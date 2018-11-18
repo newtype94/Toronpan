@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <% include ./head %>
+</head>
+<body>
+<% include ./header %>
+<div class="container">
+  <h1><%=joinOrNot%></h1>
+</div>
+</div>
+</body>
+</html>
+
+<%
+function easyDate(date, arg) {
+    if(arg==0)
+    return date.toLocaleDateString("ko-KR");
+    if(arg==1)
+    return date.toLocaleTimeString("ko-KR");
+}
+%>

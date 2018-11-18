@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel='stylesheet' href='/stylesheets/panWriteStyle.css' />
+  <% include ./head %>
+</head>
+<body>
+  <div class="container">
+    <form action="/joinDB/<%=sessionUser.idK %>" method="post">
+      <div class="form-group">
+        <label for="nameJ">활동하실 닉네임<input type="text" class="form-control" name="nameJ" id="nameJ" /></label>
+      </div>
+      <div class="radio">
+        <label for="m"><input type="radio" name="genderJ" value="m" id="m" />남 </label>
+        <label for="f"><input type="radio" name="genderJ" value="f" id="f" />여</label>
+      </div>
+      <div class="form-group">
+        <label for="ageJ">출생 연도
+        <input type="text" class="form-control" name="ageJ" id="ageJ" />
+        </label>
+      </div>
+      <div class="radio">
+        <label for="l"><input type="radio" name="sideJ" value="l" id="l" />진보 </label>
+        <label for="f"><input type="radio" name="sideJ" value="r" id="r" />보수 </label>
+      </div>
+      <button type="submit" class="btn btn-primary">가입</button>
+    </form>
+  </div>
+</body>
+</html>

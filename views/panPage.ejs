@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <link rel='stylesheet' href='/stylesheets/panPageStyle.css' />
+  <% include ./head %>
+</head>
+
+<body>
+  <% include ./header %>
+  <div class="container">
+    <div class="text-center fontCenter">
+      <%= title%>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-2 fontCenter">작성자</div>
+      <div class="col-md-6 fontCenter">제목</div>
+      <div class="col-md-2 fontCenter">좋아요</div>
+      <div class="col-md-2 fontCenter">시간</div>
+    </div>
+    <hr>
+    <% if (panArr !== null){
+    for(var i = 0; i < panArr.length; i++) { %>
+    <div class="row" style="height:50px;">
+      <div class="col-md-2 fontCenter">
+        <%=panArr[i].writer%>
+        </h3>
+      </div>
+      <div class="col-md-6 fontCenter" style="text-align:left;">
+        <a href="/pan/<%= panArr[i]._id%>">
+          <%=panArr[i].title%></a>
+      </div>
+      <div class="col-md-2 fontCenter">
+        <%= panArr[i].like_number%>
+      </div>
+      <div class="col-md-2 fontCenter">
+        <% var now = new Date(); now = now.toLocaleDateString();
+        if (now==panArr[i].board_date.toLocaleDateString()){ %>
+        <%= panArr[i].board_date.toLocaleTimeString(); %>
+        <% }else{ %>
+        <%= now %>
+        <% } %>
+      </div>
+    </div>
+    <%  }} %>
+    <div class="text-center">
+      <ul class="pagination">
+        <% var start=page;
+        if((start%10)==0){
+          start--;
+        }
+        while((start%10)!=0){
+          start--;
+        }
+        start++;
+        if((start+9)>pagination){
+          end=pagination;
+        }else{
+          end=start+9;
+        }
+        if(start!==1){ %>
+        <li><a href="./<%=start-1%>"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+          </a></li>
+        <%}
+      for(var i=start; i<=end; i++){ %>
+        <li><a href="./<%=i%>" class="page-link">
+            <%=i%></a></li>
+        <%}%>
+        <%if(end!=pagination){ %>
+        <li><a href="./<%=end+1%>" <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>
+        <%} %>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <hr>
+    <% include ./footer %><br></div>
+</body>
+
+</html>
