@@ -114,8 +114,67 @@ router.post('/joinDB/:idK', function(req, res) {
   });
 });
 
-router.get('/user/expup', function(req, res, next){
+router.get('/user/expup/:panid', function(req, res, next) {
+  var howmuch = 0;
+  var sessionUser = req.user;
 
+  if (sessionUser == null) {
+    req.flash('joinOrNot', '로그인이 안되었습니다');
+    res.render('panHome', {
+      joinOrNot: req.flash('joinOrNot'),
+      login: 0
+    });
+  } else if (req.params.panid != null) {
+    Board.findOne({
+      _id: req.params.panid,
+      writer_id: sessionUser._id,
+      exp_done: false
+    }).exec(
+      function(err, panDB) {
+        if (err) throw err;
+        if (panDB) {
+          howmuch = panDB.like_number;
+
+          User.findOneAndUpdate({
+            _id: sessionUser._id
+          }, {
+            $inc: {
+              exp: howmuch
+            }
+          }, function() {
+            Board.findOneAndUpdate({
+              _id: req.params.panid,
+              writer_id: sessionUser._id,
+              exp_done: false
+            }, {
+              $set: {
+                exp_done: true,
+                exp_done_howmuch: howmuch
+              }
+            }, function() {
+              req.flash('joinOrNot', '정산 완료.. 경험치 획득..');
+              res.render('panHome', {
+                joinOrNot: req.flash('joinOrNot'),
+                login: 1
+              });
+            });
+          });
+        } else {
+          req.flash('joinOrNot', '정산 실패..');
+          res.render('panHome', {
+            joinOrNot: req.flash('joinOrNot'),
+            login: 1
+          });
+        }
+      }
+    );
+  } else {
+    req.flash('joinOrNot', '정산 실패..');
+    res.render('panHome', {
+      joinOrNot: req.flash('joinOrNot'),
+      login: 1
+    });
+  }
 });
 
 //최신글 페이징
@@ -312,6 +371,8 @@ router.post('/pan/write', function(req, res) {
           board.writer_id = sessionUser._id;
           board.board_date = Date.now();
           board.like_number = 0;
+          board.exp_done = false;
+          board.exp_done_howmuch = 0;
           board.hit = 0;
 
           board.save(function(err) {
@@ -428,22 +489,45 @@ router.get('/pan/:id', function(req, res) {
 router.get('/mypage/:page', function(req, res) {
   var sessionUser = req.user;
 
+  //today 작성 글 개수
+  var now = new Date();
+  now = now.toLocaleDateString();
+  var todayWrite = 0;
+
+  //마이페이지 페이징
   var page = req.params.page;
   if (page == null)
     page = 1;
-
   var skipSize = (page - 1) * 7;
   var limitSize = 7;
   var pageNum = 1;
+
   if (sessionUser == null) {
     req.flash('joinOrNot', '로그인 후 작성 가능합니다');
     res.render('panHome', {
       joinOrNot: req.flash('joinOrNot'),
       login: 0
     });
-  }else{
+  } else {
+    User.findOne({_id : sessionUser._id}, function(err, userDB){
+      User.findOneAndUpdate({_id : sessionUser._id}, {$set:{level : (userDB.exp)/50}}, function(){
+        console.log("레벨업 성공.." + (userDB.exp)/50);
+      });
+    });
+    WriteLimit.findOne({
+      $and: [{
+        writer: sessionUser._id
+      }, {
+        date: now
+      }]
+    },function(err, what){
+      if (err) throw err
+      if(what)
+        todayWrite = what. howMany;
+    });
+
     Board.count({
-      writer_id : sessionUser ._id
+      writer_id: sessionUser._id
     }, function(err, totalCount) {
       if (err) throw err;
       pageNum = Math.ceil(totalCount / limitSize);
@@ -458,7 +542,9 @@ router.get('/mypage/:page', function(req, res) {
           panArr: panArr,
           pagination: pageNum,
           page: page,
-          title: "마이페이지"
+          title: "마이페이지",
+          me: sessionUser,
+          todayWrite : todayWrite
         });
       });
     });
@@ -490,7 +576,7 @@ router.get('/pan/update/:id', function(req, res) {
   }
 });
 
-//글 수정
+//글 수정 알고리즘
 router.post('/pan/updating/:id', function(req, res) {
   var title = "제목없음"
   if (req.body.title)
@@ -511,7 +597,7 @@ router.post('/pan/updating/:id', function(req, res) {
     });
   });
 
-  res.redirect("/");
+  res.redirect("/mypage/1");
 });
 
 
@@ -523,8 +609,7 @@ router.get('/pan/remove/:id', function(req, res) {
     if (err) return res.status(500).json({
       error: "database failure"
     });
-    else res.redirect("/");
-
+    else res.redirect("/mypage/1");
   });
 });
 

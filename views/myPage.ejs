@@ -15,8 +15,28 @@
     <hr>
 
     <div class="row">
-
+      <% if(me.sideJ == 1){ %>
+      <div class="col-md-2 fontCenter">성향 : 진보 </div>
+      <% }else{ %>
+      <div class="col-md-2 fontCenter">성향 : 보수 </div>
+      <% } %>
+      <div class="col-md-2 fontCenter">닉네임 :
+        <%= me.nameJ %>
+      </div>
+      <div class="col-md-2 fontCenter">출생연도 :
+        <%= me.ageJ %>
+      </div>
+      <div class="col-md-2 fontCenter">
+        오늘 쓴 글 : <%= todayWrite %> 개
+      </div>
+      <div class="col-md-2 fontCenter">레벨 :
+        <%= me.level %>
+      </div>
+      <div class="col-md-2 fontCenter">누적경험치 :
+        <%= me.exp %>
+      </div>
     </div>
+    <hr>
 
     <div class="row">
       <div class="col-md-6 fontCenter">제목</div>
@@ -29,7 +49,8 @@
     for(var i = 0; i < panArr.length; i++) { %>
     <div class="row" style="height:50px;">
       <div class="col-md-6 fontCenter" style="text-align:left;">
-        <a href="/pan/<%= panArr[i]._id%>"><%=panArr[i].title%></a>
+        <a href="/pan/<%= panArr[i]._id%>">
+          <%=panArr[i].title%></a>
       </div>
       <div class="col-md-1 fontCenter">
         <%= panArr[i].like_number%>
@@ -43,7 +64,12 @@
         <% } %>
       </div>
       <div class="col-md-3 fontCenter">
+        <% if(panArr[i].exp_done==false){ %>
         <button class="btn-1"><a href="/user/expup/<%= panArr[i]._id %>">정산</a></button>
+        <% }else{ %>
+        <span>정산완료 :
+          <%= panArr[i].exp_done_howmuch %></span>
+        <% } %>
         <button class="btn-1"><a href="/pan/update/<%= panArr[i]._id %>">수정</a></button>
         <button class="btn-1"><a href="/pan/remove/<%= panArr[i]._id %>">삭제</a></button>
       </div>
