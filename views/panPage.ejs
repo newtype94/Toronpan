@@ -45,7 +45,7 @@
     </div>
     <%  }} %>
     <div class="text-center">
-      <ul class="pagination">
+      <ul class="uk-pagination uk-flex-center">
         <% var start=page;
         if((start%10)==0){
           start--;
@@ -60,15 +60,15 @@
           end=start+9;
         }
         if(start!==1){ %>
-        <li><a href="./<%=start-1%>"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <li><a href="./<%=start-1%>"><span uk-pagination-previous></span>
           </a></li>
+
+        <% }
+         for(var i=start; i<=end; i++){ %>
+        <li><a href="./<%=i%>" class="page-link"><%=i%></a></li>
         <%}
-      for(var i=start; i<=end; i++){ %>
-        <li><a href="./<%=i%>" class="page-link">
-            <%=i%></a></li>
-        <%}%>
-        <%if(end!=pagination){ %>
-        <li><a href="./<%=end+1%>" <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>
+        if(end!=pagination){ %>
+        <li><a href="./<%=end+1%>"><span uk-pagination-next></span></a></li>
         <%} %>
       </ul>
     </div>

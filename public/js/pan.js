@@ -97,9 +97,9 @@ $(function() {
             '</div>' +
 
             '<div class="row">' +
-            '<div class="col-md-8" style="padding : 20px;">' + comment[i].contents + '</div>' +
-            '<div class="col-md-2"><button class="commentLike" data-commentid="' + comment[i]._id + '">좋아요</button></div>' +
-            '<div class="col-md-2"><button class="commentDislike" data-commentid="' + comment[i]._id + '">싫어요</button></div>' +
+            '<div class="col-md-7" style="padding : 20px;">' + comment[i].contents + '</div>' +
+            '<div class="col-md-5"><button class="commentLike uk-button uk-button-primary" data-commentid="' + comment[i]._id + '">좋아요</button>' +
+            '<button class="commentDislike uk-button uk-button-danger" data-commentid="' + comment[i]._id + '">싫어요</button></div>' +
             '</div>' +
 
             '<div class="row">'+ //대댓 영역 시작
@@ -114,7 +114,7 @@ $(function() {
             '<form action="/littlecomment/write" method="post">' +
             '<input type="hidden" name="id" value="' + comment[i]._id + '">' +
             '<div class="col-md-3"> 대댓글 :  </div>' +
-            '<div class="col-md-7"><textarea class="form-control" name="contents"></textarea></div>' +
+            '<div class="col-md-7"><textarea class="uk-textarea" name="contents"></textarea></div>' +
             '<div class="col-md-2"><input class="btn btn-default form-control" type="submit" value="완료"></div>' +
             '</form></div>'; //대댓 쓰기 끝
 

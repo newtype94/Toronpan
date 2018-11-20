@@ -42,19 +42,23 @@
     </div>
     <div class="row" style="margin-top:20px; margin-bottom:20px;">
       <div class='col-md-4'></div>
-      <div class="col-md-2 bordered fontCenter" id="like" data-panId="<%= pan._id %>" />
-        좋아요</div>
-      <div class="col-md-2 bordered fontCenter" id="dislike" data-panId="<%= pan._id %>" />싫어요</div>
+      <div class="col-md-4" style="text-align : center; font-weight: bold;">
+        <button class="uk-button uk-button-primary" id="like" data-panId="<%= pan._id %>">좋아요</button>
+        <button class="uk-button uk-button-danger" id="dislike" data-panId="<%= pan._id %>">싫어요</button>
+      </div>
       <div class='col-md-4'></div>
     </div>
   </div>
   <div class="container">
-    <hr>
+    <hr class="uk-divider-icon">
     <div class="row">
       <div class="col-md-6">
-        <div class="col-md-6 bordered fontCenter getComment" data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</div>
-        <div class="col-md-6 bordered fontCenter getComment" data-page="1" data-where="hot">인기 댓글</div>
-        <hr><div class="row" id="commentBox"></div>
+        <div class="row">
+          <div class="col-md-6 bordered fontCenter getComment" data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</div>
+          <div class="col-md-6 bordered fontCenter getComment" data-page="1" data-where="hot">인기 댓글</div>
+        </div>
+        <hr>
+        <div class="row" id="commentBox"></div>
         <div class="row" style="padding-top:10px; padding-bottom:10px;">
           <% if(login==0){ %>
           <h3>로그인을 하지 않아 댓글을 달 수 없습니다</h3>
@@ -66,7 +70,7 @@
             <div class="col-md-2 fontCenter">
               <%=sessionUser.nameJ%>
             </div>
-            <div class="col-md-8"><textarea class="form-control" name="contents"></textarea></div>
+            <div class="col-md-8"><textarea class="uk-textarea" name="contents"></textarea></div>
             <div class="col-md-2"><input class="btn btn-default form-control" type="submit" value="완료"></div>
           </form>
           <% } %>
