@@ -14,8 +14,34 @@ var Comment = require('../models/comment');
 var LittleComment = require('../models/littleComment');
 var User = require('../models/user');
 var WriteLimit = require('../models/writeLimit');
+var SurveyDone = require('../models/surveyDone')
 
+function checkLogin(user){
+  if(user ==null){
+    return 0;
+  }else if(user.nameJ){
+    return 2;
+  }
+  else if(user._id){
+    return 1;
+  }
+}
 
+function checkSurvey(id){
+  var now = new Date();
+  now = now.toLocaleDateString();
+  SurveyDone.findOne({
+    $and: [{
+      done_people: id
+    }, {
+      date: now
+    }]
+  }, function(err, what) {
+    if (err) throw err
+    else if(what) return true;
+    else return false;
+  });
+}
 
 //+++++++++++++++login++++++++++++++
 // localhost:3000/login/kakao로 들어오면(get으로 들어오면) passport.authenticate를 실행(여기서는 임의로 login-kakao로 이름을 줌)
@@ -256,19 +282,15 @@ router.get('/page/hot/:page', function(req, res, next) {
 router.get('/write', function(req, res, next) {
   var now = new Date();
   now = now.toLocaleDateString();
-  console.log(now);
   var sessionUser = req.user;
-  if (sessionUser == null) {
-    req.flash('joinOrNot', '로그인 후 작성 가능합니다');
+  if (checkLogin(req.user) != 2) {
+    if(checkLogin(req.user) == 0)
+      req.flash('joinOrNot', '로그인 후 작성 가능합니다');
+    if(checkLogin(req.user) == 1)
+      req.flash('joinOrNot', '회원등록(10초 소요) 후 작성 가능합니다');
     res.render('panHome', {
       joinOrNot: req.flash('joinOrNot'),
-      login: 0
-    });
-  } else if (sessionUser.nameJ == null) {
-    req.flash('joinOrNot', '회원등록(10초 소요) 후 작성 가능합니다');
-    res.render('panHome', {
-      joinOrNot: req.flash('joinOrNot'),
-      login: 1
+      login: checkLogin(req.user)
     });
   } else {
     WriteLimit.findOne({
@@ -428,39 +450,31 @@ router.post('/upload', uploadSetting.single('upload'), function(req, res) {
 router.get('/pan/:id', function(req, res) {
   var sessionUser = req.user;
 
-  if (sessionUser == null) {
-    Board.findOneAndUpdate({
-      _id: req.params.id
-    }, {
-      $inc: {
-        hit: 1
-      }
-    }, {
-      new: true
-    }, function(err, panDB) {
-      res.render('pan', {
-        login: 0,
-        comment: null,
-        pan: panDB
+  if (checkLogin(sessionUser) == 2) {
+    if (checkSurvey(sessionUser._id)){
+      Board.findOneAndUpdate({
+        _id: req.params.id
+      }, {
+        $inc: {
+          hit: 1
+        }
+      }, {
+        new: true
+      }, function(err, panDB) {
+        Comment.find({
+          whatBoard: req.params.id
+        }, function(err, commentDB) {
+          res.render('pan', {
+            login: 1,
+            pan: panDB,
+            comment: commentDB,
+            sessionUser: sessionUser
+          });
+        });
       });
-    });
-  } else if (sessionUser.nameJ == null) {
-    Board.findOneAndUpdate({
-      _id: req.params.id
-    }, {
-      $inc: {
-        hit: 1
-      }
-    }, {
-      new: true
-    }, function(err, panDB) {
-      res.render('pan', {
-        login: 2,
-        pan: panDB,
-        comment: null,
-        sessionUser: sessionUser
-      });
-    });
+    }else{
+      res.render('panHome', {login : checkLogin(sessionUser), joinOrNot : "설문하시오" });
+    }
   } else {
     Board.findOneAndUpdate({
       _id: req.params.id
@@ -471,15 +485,11 @@ router.get('/pan/:id', function(req, res) {
     }, {
       new: true
     }, function(err, panDB) {
-      Comment.find({
-        whatBoard: req.params.id
-      }, function(err, commentDB) {
-        res.render('pan', {
-          login: 1,
-          pan: panDB,
-          comment: commentDB,
-          sessionUser: sessionUser
-        });
+      res.render('pan', {
+        login: checkLogin(sessionUser),
+        pan: panDB,
+        comment: null,
+        sessionUser: sessionUser
       });
     });
   }

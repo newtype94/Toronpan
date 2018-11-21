@@ -28,8 +28,9 @@
         </h3>
       </div>
       <div class="col-md-6 fontCenter" style="text-align:left;">
-        <a href="/pan/<%= panArr[i]._id%>">
-          <%=panArr[i].title%></a>
+        <button class="uk-button uk-button-text" onclick="location.href='/pan/<%= panArr[i]._id%>'">
+          <%=panArr[i].title%>
+        </button>
       </div>
       <div class="col-md-2 fontCenter">
         <%= panArr[i].like_number%>

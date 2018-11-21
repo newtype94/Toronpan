@@ -175,4 +175,8 @@ $(function() {
   });
 
   $('#getFirstComment').click();
+
+  $('.goBack').click(function(){
+    window.history.back();
+  });
 });

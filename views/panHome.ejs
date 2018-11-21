@@ -7,17 +7,9 @@
 <body>
 <% include ./header %>
 <div class="container">
-  <h1><%=joinOrNot%></h1>
+  <% if(joinOrNot != null) %>
+    <h1><%=joinOrNot%></h1>
 </div>
 </div>
 </body>
 </html>
-
-<%
-function easyDate(date, arg) {
-    if(arg==0)
-    return date.toLocaleDateString("ko-KR");
-    if(arg==1)
-    return date.toLocaleTimeString("ko-KR");
-}
-%>
