@@ -14,7 +14,8 @@ var Comment = require('../models/comment');
 var LittleComment = require('../models/littleComment');
 var User = require('../models/user');
 var WriteLimit = require('../models/writeLimit');
-var SurveyDone = require('../models/surveyDone')
+var TodaySurvey = require('../models/todaySurvey');
+var SurveyDone = require('../models/surveyDone');
 
 function checkLogin(user){
   if(user ==null){
@@ -140,6 +141,79 @@ router.post('/joinDB/:idK', function(req, res) {
   });
 });
 
+//설문 페이지
+router.get('/survey', function(req, res, next) {
+  var sessionUser = req.user;
+  if(checkLogin(sessionUser)==2){
+    res.render('panSurvey',{
+      login:2
+    });
+  }else{
+    req.flash('joinOrNot', '로그인이 안되었습니다');
+    res.render('panHome', {
+      joinOrNot: req.flash('joinOrNot'),
+      login: checkLogin(sessionUser)
+    });
+  }
+});
+
+
+//관리자 설문 등록 알고리즘
+router.post('/survey/new', function(req, res) {
+  var sessionUser = req.user;
+  var todaySurvey = new TodaySurvey();
+  var firstQ = req.body.firstQ;
+  console.log(firstQ);
+  var now = new Date();
+  now = now.toLocaleDateString();
+  if((firstQ!=null)&&(sessionUser!=null)){
+    todaySurvey.firstQ = firstQ;
+    todaySurvey.date = now;
+    todaySurvey.save();
+    todaySurvey.save(function(err) {
+    if (err) {
+      console.log(err);
+      res.redirect('/');
+    }
+    req.flash('joinOrNot', '관리자님! 설문등록 잘되었습니다.');
+    res.render('panHome', {
+      joinOrNot: req.flash('joinOrNot'),
+      login: checkLogin(sessionUser)
+    });
+    });
+  }
+});
+
+//사용자 설문 제출 알고리즘
+router.post('/survey/do', function(req, res) {
+  var todaySurvey = new TodaySurvey();
+  var idK = req.params.idK;
+  var nameJ = req.body.nameJ;
+  var genderJ = req.body.genderJ;
+  var ageJ = req.body.ageJ;
+  var sideJ = req.body.sideJ;
+
+  User.findOneAndUpdate({
+    idK: idK
+  }, {
+    $set: {
+      nameJ: nameJ,
+      genderJ: genderJ,
+      ageJ: ageJ,
+      sideJ: sideJ,
+      level: 1,
+      exp: 0
+    }
+  }, function(err, board) {
+    if (err) {
+      console.log(err);
+      res.redirect('/join');
+    }
+    res.redirect('/');
+  });
+});
+
+//경험치 정산
 router.get('/user/expup/:panid', function(req, res, next) {
   var howmuch = 0;
   var sessionUser = req.user;

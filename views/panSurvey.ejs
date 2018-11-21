@@ -4,81 +4,31 @@
 <head>
   <link rel='stylesheet' href='/stylesheets/panStyle.css' />
   <% include ./head %>
-  <script src="/js/pan.js"></script>
 </head>
 
 <body>
   <% include ./header %>
-  <div class="container fontCenter">
-    <hr>
-    <div class="row" style="margin-top:20px;">
-      <div class="col-md-2"><button class="uk-button uk-button-default goBack">뒤로가기</button></div>
-      <div class="col-md-8">
-        <a href="/pan/<%= pan._id%>"><%= pan.title %></a>
-      </div>
-      <div class="col-md-2"></div>
-    </div>
-    <hr>
+  <div class="container">
+    <h1>일일단위 설문 주제 선정</h1>
     <div class="row">
-      <div class="col-md-4"></div>
-      <div class="col-md-2">조회수 :
-        <%= pan.hit %>
-      </div>
-      <div class="col-md-2">작성자 :
-        <%= pan.writer %>
-      </div>
-      <div class="col-md-2">좋아요 : <span id="like_number">
-          <%= pan.like_number%></span></div>
-      <div class="col-md-2">
-        <%= pan.board_date.toLocaleString()%>
-      </div>
+      <form action="/survey/new" method="post">
+        <label for="firstQ">(관리자용)새로운 설문 주제<input type="text" name="firstQ" id="firstQ" /></label>
+        <button type="submit" >오늘 등록완료</button>
+      </form>
+    </div>
+    <br><br>
+    <h1>일일단위 사용자 설문 제출</h1>
+    <div class="row">
+      <form action="/survey/do" method="post">
+        <div class="radio">
+          <label for="degree_1"><input type="radio" name="degree_1" value="1" id="degree_1" />못하고있다</label>
+          <label for="degree_2"><input type="radio" name="degree_2" value="2" id="degree_2" />중간은 한다</label>
+          <label for="degree_3"><input type="radio" name="degree_3" value="f" id="degree_3" />잘하고 있다</label>
+        </div>
+        <button type="submit">오늘 제출완료</button>
+      </form>
     </div>
   </div>
-  <div class="container">
-    <hr>
-    <div class="row" style="padding-top:20px; padding-bottom:20px;">
-      <div class="col-md-12">
-        <%- pan.contents%>
-      </div>
-    </div>
-    <div class="row" style="margin-top:20px; margin-bottom:20px;">
-      <div class='col-md-4'></div>
-      <div class="col-md-4" style="text-align : center; font-weight: bold;">
-        <button class="uk-button uk-button-primary" id="like" data-panId="<%= pan._id %>">좋아요</button>
-        <button class="uk-button uk-button-danger" id="dislike" data-panId="<%= pan._id %>">싫어요</button>
-      </div>
-      <div class='col-md-4'></div>
-    </div>
-  </div>
-  <div class="container">
-    <hr class="uk-divider-icon">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="row">
-          <div class="col-md-6 bordered fontCenter getComment" data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</div>
-          <div class="col-md-6 bordered fontCenter getComment" data-page="1" data-where="hot">인기 댓글</div>
-        </div>
-        <hr>
-        <div class="row" id="commentBox"></div>
-        <div class="row" style="padding-top:10px; padding-bottom:10px;">
-          <% if(login==0){ %>
-          <h3>로그인을 하지 않아 댓글을 달 수 없습니다</h3>
-          <% } else if(login==2){ %>
-          <h3>가입을 하지 않아 댓글을 달 수 없습니다. 로그아웃 후 다시 로그인하여 가입을 진행해주세요</h3>
-          <% } else { %>
-          <form action="/comment/write" method="post">
-            <input type="hidden" name="id" value="<%=pan._id%>">
-            <div class="col-md-2 fontCenter">
-              <%=sessionUser.nameJ%>
-            </div>
-            <div class="col-md-8"><textarea class="uk-textarea" name="contents"></textarea></div>
-            <div class="col-md-2"><input class="btn btn-default form-control" type="submit" value="완료"></div>
-          </form>
-          <% } %>
-        </div>
-      </div>
-      <div class="col-md-6"></div>
-    </div>
   </div>
   <div class="container">
     <hr>

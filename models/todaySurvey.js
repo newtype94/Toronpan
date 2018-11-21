@@ -9,7 +9,7 @@ var user = new Schema({
 });
 
 var todaySurvey = new Schema({
-  first : String,
+  firstQ : String,
   first_1 : [user],
   first_2 : [user],
   first_3 : [user],
