@@ -17,32 +17,15 @@ var WriteLimit = require('../models/writeLimit');
 var TodaySurvey = require('../models/todaySurvey');
 var SurveyDone = require('../models/surveyDone');
 
-function checkLogin(user){
-  if(user ==null){
+function checkLogin(user) {
+  if (user == null)
     return 0;
-  }else if(user.nameJ){
+  else if (user.nameJ)
     return 2;
-  }
-  else if(user._id){
+  else if (user._id)
     return 1;
-  }
 }
 
-function checkSurvey(id){
-  var now = new Date();
-  now = now.toLocaleDateString();
-  SurveyDone.findOne({
-    $and: [{
-      done_people: id
-    }, {
-      date: now
-    }]
-  }, function(err, what) {
-    if (err) throw err
-    else if(what) return true;
-    else return false;
-  });
-}
 
 //+++++++++++++++login++++++++++++++
 // localhost:3000/login/kakao로 들어오면(get으로 들어오면) passport.authenticate를 실행(여기서는 임의로 login-kakao로 이름을 줌)
@@ -141,14 +124,14 @@ router.post('/joinDB/:idK', function(req, res) {
   });
 });
 
-//설문 페이지
-router.get('/survey', function(req, res, next) {
+//설문 관리자 페이지(임시) 렌더링
+router.get('/survey/admin', function(req, res, next) {
   var sessionUser = req.user;
-  if(checkLogin(sessionUser)==2){
-    res.render('panSurvey',{
-      login:2
+  if (checkLogin(sessionUser) == 2) {
+    res.render('panSurveyAdmin', {
+      login: 2
     });
-  }else{
+  } else {
     req.flash('joinOrNot', '로그인이 안되었습니다');
     res.render('panHome', {
       joinOrNot: req.flash('joinOrNot'),
@@ -157,60 +140,166 @@ router.get('/survey', function(req, res, next) {
   }
 });
 
+//설문 페이지 렌더링
+router.get('/survey/user', function(req, res, next) {
+  var sessionUser = req.user;
+  var now = new Date();
+  now = now.toLocaleDateString();
+  if (checkLogin(sessionUser) == 2) {
+    SurveyDone.findOne({
+      done_people: sessionUser.idK,
+      date: now
+    }, function(err, what) {
+      if(err){
+        console.log(err);
+        res.redirect("/");
+      }else if(what){
+        req.flash('joinOrNot', '오늘은 이미 설문에 참여했습니다.');
+        res.render('panHome', {
+          joinOrNot: req.flash('joinOrNot'),
+          login: checkLogin(sessionUser)
+        });
+      }else{
+        TodaySurvey.findOne({
+          date: now
+        }, function(err, surveyDB) {
+          if(err){
+            console.log(err);
+            res.redirect("/");
+          } else if (surveyDB) {
+            res.render('panSurvey', {
+              login: 2,
+              firstQ: surveyDB.firstQ,
+              firstID: surveyDB._id
+            });
+          } else {
+            req.flash('joinOrNot', '오류 발생');
+            res.render('panHome', {
+              joinOrNot: req.flash('joinOrNot'),
+              login: checkLogin(sessionUser)
+            });
+          }
+        });
+      }
+    });
+  } else {
+    req.flash('joinOrNot', '로그인이 안되었습니다');
+    res.render('panHome', {
+      joinOrNot: req.flash('joinOrNot'),
+      login: checkLogin(sessionUser)
+    });
+  }
+});
 
 //관리자 설문 등록 알고리즘
 router.post('/survey/new', function(req, res) {
   var sessionUser = req.user;
   var todaySurvey = new TodaySurvey();
+  var surveyDone = new SurveyDone();
   var firstQ = req.body.firstQ;
   console.log(firstQ);
   var now = new Date();
   now = now.toLocaleDateString();
-  if((firstQ!=null)&&(sessionUser!=null)){
+  if ((firstQ != null) && (sessionUser != null)) {
     todaySurvey.firstQ = firstQ;
     todaySurvey.date = now;
     todaySurvey.save();
     todaySurvey.save(function(err) {
-    if (err) {
-      console.log(err);
-      res.redirect('/');
-    }
-    req.flash('joinOrNot', '관리자님! 설문등록 잘되었습니다.');
-    res.render('panHome', {
-      joinOrNot: req.flash('joinOrNot'),
-      login: checkLogin(sessionUser)
-    });
+      if (err) {
+        console.log(err);
+        res.redirect('/');
+      }
+      surveyDone.date = now;
+      surveyDone.save(function(err) {
+        if (err) {
+          console.log(err);
+          res.redirect('/');
+        }
+        req.flash('joinOrNot', '관리자님! 설문등록 잘되었습니다.');
+        res.render('panHome', {
+          joinOrNot: req.flash('joinOrNot'),
+          login: checkLogin(sessionUser)
+        });
+      });
     });
   }
 });
-
 //사용자 설문 제출 알고리즘
 router.post('/survey/do', function(req, res) {
+  var sessionUser = req.user;
   var todaySurvey = new TodaySurvey();
-  var idK = req.params.idK;
-  var nameJ = req.body.nameJ;
-  var genderJ = req.body.genderJ;
-  var ageJ = req.body.ageJ;
-  var sideJ = req.body.sideJ;
+  var degree = req.body.degree; // 1,2,3 셋 중 하나 반환
+  var now = new Date();
+  now = now.toLocaleDateString();
+  var user = {};
+  user["idK"] = sessionUser.idK;
+  user["genderJ"] = sessionUser.genderJ;
+  user["ageJ"] = sessionUser.ageJ;
+  user["sideJ"] = sessionUser.sideJ;
 
-  User.findOneAndUpdate({
-    idK: idK
-  }, {
-    $set: {
-      nameJ: nameJ,
-      genderJ: genderJ,
-      ageJ: ageJ,
-      sideJ: sideJ,
-      level: 1,
-      exp: 0
-    }
-  }, function(err, board) {
-    if (err) {
-      console.log(err);
-      res.redirect('/join');
-    }
-    res.redirect('/');
-  });
+  if(sessionUser!=null){
+    SurveyDone.findOne({
+      done_people: sessionUser.idK,
+      date: now
+    },function(err, what){
+      if(err){
+        console.log(err);
+        res.redirect("/");
+      }else if(what){
+        req.flash('joinOrNot', '오늘은 이미 설문에 참여했습니다.');
+        res.render('panHome', {
+          joinOrNot: req.flash('joinOrNot'),
+          login: checkLogin(sessionUser)
+        });
+      }else{
+        TodaySurvey.findOneAndUpdate({
+            _id: req.body.firstID,
+          }, {
+            $push: {
+              first_1: user
+            }
+          },
+          function(err, db) {
+            if (!err && db) {
+              SurveyDone.findOneAndUpdate({
+                  date: now
+                }, {
+                  $push: {
+                    done_people: sessionUser.idK
+                  }
+                }, {
+                  new: true
+                },
+                function(err, db) {
+                  if (!err && db) {
+                    req.flash('joinOrNot', '회원님! 설문에 참여해주셔서 감사합니다.');
+                    res.render('panHome', {
+                      joinOrNot: req.flash('joinOrNot'),
+                      login: checkLogin(sessionUser)
+                    });
+                  } else {
+                    req.flash('joinOrNot', '회원님! 설문 참여중 오류가 발생했습니다.');
+                    res.render('panHome', {
+                      joinOrNot: req.flash('joinOrNot'),
+                      login: checkLogin(sessionUser)
+                    });
+                  }
+                }
+              );
+            } else {
+              req.flash('joinOrNot', '회원님! 설문 참여중 오류가 발생했습니다.');
+              res.render('panHome', {
+                joinOrNot: req.flash('joinOrNot'),
+                login: checkLogin(sessionUser)
+              });
+            }
+          }
+        );
+      }
+    });
+  }
+
+
 });
 
 //경험치 정산
@@ -358,9 +447,9 @@ router.get('/write', function(req, res, next) {
   now = now.toLocaleDateString();
   var sessionUser = req.user;
   if (checkLogin(req.user) != 2) {
-    if(checkLogin(req.user) == 0)
+    if (checkLogin(req.user) == 0)
       req.flash('joinOrNot', '로그인 후 작성 가능합니다');
-    if(checkLogin(req.user) == 1)
+    if (checkLogin(req.user) == 1)
       req.flash('joinOrNot', '회원등록(10초 소요) 후 작성 가능합니다');
     res.render('panHome', {
       joinOrNot: req.flash('joinOrNot'),
@@ -523,32 +612,45 @@ router.post('/upload', uploadSetting.single('upload'), function(req, res) {
 // 글 읽기
 router.get('/pan/:id', function(req, res) {
   var sessionUser = req.user;
+  var now = new Date();
+  now = now.toLocaleDateString();
 
   if (checkLogin(sessionUser) == 2) {
-    if (checkSurvey(sessionUser._id)){
-      Board.findOneAndUpdate({
-        _id: req.params.id
-      }, {
-        $inc: {
-          hit: 1
-        }
-      }, {
-        new: true
-      }, function(err, panDB) {
-        Comment.find({
-          whatBoard: req.params.id
-        }, function(err, commentDB) {
-          res.render('pan', {
-            login: 1,
-            pan: panDB,
-            comment: commentDB,
-            sessionUser: sessionUser
+    SurveyDone.findOne({
+      done_people: sessionUser.idK,
+      date: now
+    }, function(err, what) {
+      if(err){
+        console.log(err);
+        res.redirect("/");
+      }else if(what){
+        Board.findOneAndUpdate({
+          _id: req.params.id
+        }, {
+          $inc: {
+            hit: 1
+          }
+        }, {
+          new: true
+        }, function(err, panDB) {
+          Comment.find({
+            whatBoard: req.params.id
+          }, function(err, commentDB) {
+            res.render('pan', {
+              login: 1,
+              pan: panDB,
+              comment: commentDB,
+              sessionUser: sessionUser
+            });
           });
         });
-      });
-    }else{
-      res.render('panHome', {login : checkLogin(sessionUser), joinOrNot : "설문하시오" });
-    }
+      }else{
+        res.render('panHome', {
+          login: checkLogin(sessionUser),
+          joinOrNot: "설문하시오"
+        });
+      }
+    });
   } else {
     Board.findOneAndUpdate({
       _id: req.params.id
@@ -593,9 +695,17 @@ router.get('/mypage/:page', function(req, res) {
       login: 0
     });
   } else {
-    User.findOne({_id : sessionUser._id}, function(err, userDB){
-      User.findOneAndUpdate({_id : sessionUser._id}, {$set:{level : (userDB.exp)/50}}, function(){
-        console.log("레벨업 성공.." + (userDB.exp)/50);
+    User.findOne({
+      _id: sessionUser._id
+    }, function(err, userDB) {
+      User.findOneAndUpdate({
+        _id: sessionUser._id
+      }, {
+        $set: {
+          level: (userDB.exp) / 50
+        }
+      }, function() {
+        console.log("레벨업 성공.." + (userDB.exp) / 50);
       });
     });
     WriteLimit.findOne({
@@ -604,10 +714,10 @@ router.get('/mypage/:page', function(req, res) {
       }, {
         date: now
       }]
-    },function(err, what){
+    }, function(err, what) {
       if (err) throw err
-      if(what)
-        todayWrite = what. howMany;
+      if (what)
+        todayWrite = what.howMany;
     });
 
     Board.count({
@@ -628,7 +738,7 @@ router.get('/mypage/:page', function(req, res) {
           page: page,
           title: "마이페이지",
           me: sessionUser,
-          todayWrite : todayWrite
+          todayWrite: todayWrite
         });
       });
     });

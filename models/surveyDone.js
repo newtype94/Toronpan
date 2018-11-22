@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var surveyDone = new Schema({
-  done_people : String,
+  done_people : [String],
   date: {type: Date, default: Date.now().toLocaleDateString}
 });
 
