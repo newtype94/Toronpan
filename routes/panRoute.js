@@ -18,12 +18,12 @@ var TodaySurvey = require('../models/todaySurvey');
 var SurveyDone = require('../models/surveyDone');
 
 function checkLogin(user) {
-  if (user == null)
+  if (user == null) //로그인 X
     return 0;
-  else if (user.nameJ)
-    return 2;
-  else if (user._id)
+  else if (user.nameJ == null) //로그인 + 가입 X
     return 1;
+  else //로그인 + 가입완료
+    return 2;
 }
 
 
@@ -37,9 +37,8 @@ router.get('/logout', function(req, res, next) {
   res.redirect('/');
 });
 
-
 router.get('/oauth', passport.authenticate('login-kakao', {
-  successRedirect: '/join', // 성공하면 /main으로 가도록
+  successRedirect: '/userduty', // 성공하면 /main으로 가도록
   failureRedirect: '/'
 }));
 
@@ -85,14 +84,32 @@ router.get('/', function(req, res, next) {
 });
 
 //회원가입
-router.get('/join', function(req, res, next) {
+router.get('/userduty', function(req, res, next) {
   var sessionUser = req.user;
-  if (sessionUser.nameJ != null)
-    res.redirect('/');
-  else
+  var now = new Date();
+  now = now.toLocaleDateString();
+
+  if (checkLogin(sessionUser) == 2) {
+    SurveyDone.findOne({
+      done_people: sessionUser.idK,
+      date: now
+    }, function(err, what) {
+      if (err) {
+        console.log(err);
+        res.redirect("/");
+      } else if (what) { //설문 참여 했음
+        res.redirect("/");
+      } else { //설문 참여 안 했음
+        res.redirect("/survey/user")
+      }
+    });
+  } else if (checkLogin(sessionUser) == 1)
     res.render('join', {
       sessionUser: sessionUser
     });
+  else
+    res.redirect("/");
+
 });
 
 //회원가입 알고리즘
@@ -118,9 +135,9 @@ router.post('/joinDB/:idK', function(req, res) {
   }, function(err, board) {
     if (err) {
       console.log(err);
-      res.redirect('/join');
+      res.redirect('/userduty');
     }
-    res.redirect('/');
+    res.redirect('/userduty');
   });
 });
 
@@ -150,20 +167,20 @@ router.get('/survey/user', function(req, res, next) {
       done_people: sessionUser.idK,
       date: now
     }, function(err, what) {
-      if(err){
+      if (err) {
         console.log(err);
         res.redirect("/");
-      }else if(what){
+      } else if (what) {
         req.flash('joinOrNot', '오늘은 이미 설문에 참여했습니다.');
         res.render('panHome', {
           joinOrNot: req.flash('joinOrNot'),
           login: checkLogin(sessionUser)
         });
-      }else{
+      } else {
         TodaySurvey.findOne({
           date: now
         }, function(err, surveyDB) {
-          if(err){
+          if (err) {
             console.log(err);
             res.redirect("/");
           } else if (surveyDB) {
@@ -173,7 +190,7 @@ router.get('/survey/user', function(req, res, next) {
               firstID: surveyDB._id
             });
           } else {
-            req.flash('joinOrNot', '오류 발생');
+            req.flash('joinOrNot', '오늘 설문이 없어요');
             res.render('panHome', {
               joinOrNot: req.flash('joinOrNot'),
               login: checkLogin(sessionUser)
@@ -237,21 +254,21 @@ router.post('/survey/do', function(req, res) {
   user["ageJ"] = sessionUser.ageJ;
   user["sideJ"] = sessionUser.sideJ;
 
-  if(sessionUser!=null){
+  if (sessionUser != null) {
     SurveyDone.findOne({
       done_people: sessionUser.idK,
       date: now
-    },function(err, what){
-      if(err){
+    }, function(err, what) {
+      if (err) {
         console.log(err);
         res.redirect("/");
-      }else if(what){
+      } else if (what) {
         req.flash('joinOrNot', '오늘은 이미 설문에 참여했습니다.');
         res.render('panHome', {
           joinOrNot: req.flash('joinOrNot'),
           login: checkLogin(sessionUser)
         });
-      }else{
+      } else {
         TodaySurvey.findOneAndUpdate({
             _id: req.body.firstID,
           }, {
@@ -298,8 +315,6 @@ router.post('/survey/do', function(req, res) {
       }
     });
   }
-
-
 });
 
 //경험치 정산
@@ -393,7 +408,8 @@ router.get('/page/new/:page', function(req, res, next) {
         panArr: panArr,
         pagination: pageNum,
         page: page,
-        title: "최신글"
+        title: "최신글",
+        formBack: null
       });
     });
   });
@@ -405,7 +421,7 @@ router.get('/page/hot/:page', function(req, res, next) {
   if (req.user != null) {
     login = 1;
   }
-  console.log(login);
+
   var page = req.params.page;
   if (page == "") {
     page = 1;
@@ -434,12 +450,236 @@ router.get('/page/hot/:page', function(req, res, next) {
         panArr: panArr,
         pagination: pageNum,
         page: page,
-        title: "인기글"
+        title: "인기글",
+        formBack: null
       });
     });
   });
 });
 
+//search 알고리즘
+router.post('/pan/search/:page', function(req, res) {
+  var where = req.body.where;
+  var how = req.body.how;
+  var what = req.body.what;
+
+  var formBack = [];
+  formBack['where'] = where;
+  formBack['how'] = how;
+  formBack['what'] = what;
+
+  var page = req.params.page;
+  if (page == "") {
+    page = 1;
+  }
+  var skipSize = (page - 1) * 7;
+  var limitSize = 7;
+  var pageNum = 1;
+
+  if (where == "최신") { //최신
+    if (how == "제목") { //최신 -> 제목
+      Board.count({
+        title: {
+          $regex: ".*" + what + ".*"
+        }
+      }, function(err, totalCount) {
+        if (err) throw err;
+        pageNum = Math.ceil(totalCount / limitSize);
+        Board.find({
+          title: {
+            $regex: ".*" + what + ".*"
+          }
+        }).sort({
+          board_date: -1
+        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
+          if (err) throw err;
+          res.render('searchPage', {
+            login: checkLogin(req.user),
+            panArr: panArr,
+            pagination: pageNum,
+            page: page,
+            title: "검색된 최신글",
+            formBack: formBack
+          });
+        });
+      });
+    } else if (how == "내용") { //최신 -> 내용
+      Board.count({
+        contents: {
+          $regex: ".*" + what + ".*"
+        }
+      }, function(err, totalCount) {
+        if (err) throw err;
+        pageNum = Math.ceil(totalCount / limitSize);
+        Board.find({
+          contents: {
+            $regex: ".*" + what + ".*"
+          }
+        }).sort({
+          board_date: -1
+        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
+          if (err) throw err;
+          res.render('searchPage', {
+            login: checkLogin(req.user),
+            panArr: panArr,
+            pagination: pageNum,
+            page: page,
+            title: "검색된 최신글",
+            formBack: formBack
+          });
+        });
+      });
+    } else { //최신 -> 내용+내용
+      Board.count({
+        $or: [{
+          title: {
+            $regex: ".*" + what + ".*"
+          }
+        }, {
+          contents: {
+            $regex: ".*" + what + ".*"
+          }
+        }]
+      }, function(err, totalCount) {
+        if (err) throw err;
+        pageNum = Math.ceil(totalCount / limitSize);
+        Board.find({
+          $or: [{
+            title: {
+              $regex: ".*" + what + ".*"
+            }
+          }, {
+            contents: {
+              $regex: ".*" + what + ".*"
+            }
+          }]
+        }).sort({
+          board_date: -1
+        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
+          if (err) throw err;
+          res.render('searchPage', {
+            login: checkLogin(req.user),
+            panArr: panArr,
+            pagination: pageNum,
+            page: page,
+            title: "검색된 최신글",
+            formBack: formBack
+          });
+        });
+      });
+    }
+  } else if (where == "인기") { //인기
+    if (how == "제목") { //인기 -> 제목
+      Board.count({
+        like_number: {
+          $gte: 50
+        },
+        title: {
+          $regex: ".*" + what + ".*"
+        }
+      }, function(err, totalCount) {
+        if (err) throw err;
+        pageNum = Math.ceil(totalCount / limitSize);
+        Board.find({
+          like_number: {
+            $gte: 50
+          },
+          title: {
+            $regex: ".*" + what + ".*"
+          }
+        }).sort({
+          board_date: -1
+        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
+          if (err) throw err;
+          res.render('searchPage', {
+            login: checkLogin(req.user),
+            panArr: panArr,
+            pagination: pageNum,
+            page: page,
+            title: "검색된 인기글",
+            formBack: formBack
+          });
+        });
+      });
+    } else if (how == "내용") { //인기 -> 내용
+      Board.count({
+        like_number: {
+          $gte: 50
+        },
+        contents: {
+          $regex: ".*" + what + ".*"
+        }
+      }, function(err, totalCount) {
+        if (err) throw err;
+        pageNum = Math.ceil(totalCount / limitSize);
+        Board.find({
+          like_number: {
+            $gte: 50
+          },
+          contents: {
+            $regex: ".*" + what + ".*"
+          }
+        }).sort({
+          board_date: -1
+        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
+          if (err) throw err;
+          res.render('searchPage', {
+            login: checkLogin(req.user),
+            panArr: panArr,
+            pagination: pageNum,
+            page: page,
+            title: "검색된 인기글",
+            formBack: formBack
+          });
+        });
+      });
+    } else { //인기 -> 제목+내용
+      Board.count({
+        like_number: {
+          $gte: 50
+        },
+        $or: [{
+          title: {
+            $regex: ".*" + what + ".*"
+          }
+        }, {
+          contents: {
+            $regex: ".*" + what + ".*"
+          }
+        }]
+      }, function(err, totalCount) {
+        if (err) throw err;
+        pageNum = Math.ceil(totalCount / limitSize);
+        Board.find({
+          like_number: {
+            $gte: 50
+          },
+          $or: [{
+            title: {
+              $regex: ".*" + what + ".*"
+            }
+          }, {
+            contents: {
+              $regex: ".*" + what + ".*"
+            }
+          }]
+        }).sort({
+          board_date: -1
+        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
+          if (err) throw err;
+          res.render('searchPage', {
+            login: checkLogin(req.user),
+            panArr: panArr,
+            pagination: pageNum,
+            page: page,
+            title: "검색된 인기글",
+            formBack: formBack
+          });
+        });
+      });
+    }
+  }
+});
 
 //글 작성
 router.get('/write', function(req, res, next) {
@@ -620,10 +860,10 @@ router.get('/pan/:id', function(req, res) {
       done_people: sessionUser.idK,
       date: now
     }, function(err, what) {
-      if(err){
+      if (err) {
         console.log(err);
         res.redirect("/");
-      }else if(what){
+      } else if (what) {
         Board.findOneAndUpdate({
           _id: req.params.id
         }, {
@@ -644,7 +884,7 @@ router.get('/pan/:id', function(req, res) {
             });
           });
         });
-      }else{
+      } else {
         res.render('panHome', {
           login: checkLogin(sessionUser),
           joinOrNot: "설문하시오"
@@ -702,10 +942,10 @@ router.get('/mypage/:page', function(req, res) {
         _id: sessionUser._id
       }, {
         $set: {
-          level: (userDB.exp) / 50
+          level: parseInt((userDB.exp) / 50) + 1
         }
       }, function() {
-        console.log("레벨업 성공.." + (userDB.exp) / 50);
+        console.log("레벨업 성공..");
       });
     });
     WriteLimit.findOne({

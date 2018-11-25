@@ -4,6 +4,7 @@
 <head>
   <link rel='stylesheet' href='/stylesheets/panPageStyle.css' />
   <% include ./head %>
+  <script src="/js/searchPage.js"></script>
 </head>
 
 <body>
@@ -14,27 +15,12 @@
         <%= title%>
       </div>
       <div class="col-md-9 text-center">
-        <form action="/pan/search/1" method="post">
-          <div class="uk-inline">
-            <select class="uk-select" name="where">
-              <option value="최신">최신</option>
-              <option value="인기">인기</option>
-            </select>
-          </div>
-          <div class="uk-inline">
-            <select class="uk-select" name="how">
-              <option value="제목">제목</option>
-              <option value="제목">내용</option>
-              <option value="제목+내용">제목+내용</option>
-            </select>
-          </div>
-          <div class="uk-inline">
-            <span class="uk-form-icon" uk-icon="icon: search"></span>
-            <input class="uk-input" name="what" type="text">
-          </div>
-          <button type="submit" class="uk-button uk-button-default">검색</button>
+          <b><%= formBack.where %>글</b> 중에서 <b><%= formBack.how %></b>에 <b>"<%= formBack.what %>"</b>가 포함된 글 목록입니다.
+          <form id="searchForm" method="post">
+          <input type="hidden" name="where" value="<%= formBack.where %>">
+          <input type="hidden" name="how" value="<%= formBack.how %>">
+          <input type="hidden" name="what" value="<%= formBack.what %>">
         </form>
-        <% } %>
       </div>
     </div>
     <hr>
@@ -86,16 +72,16 @@
           end=start+9;
         }
         if(start!==1){ %>
-        <li><a href="./<%=start-1%>"><span uk-pagination-previous></span>
+        <li><a data-link="./<%=start-1%>" class="page-link"><span uk-pagination-previous></span>
           </a></li>
 
         <% }
          for(var i=start; i<=end; i++){ %>
-        <li><a href="./<%=i%>" class="page-link">
+        <li><a data-link="./<%=i%>" class="page-link">
             <%=i%></a></li>
         <%}
         if(end!=pagination){ %>
-        <li><a href="./<%=end+1%>"><span uk-pagination-next></span></a></li>
+        <li><a data-link="./<%=end+1%>" class="page-link"><span uk-pagination-next></span></a></li>
         <%} %>
       </ul>
     </div>
@@ -103,6 +89,7 @@
   <div class="container">
     <hr>
     <% include ./footer %><br></div>
-</body>
 
+
+</body>
 </html>
