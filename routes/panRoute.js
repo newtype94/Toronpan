@@ -4,7 +4,8 @@ var passport = require('passport');
 var KakaoStrategy = require('passport-kakao').Strategy;
 var multer = require('multer');
 var uploadSetting = multer({
-  dest: "./tmp"
+  dest: "./tmp",
+  limits: { fileSize: 3 * 1024 * 1024 }
 });
 var fs = require('fs');
 var $ = require('jquery');
@@ -408,8 +409,7 @@ router.get('/page/new/:page', function(req, res, next) {
         panArr: panArr,
         pagination: pageNum,
         page: page,
-        title: "최신글",
-        formBack: null
+        title: "최신글"
       });
     });
   });

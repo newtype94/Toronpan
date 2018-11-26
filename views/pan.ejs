@@ -14,7 +14,8 @@
     <div class="row" style="margin-top:20px;">
       <div class="col-md-2"><button class="uk-button uk-button-default goBack">뒤로가기</button></div>
       <div class="col-md-8">
-        <a href="/pan/<%= pan._id%>"><%= pan.title %></a>
+        <a href="/pan/<%= pan._id%>">
+          <%= pan.title %></a>
       </div>
       <div class="col-md-2"></div>
     </div>
@@ -55,10 +56,14 @@
     <div class="row">
       <div class="col-md-6">
         <div class="row">
-          <div class="col-md-6 bordered fontCenter getComment" data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</div>
-          <div class="col-md-6 bordered fontCenter getComment" data-page="1" data-where="hot">인기 댓글</div>
+          <div class="row">
+            <div class="col-md-12" style="text-align:center;">
+              <button class="getComment uk-button uk-button-default uk-button-large" data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</button>
+              <button class="uk-button uk-button-default uk-button-large getComment" data-page="1" data-where="hot">인기 댓글</button></div>
+          </div>
         </div>
         <hr>
+
         <div class="row" id="commentBox"></div>
         <div class="row" style="padding-top:10px; padding-bottom:10px;">
           <% if(login==0){ %>
