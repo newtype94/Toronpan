@@ -1,31 +1,41 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<link rel='stylesheet' href='/stylesheets/panWriteStyle.css' />
-<script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
-<% include ./head %>
-<script>
-</script>
+  <link rel='stylesheet' href='/stylesheets/panWriteStyle.css' />
+  <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
+  <% include ./head %>
+  <script>
+  </script>
 </head>
+
 <body>
   <% include ./header %>
   <div class="container">
-    <hr><div class="text-center fontCenter">글쓰기</div><hr>
+    <hr>
+    <div class="text-center fontCenter">글쓰기</div>
+    <hr>
     <form action="/pan/write" method="post" id="writeForm">
-      <div class="form-group">
-        <label for="title">제목<input type="text" class="form-control" name="title" id="title" /></label>
+      <div class="uk-margin">
+        <input type="text" class="uk-input uk-form-width-large" name="title" placeholder="제목" />
       </div>
-      <div class="form-group">
+      <div uk-form-custom>
+        <input type="file">
+        <button type="button"></button>
+      </div>
+      <div class="uk-margin">
         <textarea name="contents" id="contents"></textarea>
       </div>
+
       <script>
-      CKEDITOR.replace( 'contents', {
+        CKEDITOR.replace( 'contents', {
         filebrowserUploadUrl: '/upload',
       });
       </script>
-      <input type="hidden" name="writer" value=<%= sessionUser.nameJ %>><br>
-      <input type="submit" class="btn btn-1" value="작성완료">
+      <input type="hidden" name="writer" value=<%=sessionUser.nameJ %>><br>
+      <input type="submit" class="uk-button uk-button-default" value="글 등록">
     </form>
   </div>
 </body>
+
 </html>
