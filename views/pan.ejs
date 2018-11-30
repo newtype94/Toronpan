@@ -12,7 +12,7 @@
   <div class="container fontCenter">
     <hr>
     <div class="row" style="margin-top:20px;">
-      <div class="col-md-2"><button class="uk-button uk-button-default goBack">뒤로가기</button></div>
+      <div class="col-md-2"><button class=" goBack">뒤로가기</button></div>
       <div class="col-md-8">
         <a href="/pan/<%= pan._id%>">
           <%= pan.title %></a>
@@ -45,21 +45,21 @@
     <div class="row" style="margin-top:20px; margin-bottom:20px;">
       <div class='col-md-4'></div>
       <div class="col-md-4" style="text-align : center; font-weight: bold;">
-        <button class="uk-button uk-button-primary" id="like" data-panId="<%= pan._id %>">좋아요</button>
-        <button class="uk-button uk-button-danger" id="dislike" data-panId="<%= pan._id %>">싫어요</button>
+        <button id="like" data-panId="<%= pan._id %>">좋아요</button>
+        <button id="dislike" data-panId="<%= pan._id %>">싫어요</button>
       </div>
       <div class='col-md-4'></div>
     </div>
   </div>
   <div class="container">
-    <hr class="uk-divider-icon">
+    <hr>
     <div class="row">
       <div class="col-md-6">
         <div class="row">
           <div class="row">
             <div class="col-md-12" style="text-align:center;">
-              <button class="getComment uk-button uk-button-default uk-button-large" data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</button>
-              <button class="uk-button uk-button-default uk-button-large getComment" data-page="1" data-where="hot">인기 댓글</button></div>
+              <button class="getComment " data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</button>
+              <button class="getComment" data-page="1" data-where="hot">인기 댓글</button></div>
           </div>
         </div>
         <hr>
@@ -76,8 +76,8 @@
             <div class="col-md-2 fontCenter">
               <%=sessionUser.nameJ%>
             </div>
-            <div class="col-md-8"><textarea class="uk-textarea" name="contents"></textarea></div>
-            <div class="col-md-2"><input class="btn btn-default form-control" type="submit" value="완료"></div>
+            <div class="col-md-8"><textarea class="" name="contents"></textarea></div>
+            <div class="col-md-2"><input class="" type="submit" value="완료"></div>
           </form>
           <% } %>
         </div>

@@ -828,10 +828,11 @@ router.post('/pan/write', function(req, res) {
 
 //사진 업로드 알고리즘
 router.post('/upload', uploadSetting.single('upload'), function(req, res) {
+  console.log(uploadSetting);
   var tmpPath = req.file.path;
-  console.log(tmpPath);
+
   var fileName = req.file.filename;
-  console.log(req.file);
+
   var newPath = "./public/images/" + fileName;
   fs.rename(tmpPath, newPath, function(err) {
     if (err) {
