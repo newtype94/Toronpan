@@ -15,8 +15,11 @@ var panRoute = require('./routes/panRoute');
 var app = express();
 
 //mongoDB + mongoose
-//mongodb://root:qweqwe123@ds211694.mlab.com:11694/heroku_zvmw5t7x
-var promise = mongoose.connect('mongodb://localhost/mydb', {
+
+
+//          mongodb://localhost/mydb
+
+var promise = mongoose.connect('mongodb://withfact:u35C6W5j8zA4z35@ds137720.mlab.com:37720/heroku_hhf6046m', {
     useMongoClient: true
 });
 var db = mongoose.connection;
