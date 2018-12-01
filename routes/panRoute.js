@@ -5,7 +5,9 @@ var KakaoStrategy = require('passport-kakao').Strategy;
 var multer = require('multer');
 var uploadSetting = multer({
   dest: "./tmp",
-  limits: { fileSize: 3 * 1024 * 1024 }
+  limits: {
+    fileSize: 10 * 1024 * 1024
+  }
 });
 var fs = require('fs');
 var $ = require('jquery');
@@ -827,26 +829,24 @@ router.post('/pan/write', function(req, res) {
 });
 
 //사진 업로드 알고리즘
-router.post('/upload', uploadSetting.single('upload'), function(req, res) {
-  console.log(uploadSetting);
-  var tmpPath = req.file.path;
+router.post('/upload', uploadSetting.single('file'), function(req, res) {
 
+  var tmpPath = req.file.path;
   var fileName = req.file.filename;
 
   var newPath = "./public/images/" + fileName;
+
   fs.rename(tmpPath, newPath, function(err) {
+    var sending = {};
     if (err) {
       console.log(err);
+      sending["err"] = err;
     }
-    var html;
-    html = "";
-    html += "<script type='text/javascript'>";
-    html += " var funcNum = " + req.query.CKEditorFuncNum + ";";
-    html += " var url = \"/images/" + fileName + "\";";
-    html += " var message = \"업로드 완료\";";
-    html += " window.parent.CKEDITOR.tools.callFunction(funcNum, url);";
-    html += "</script>";
-    res.send(html);
+    sending["path"] = newPath.substring(8, newPath.length);
+    console.log(typeof(sending));
+    var sendingString = JSON.stringify(sending);
+    console.log(typeof(sendingString));
+    res.json(sendingString);
   });
 });
 

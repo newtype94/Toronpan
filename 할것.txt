@@ -8,8 +8,7 @@ req.params 에 복수개의 parameter 입력가능...
 
 본인의 ID 옆에 레벨 표시, 나이, 성별 표시
 
-summernote
-https://m.blog.naver.com/PostView.nhn?blogId=heartflow89&logNo=221097971475&proxyReferer=https%3A%2F%2Fwww.google.co.kr%2F
+엑박기능
 
 글쓰기 전에 설문여부 체크
 

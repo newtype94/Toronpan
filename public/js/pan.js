@@ -25,6 +25,7 @@ $(function() {
       type: 'post',
       dataType: 'json',
       success: function(data) {
+        alert(typeof(data));
         if (data.error)
           alert(data.error);
         else if (data.result)

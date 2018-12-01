@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
   <% include ./head %>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
 </head>
+
 <body>
   <% include ./header %>
   <div class="container">
@@ -15,48 +14,54 @@
     <div class="text-center fontCenter">글쓰기</div>
     <hr>
     <form action="/pan/write" method="post" id="writeForm">
-        <input  type="text" name="title" placeholder="제목" /><br>
-        <input type="hidden" name="writer" value=<%=sessionUser.nameJ %>><br>
-        <input type="submit" value="글 등록">
+      <input type="text" name="title" placeholder="제목" /><br>
+      <input type="hidden" name="writer" value=<%=sessionUser.nameJ %>><br>
+      <input type="submit" value="글 등록">
+      <textarea name="contents" id="summernote"></textarea>
     </form>
-    <div id="summernote"></div>
     <script>
-    $(function(){
-$('#summernote').summernote({
-  height: 600,
-  fontNames : [ '맑은고딕', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', ],
-  fontNamesIgnoreCheck : [ '맑은고딕' ],
-  focus: true,
+      $(function() {
+        $('#summernote').summernote({
+          height: 600,
+          fontNames: ['맑은고딕', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', ],
+          fontNamesIgnoreCheck: ['맑은고딕'],
+          focus: true,
 
-  callbacks: {
-    onImageUpload: function(files, editor, welEditable) {
-            for (var i = files.length - 1; i >= 0; i--) {
-              sendFile(files[i], this);
+          callbacks: {
+            onImageUpload: function(files, editor, welEditable) {
+              for (var i = files.length - 1; i >= 0; i--) {
+                sendFile(files[i], this);
+              }
             }
+          }
+
+        });
+
+        function sendFile(file, el) {
+
+          var form_data = new FormData();
+          form_data.append('file', file);
+          $.ajax({
+            data: form_data, //client -> server
+            dataType: 'json', //server -> client
+            type: "POST",
+            url: '/upload',
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            success: function(data) {
+              if ((data) && (typeof data !== "object"))
+                data = $.parseJSON(data);
+              if(data.err)
+                alert(data.error);
+              else if(data.path)
+                $(el).summernote('editor.insertImage', data.path);
+            }
+          });
         }
-  }
-
-});
-
-})
-
-function sendFile(file, el) {
-var form_data = new FormData();
-    form_data.append('file', file);
-    $.ajax({
-      data: form_data,
-      type: "POST",
-      url: './profileImage.mpf',
-      cache: false,
-      contentType: false,
-      enctype: 'multipart/form-data',
-      processData: false,
-      success: function(img_name) {
-          $(el).summernote('editor.insertImage', img_name);
-      }
-    });
-}
-</script>
+      });
+    </script>
   </div>
 </body>
 
