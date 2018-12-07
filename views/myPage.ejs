@@ -10,87 +10,111 @@
   <% include ./header %>
   <div class="container">
     <div class="row">
+      <div class="col-md-3">
+        <div class="card border-info mb-5" style="max-width: 20rem;">
+          <div class="card-header text-center">
+            <%= me.nameJ %>
+          </div>
+          <div class="card-body text-info">
+            <h4 class="card-title">
+              세부정보
+            </h4>
+            <p>
+              <% if(me.sideJ == 1){ %>
+              성향 : 진보
+              <% }else{ %>
+              성향 : 보수
+              <% } %>
+            </p>
+            <p>출생연도 :
+              <%= me.ageJ %>
+            </p>
+            <p>오늘 쓴 글 :
+              <%= todayWrite %> 개</p>
+            <p>레벨 :
+              <%= me.level %>
+            </p>
+            <p>누적경험치 :
+              <%= me.exp %>
+            </p>
 
-    <div class="col-md-3">
-      <br><br><br><br>
-      <% if(me.sideJ == 1){ %>
-      <p>성향 : 진보</p>
-      <% }else{ %>
-      <p>성향 : 보수</p>
-      <% } %>
-      <p>닉네임 : <%= me.nameJ %> </p>
-      <p>출생연도 : <%= me.ageJ %> </p>
-      <p>오늘 쓴 글 : <%= todayWrite %> 개</p>
-      <p>레벨 : <%= me.level %> </p>
-      <p>누적경험치 : <%= me.exp %> </p>
-  </div>
-
-    <div class="col-md-9">
-
-      <hr>
-    <div class="row">
-      <div class="col-md-6 text-center">제목</div>
-      <div class="col-md-1 text-center">인정</div>
-      <div class="col-md-2 text-center">시간</div>
-      <div class="col-md-3 text-center">권한</div>
-    </div>
-    <hr>
-    <% if (panArr !== null){
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <hr>
+        <div class="row">
+          <div class="col-md-6 text-center">제목</div>
+          <div class="col-md-1 text-center">인정</div>
+          <div class="col-md-2 text-center">시간</div>
+          <div class="col-md-3 text-center">권한</div>
+        </div>
+        <hr>
+        <% if (panArr !== null){
     for(var i = 0; i < panArr.length; i++) { %>
-    <div class="row" style="height:50px;">
-      <div class="col-md-5">
-        <button class="uk-button uk-button-text" onclick="location.href='/pan/<%= panArr[i]._id%>'">
-          <%=panArr[i].title%>
-        </button>
-      </div>
-      <div class="col-md-2 text-center">
-        <%= panArr[i].like_number%>
-      </div>
-      <div class="col-md-5 text-center uk-button-group">
-        <div class="uk-inline">
-        <% if(panArr[i].exp_done==false){ %>
-        <button class="uk-button uk-button-default" onclick='location.href="/user/expup/<%= panArr[i]._id %>"'>정산</button>
-        <% }else{ %>
-        <span>정산완료 :
-          <%= panArr[i].exp_done_howmuch %></span>
-        <% } %>
-        <button class="uk-button uk-button-default" onclick="location.href='/pan/update/<%= panArr[i]._id %>'">수정</button>
-        <button class="uk-button uk-button-default" onclick="location.href='/pan/remove/<%= panArr[i]._id %>'">삭제</a></button>
-      </div>
+        <div class="row" style="height:50px;">
+          <div class="col-md-5">
+            <button class="btn btn-outline-dark" onclick="location.href='/pan/<%= panArr[i]._id%>'">
+              <%=panArr[i].title%>
+            </button>
+          </div>
+          <div class="col-md-2 text-center">
+            <%= panArr[i].like_number%>
+          </div>
+          <div class="col-md-5 text-center uk-button-group">
+            <div class="uk-inline">
+              <% if(panArr[i].exp_done==false){ %>
+              <button type="button" class="btn btn-success" onclick='location.href="/user/expup/<%= panArr[i]._id %>"'>정산</button>
+              <% }else{ %>
+              <span>정산완료 :
+                <%= panArr[i].exp_done_howmuch %></span>
+              <% } %>
+              <button type="button" class="btn btn-warning" onclick="location.href='/pan/update/<%= panArr[i]._id %>'">수정</button>
+              <button type="button" class="btn btn-danger" onclick="location.href='/pan/remove/<%= panArr[i]._id %>'">삭제</a></button>
+            </div>
+          </div>
+        </div>
+        <br>
+        <%  }} %>
+        <nav aria-label="Page navigation example" style="padding:30px;">
+          <ul class="pagination justify-content-center">
+            <% var start=page;
+    if((start%10)==0){
+      start--;
+    }
+    while((start%10)!=0){
+      start--;
+    }
+    start++;
+    if((start+9)>pagination){
+      end=pagination;
+    }else{
+      end=start+9;
+    }
+    if(start!==1){ %>
+            <li class="page-item">
+              <a class="page-link" href="./<%=start-1%>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <% }
+     for(var i=start; i<=end; i++){ %>
+            <li class="page-item"><a class="page-link" href="./<%=i%>" class="page-link">
+                <%=i%></a></li>
+            <%}
+    if(end!=pagination){ %>
+            <li class="page-item">
+              <a class="page-link" href="./<%=end+1%>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <%} %>
+          </ul>
+        </nav>
       </div>
     </div>
-    <br>
-    <%  }} %>
-    <div class="text-center">
-      <ul class="uk-pagination uk-flex-center">
-        <% var start=page;
-        if((start%10)==0){
-          start--;
-        }
-        while((start%10)!=0){
-          start--;
-        }
-        start++;
-        if((start+9)>pagination){
-          end=pagination;
-        }else{
-          end=start+9;
-        }
-        if(start!==1){ %>
-        <li><a href="./<%=start-1%>"><span uk-pagination-previous></span>
-          </a></li>
-        <%}
-      for(var i=start; i<=end; i++){ %>
-        <li><a href="./<%=i%>" class="page-link">
-            <%=i%></a></li>
-        <%}%>
-        <%if(end!=pagination){ %>
-        <li><a href="./<%=end+1%>"> <span uk-pagination-next></span></a></li>
-        <%} %>
-      </ul>
-    </div>
-  </div>
-  </div>
   </div>
   <div class="container">
     <hr>

@@ -74,7 +74,7 @@ $(function() {
   });
 
   $(document).on("click", '.littleCommentToggle', function() {
-    $(this).parent().parent().children().filter('.littleComment').slideToggle();
+    $(this).parent().parent().parent().parent().children().filter('.littleComment').slideToggle();
   });
 
   $(document).on("click", '.getComment', function() {
@@ -87,44 +87,43 @@ $(function() {
       dataType: 'json',
       success: function(json) {
         var comments = ""; //댓글 input
-
         var comment = $.parseJSON(json);
+
         for (var i = 0; i < comment.length - 1; i++) { //배열의 마지막 요소는 {pageNum:N} 임의로 넣은거라서
-          comments += '<div class="row">' +
-            '<div class="col-md-2 fontCenter bordered">' + comment[i].writer + '</div>' +
-            '<div class="col-md-8">' + comment[i].comment_date.toLocaleString("ko-KR") + '</div>' +
-            '<div class="col-md-2" id="' + comment[i]._id + '">' + comment[i].like_number + '</div>' +
+          comments += '<div><div class="row">' +
+            '<div class="col-md-8">' +
+            '<div class="card mb-3" style="max-width: 40rem;">' +
+            '<div class="card-header">' + comment[i].writer + '</div>' +
+            '<div class="card-body">' +
+            '<p class="card-text">' + comment[i].comment_date.toLocaleString("ko-KR") + '</p>' +
+            '<p class="card-text">' + comment[i].contents + '</p>' +
             '<input type="hidden" class="commentId" value="' + comment[i]._id + '" />' +
+            '</div>' + //card-body
+            '<div class="card-footer littleCommentToggle" data-commentid="' + comment[i]._id + '">대댓글</div>' + //card-footer
+            '</div>' + //card
+            '</div>' + //col-md-8
+
+            '<div class="col-md-4">' +
+            '<div class="btn-group" role="group">'+
+            '<button class="commentLike btn btn-primary" data-commentid="' + comment[i]._id + '">좋아요</button>' +
+            '<button class="commentDislike btn btn-danger" data-commentid="' + comment[i]._id + '">싫어요</button>' +
             '</div>' +
-
-            '<div class="row">' +
-            '<div class="col-md-7" style="padding : 20px;">' + comment[i].contents + '</div>' +
-            '<div class="col-md-5"><button class="commentLike uk-button uk-button-primary" data-commentid="' + comment[i]._id + '">좋아요</button>' +
-            '<button class="commentDislike uk-button uk-button-danger" data-commentid="' + comment[i]._id + '">싫어요</button></div>' +
-            '</div>' +
-
-            '<div class="row">'+ //대댓 영역 시작
-
-            '<div class="row">'+ //대댓 버튼 시작
-            '<div class="col-md-2"></div>'+
-            '<div class="col-md-8 littleCommentToggle bordered" data-commentid="' + comment[i]._id +'">대댓글 열고 닫기</div>'+
-            '<div class="col-md-2"></div>'+
-            '</div>'+ //대댓 버튼 끝
-
-            '<div class="row littleComment">' + //대댓 쓰기 시작
-            '<form action="/littlecomment/write" method="post">' +
+            '<div id="' + comment[i]._id + '">' + comment[i].like_number + '</div>' +
+            '<form class="form-inline" action="/littlecomment/write" method="post">' +
             '<input type="hidden" name="id" value="' + comment[i]._id + '">' +
-            '<div class="col-md-3"> 대댓글 :  </div>' +
-            '<div class="col-md-7"><textarea class="uk-textarea" name="contents"></textarea></div>' +
-            '<div class="col-md-2"><input class="btn btn-default form-control" type="submit" value="완료"></div>' +
-            '</form></div>'; //대댓 쓰기 끝
+            '<textarea class="form-control mb-2" name="contents" row="3"></textarea>' +
+            '<input class="btn btn-primary" type="submit" value="완료">' +
+            '</form>'+
+            '</div>' + //col-md-4
+            '</div>' + //row
 
+            '<div class="row littleComment">'; //대댓 영역 시작
 
           if (comment[i].littleComment !== null) {
             for (var a = 0; a < comment[i].littleComment.length; a++) {
-              comments += '<div class="row littleComment" style ="padding:10px;"><div class="col-md-3"><span class="bordered">' + comment[i].littleComment[a].writer + '</span></div>' +
-                '<div class="col-md-6">' + comment[i].littleComment[a].comment_date.toLocaleString("ko-KR") + '</div>' +
-                '<div class="col-md-3">' + comment[i].littleComment[a].contents + '</div></div>';
+              comments += '<div class="col-md-3 mb-2">' + comment[i].littleComment[a].writer + '</div>' +
+                '<div class="col-md-6 mb-2">' + comment[i].littleComment[a].comment_date.toLocaleString("ko-KR") + '</div>' +
+                '<div class="col-md-3 mb-2">' + comment[i].littleComment[a].contents + '</div>';
             }
           }
           comments += '</div></div><hr>'; //대댓 영역 끝 + 전체 comment 끝
@@ -133,8 +132,8 @@ $(function() {
 
         var pageNum = comment[comment.length - 1].pageNum;
         var paging = "";
-        paging += '<div class="text-center">' +
-          '<ul class="pagination">';
+        paging +=
+          '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">';
 
         var start = thisPage; //start
         if ((start % 10) == 0)
@@ -163,11 +162,12 @@ $(function() {
           paging += '<li><button class="page-link getComment" data-page="' + tmp + '" data-where="' + newHot + '"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button></li>'
         }
 
-        paging += '</ul></div>';
+        paging += '</ul></nav>';
 
         //실제 보이는 부분
-        $("#commentBox").html(comments + paging);
-        $('.littleCommentToggle').click();
+        $("#commentBox").html(comments);
+        $("#pagingBox").html(paging);
+        //$('.littleCommentToggle').click();
       },
       error: function(request, status, error) {
         alert("에러");
@@ -175,9 +175,9 @@ $(function() {
     })
   });
 
-  $('#getFirstComment').click();
+  $('#getFirstComment').click(); //최신댓글 trigger
 
-  $('.goBack').click(function(){
+  $('.goBack').click(function() {
     window.history.back();
   });
 });

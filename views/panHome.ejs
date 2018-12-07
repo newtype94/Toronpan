@@ -1,15 +1,52 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="utf-8">
   <% include ./head %>
 </head>
+
 <body>
-<% include ./header %>
-<div class="container">
-  <% if(joinOrNot != null) %>
-    <h1><%=joinOrNot%></h1>
-</div>
-</div>
+  <% include ./header %>
+
+  <div class="container">
+    <% if(message != null){ %>
+    <div class="row mb-5">
+      <div class="col-md-12">
+        <span class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>알림</strong>
+          <%=message%>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </span>
+      </div>
+    </div>
+    <% } %>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card border-info mb-5" style="max-width: 20rem;">
+          <div class="card-header text-center">오늘의 설문</div>
+          <div class="card-body text-info">
+            <% if(survey != null){ %>
+            <h4 class="card-title">
+              <%= survey.q %>
+            </h4>
+            <form action="/survey/do" method="post">
+              <div class="radio">
+                <label for="degree_1"><input type="radio" name="degree" value="1" id="degree_1" />못하고있다</label>
+                <label for="degree_2"><input type="radio" name="degree" value="2" id="degree_2" />중간은 한다</label>
+                <label for="degree_3"><input type="radio" name="degree" value="3" id="degree_3" />잘하고 있다</label>
+              </div>
+              <input type="hidden" name="firstID" value="<%= survey.id %>" />
+              <button type="submit" class="btn btn-danger">오늘 제출완료</button>
+            </form>
+            <% }%>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </body>
+
 </html>

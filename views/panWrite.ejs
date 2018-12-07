@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <% include ./head %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
@@ -11,19 +12,24 @@
   <% include ./header %>
   <div class="container">
     <hr>
-    <div class="text-center fontCenter">글쓰기</div>
-
+    <div class="text-center">글쓰기</div>
     <hr>
     <form action="/pan/write" method="post" id="writeForm">
-      <input type="text" name="title" placeholder="제목" /><br>
-      <input type="hidden" name="writer" value=<%=sessionUser.nameJ %>><br>
-      <textarea name="contents" id="summernote"></textarea>
-      <input type="submit" value="글 등록">
+      <div class="form-group">
+        <input type="text" class="form-control form-control-lg" name="title" placeholder="제목" />
+      </div>
+      <input type="hidden" name="writer" value=<%=sessionUser.nameJ %>>
+      <div class="form-group">
+        <textarea name="contents" id="summernote"></textarea>
+      </div>
+      <div class="form-group">
+        <input type="submit" class="btn btn-success" value="글 등록">
+      </div>
     </form>
     <script>
       $(function() {
         $('#summernote').summernote({
-          height: 600,
+          height: 400,
           fontNames: ['맑은고딕', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', ],
           fontNamesIgnoreCheck: ['맑은고딕'],
           focus: true,
@@ -54,9 +60,9 @@
             success: function(data) {
               if ((data) && (typeof data !== "object"))
                 data = $.parseJSON(data);
-              if(data.err)
+              if (data.err)
                 alert(data.error);
-              else if(data.path)
+              else if (data.path)
                 $(el).summernote('editor.insertImage', data.path);
             }
           });

@@ -83,7 +83,7 @@ passport.deserializeUser(function(id, done) { // 매개변수 id는 req.session.
 
 //+++++라우팅+++++
 router.get('/', function(req, res, next) {
-  res.redirect('/page/new/1');
+  res.redirect('/home');
 });
 
 //회원가입
@@ -92,27 +92,14 @@ router.get('/userduty', function(req, res, next) {
   var now = new Date();
   now = now.toLocaleDateString();
 
-  if (checkLogin(sessionUser) == 2) {
-    SurveyDone.findOne({
-      done_people: sessionUser.idK,
-      date: now
-    }, function(err, what) {
-      if (err) {
-        console.log(err);
-        res.redirect("/");
-      } else if (what) { //설문 참여 했음
-        res.redirect("/");
-      } else { //설문 참여 안 했음
-        res.redirect("/survey/user")
-      }
-    });
-  } else if (checkLogin(sessionUser) == 1)
+  if (checkLogin(sessionUser) == 2)
+    res.redirect("/home");
+  else if (checkLogin(sessionUser) == 1)
     res.render('join', {
       sessionUser: sessionUser
     });
   else
     res.redirect("/");
-
 });
 
 //회원가입 알고리즘
@@ -152,19 +139,20 @@ router.get('/survey/admin', function(req, res, next) {
       login: 2
     });
   } else {
-    req.flash('joinOrNot', '로그인이 안되었습니다');
     res.render('panHome', {
-      joinOrNot: req.flash('joinOrNot'),
-      login: checkLogin(sessionUser)
+      message: '로그인이 안되었습니다',
+      login: checkLogin(sessionUser),
+      survey: null
     });
   }
 });
 
 //설문 페이지 렌더링
-router.get('/survey/user', function(req, res, next) {
+router.get('/home', function(req, res, next) {
   var sessionUser = req.user;
   var now = new Date();
   now = now.toLocaleDateString();
+
   if (checkLogin(sessionUser) == 2) {
     SurveyDone.findOne({
       done_people: sessionUser.idK,
@@ -172,41 +160,41 @@ router.get('/survey/user', function(req, res, next) {
     }, function(err, what) {
       if (err) {
         console.log(err);
-        res.redirect("/");
-      } else if (what) {
-        req.flash('joinOrNot', '오늘은 이미 설문에 참여했습니다.');
-        res.render('panHome', {
-          joinOrNot: req.flash('joinOrNot'),
-          login: checkLogin(sessionUser)
-        });
+        res.render("error");
+      } else if (what) { //SurveyDone에 있다 = 오늘 설문에 참여했다
+        res.redirect("/page/new/1");
       } else {
         TodaySurvey.findOne({
           date: now
         }, function(err, surveyDB) {
           if (err) {
             console.log(err);
-            res.redirect("/");
-          } else if (surveyDB) {
-            res.render('panSurvey', {
+            res.render("error");
+          } else if (surveyDB) { //
+            survey = {};
+            survey["q"] = surveyDB.firstQ;
+            survey["id"] = surveyDB._id;
+            console.log(survey);
+            res.render('panHome', {
+              message: null,
               login: 2,
-              firstQ: surveyDB.firstQ,
-              firstID: surveyDB._id
+              survey: survey
             });
           } else {
-            req.flash('joinOrNot', '오늘 설문이 없어요');
             res.render('panHome', {
-              joinOrNot: req.flash('joinOrNot'),
-              login: checkLogin(sessionUser)
+              message: '오늘 설문이 아직 안 올라왔습니다.',
+              login: 2,
+              survey: null
             });
           }
         });
       }
     });
   } else {
-    req.flash('joinOrNot', '로그인이 안되었습니다');
     res.render('panHome', {
-      joinOrNot: req.flash('joinOrNot'),
-      login: checkLogin(sessionUser)
+      message: '로그인이 안되었습니다',
+      login: 0,
+      survey: null
     });
   }
 });
@@ -235,11 +223,13 @@ router.post('/survey/new', function(req, res) {
           console.log(err);
           res.redirect('/');
         }
-        req.flash('joinOrNot', '관리자님! 설문등록 잘되었습니다.');
+
         res.render('panHome', {
-          joinOrNot: req.flash('joinOrNot'),
-          login: checkLogin(sessionUser)
+          message: '관리자님! 설문등록 잘되었습니다.',
+          login: checkLogin(sessionUser),
+          survey: null
         });
+
       });
     });
   }
@@ -266,10 +256,10 @@ router.post('/survey/do', function(req, res) {
         console.log(err);
         res.redirect("/");
       } else if (what) {
-        req.flash('joinOrNot', '오늘은 이미 설문에 참여했습니다.');
         res.render('panHome', {
-          joinOrNot: req.flash('joinOrNot'),
-          login: checkLogin(sessionUser)
+          message: '오늘은 이미 설문에 참여했습니다.',
+          login: checkLogin(sessionUser),
+          survey: null
         });
       } else {
         TodaySurvey.findOneAndUpdate({
@@ -292,25 +282,25 @@ router.post('/survey/do', function(req, res) {
                 },
                 function(err, db) {
                   if (!err && db) {
-                    req.flash('joinOrNot', '회원님! 설문에 참여해주셔서 감사합니다.');
                     res.render('panHome', {
-                      joinOrNot: req.flash('joinOrNot'),
-                      login: checkLogin(sessionUser)
+                      message: '회원님! 설문에 참여해주셔서 감사합니다.',
+                      login: checkLogin(sessionUser),
+                      survey: null
                     });
                   } else {
-                    req.flash('joinOrNot', '회원님! 설문 참여중 오류가 발생했습니다.');
                     res.render('panHome', {
-                      joinOrNot: req.flash('joinOrNot'),
-                      login: checkLogin(sessionUser)
+                      message: '회원님! 설문 참여중 오류가 발생했습니다.',
+                      login: checkLogin(sessionUser),
+                      survey: null
                     });
                   }
                 }
               );
             } else {
-              req.flash('joinOrNot', '회원님! 설문 참여중 오류가 발생했습니다.');
               res.render('panHome', {
-                joinOrNot: req.flash('joinOrNot'),
-                login: checkLogin(sessionUser)
+                message: '회원님! 설문 참여중 오류가 발생했습니다.',
+                login: checkLogin(sessionUser),
+                survey: null
               });
             }
           }
@@ -326,10 +316,10 @@ router.get('/user/expup/:panid', function(req, res, next) {
   var sessionUser = req.user;
 
   if (sessionUser == null) {
-    req.flash('joinOrNot', '로그인이 안되었습니다');
     res.render('panHome', {
-      joinOrNot: req.flash('joinOrNot'),
-      login: 0
+      message: '로그인이 안되었습니다',
+      login: 0,
+      survey: null
     });
   } else if (req.params.panid != null) {
     Board.findOne({
@@ -359,27 +349,27 @@ router.get('/user/expup/:panid', function(req, res, next) {
                 exp_done_howmuch: howmuch
               }
             }, function() {
-              req.flash('joinOrNot', '정산 완료.. 경험치 획득..');
               res.render('panHome', {
-                joinOrNot: req.flash('joinOrNot'),
-                login: 1
+                message: '정산 완료.. 경험치 획득..',
+                login: 1,
+                survey: null
               });
             });
           });
         } else {
-          req.flash('joinOrNot', '정산 실패..');
           res.render('panHome', {
-            joinOrNot: req.flash('joinOrNot'),
-            login: 1
+            message: '정산 실패..',
+            login: 1,
+            survey: null
           });
         }
       }
     );
   } else {
-    req.flash('joinOrNot', '정산 실패..');
     res.render('panHome', {
-      joinOrNot: req.flash('joinOrNot'),
-      login: 1
+      message: '정산 실패..',
+      login: 1,
+      survey: null
     });
   }
 });
@@ -690,13 +680,17 @@ router.get('/write', function(req, res, next) {
   var sessionUser = req.user;
   if (checkLogin(req.user) != 2) {
     if (checkLogin(req.user) == 0)
-      req.flash('joinOrNot', '로그인 후 작성 가능합니다');
+      res.render('panHome', {
+        message: '로그인 후 작성 가능합니다',
+        login: 0,
+        survey: null
+      });
     if (checkLogin(req.user) == 1)
-      req.flash('joinOrNot', '회원등록(10초 소요) 후 작성 가능합니다');
-    res.render('panHome', {
-      joinOrNot: req.flash('joinOrNot'),
-      login: checkLogin(req.user)
-    });
+      res.render('panHome', {
+        message: '회원등록(10초 소요) 후 작성 가능합니다',
+        login: 1,
+        survey: null
+      });
   } else {
     WriteLimit.findOne({
       $and: [{
@@ -725,9 +719,9 @@ router.get('/write', function(req, res, next) {
         console.log(what);
         console.log(sessionUser.level);
         if (what.howMany >= sessionUser.level) { //글쓰기 limit 초과
-          req.flash('joinOrNot', '오늘의 가능한 글쓰기 수 초과..');
+          req.flash('message', '오늘의 가능한 글쓰기 수 초과..');
           res.render('panHome', {
-            joinOrNot: req.flash('joinOrNot'),
+            message: req.flash('message'),
             login: 1
           });
         } else if (what.howMany < sessionUser.level) { //글쓴적은 있는데 limit 초과안함
@@ -747,15 +741,15 @@ router.post('/pan/write', function(req, res) {
   now = now.toLocaleDateString();
   var sessionUser = req.user;
   if (sessionUser == null) {
-    req.flash('joinOrNot', '로그인 후 작성 가능합니다');
+    req.flash('message', '로그인 후 작성 가능합니다');
     res.render('panHome', {
-      joinOrNot: req.flash('joinOrNot'),
+      message: req.flash('message'),
       login: 0
     });
   } else if (sessionUser.nameJ == null) {
-    req.flash('joinOrNot', '회원등록(10초 소요) 후 작성 가능합니다');
+    req.flash('message', '회원등록(10초 소요) 후 작성 가능합니다');
     res.render('panHome', {
-      joinOrNot: req.flash('joinOrNot'),
+      message: req.flash('message'),
       login: 1
     });
   } else {
@@ -781,9 +775,9 @@ router.post('/pan/write', function(req, res) {
         });
       } else if (!err && what) {
         if (what.howMany >= sessionUser.level) { //글쓰기 limit 초과
-          req.flash('joinOrNot', '오늘의 가능한 글쓰기 수 초과..');
+          req.flash('message', '오늘의 가능한 글쓰기 수 초과..');
           res.render('panHome', {
-            joinOrNot: req.flash('joinOrNot'),
+            message: req.flash('message'),
             login: 1
           });
         } else if (what.howMany < sessionUser.level) { //글쓴적은 있는데 limit 초과안함
@@ -815,9 +809,9 @@ router.post('/pan/write', function(req, res) {
                 howMany: 1
               }
             }, function() {
-              req.flash('joinOrNot', '성공적으로 등록되었습니다..');
+              req.flash('message', '성공적으로 등록되었습니다..');
               res.render('panHome', {
-                joinOrNot: req.flash('joinOrNot'),
+                message: req.flash('message'),
                 login: 1
               });
             });
@@ -888,7 +882,7 @@ router.get('/pan/:id', function(req, res) {
       } else {
         res.render('panHome', {
           login: checkLogin(sessionUser),
-          joinOrNot: "설문하시오"
+          message: "설문하시오"
         });
       }
     });
@@ -930,9 +924,9 @@ router.get('/mypage/:page', function(req, res) {
   var pageNum = 1;
 
   if (sessionUser == null) {
-    req.flash('joinOrNot', '로그인 후 작성 가능합니다');
+    req.flash('message', '로그인 후 작성 가능합니다');
     res.render('panHome', {
-      joinOrNot: req.flash('joinOrNot'),
+      message: req.flash('message'),
       login: 0
     });
   } else {

@@ -15,3 +15,5 @@ req.params 에 복수개의 parameter 입력가능...
 대댓글 열고닫기 버튼에 대댓글 갯수 추가
 
 paging -> active만 진하게 표시
+
+설문기능을 panhome으로 뺴기
