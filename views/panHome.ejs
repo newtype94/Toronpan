@@ -23,12 +23,13 @@
       </div>
     </div>
     <% } %>
+    <% if(survey != null){ %>
     <div class="row">
       <div class="col-md-12">
         <div class="card border-info mb-5" style="max-width: 20rem;">
           <div class="card-header text-center">오늘의 설문</div>
           <div class="card-body text-info">
-            <% if(survey != null){ %>
+
             <h4 class="card-title">
               <%= survey.q %>
             </h4>
@@ -41,12 +42,12 @@
               <input type="hidden" name="firstID" value="<%= survey.id %>" />
               <button type="submit" class="btn btn-danger">오늘 제출완료</button>
             </form>
-            <% }%>
+
           </div>
         </div>
       </div>
     </div>
-
+    <% }%>
 </body>
 
 </html>

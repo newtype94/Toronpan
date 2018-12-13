@@ -147,7 +147,7 @@ router.get('/survey/admin', function(req, res, next) {
   }
 });
 
-//설문 페이지 렌더링
+//home 렌더링(설문 포함)
 router.get('/home', function(req, res, next) {
   var sessionUser = req.user;
   var now = new Date();
@@ -778,7 +778,8 @@ router.post('/pan/write', function(req, res) {
           req.flash('message', '오늘의 가능한 글쓰기 수 초과..');
           res.render('panHome', {
             message: req.flash('message'),
-            login: 1
+            login: 1,
+            survey : null
           });
         } else if (what.howMany < sessionUser.level) { //글쓴적은 있는데 limit 초과안함
           var board = new Board();
@@ -812,7 +813,8 @@ router.post('/pan/write', function(req, res) {
               req.flash('message', '성공적으로 등록되었습니다..');
               res.render('panHome', {
                 message: req.flash('message'),
-                login: 1
+                login: 1,
+                survey : null
               });
             });
           });

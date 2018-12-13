@@ -39,7 +39,7 @@
         </h3>
       </div>
       <div class="col-md-6 text-center" style="text-align:left;">
-        <button class="uk-button uk-button-text" onclick="location.href='/pan/<%= panArr[i]._id%>'">
+        <button class="btn btn-outline-dark" onclick="location.href='/pan/<%= panArr[i]._id%>'">
           <%=panArr[i].title%>
         </button>
       </div>
@@ -56,9 +56,11 @@
       </div>
     </div>
     <%  }} %>
-    <div class="text-center">
-      <ul class="uk-pagination uk-flex-center">
-        <% var start=page;
+    <div class="row">
+      <div class="col-md-12">
+        <nav aria-label="Page navigation example" style="padding:30px;">
+        <ul class="pagination justify-content-center">
+          <% var start=page;
         if((start%10)==0){
           start--;
         }
@@ -72,20 +74,30 @@
           end=start+9;
         }
         if(start!==1){ %>
-        <li><a data-link="./<%=start-1%>" class="page-link"><span uk-pagination-previous></span>
-          </a></li>
-
-        <% }
+          <li class="page-item">
+            <a class="page-link" href="./<%=start-1%>" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          <% }
          for(var i=start; i<=end; i++){ %>
-        <li><a data-link="./<%=i%>" class="page-link">
-            <%=i%></a></li>
-        <%}
+          <li class="page-item"><a class="page-link" href="./<%=i%>" class="page-link">
+              <%=i%></a></li>
+          <%}
         if(end!=pagination){ %>
-        <li><a data-link="./<%=end+1%>" class="page-link"><span uk-pagination-next></span></a></li>
-        <%} %>
-      </ul>
+          <li class="page-item">
+            <a class="page-link" href="./<%=end+1%>" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+          <%} %>
+        </ul>
+      </nav>
+      </div>
     </div>
-  </div>
+    </div>
   <div class="container">
     <hr>
     <% include ./footer %><br></div>
