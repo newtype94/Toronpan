@@ -926,10 +926,10 @@ router.get('/mypage/:page', function(req, res) {
   var pageNum = 1;
 
   if (sessionUser == null) {
-    req.flash('message', '로그인 후 작성 가능합니다');
     res.render('panHome', {
-      message: req.flash('message'),
-      login: 0
+      message: '로그인 먼저 해주세요!',
+      login: 0,
+      survey : null
     });
   } else {
     User.findOne({
