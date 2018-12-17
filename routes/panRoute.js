@@ -884,7 +884,8 @@ router.get('/pan/:id', function(req, res) {
       } else {
         res.render('panHome', {
           login: checkLogin(sessionUser),
-          message: "설문하시오"
+          message: "설문하시오",
+          survey : null
         });
       }
     });
