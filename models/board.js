@@ -2,7 +2,8 @@
 var mongoose = require('mongoose');
 
 var boardSchema = new mongoose.Schema({
-    title: String,
+    field : Number, //1:정치, 2:경제, 3:사회, 4:자유
+    title : String,
     contents: String,
     writer : String,
     writer_id : String,
