@@ -1,5 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #e3f2fd;">
-  <a class="navbar-brand" href="/"><img src="/logo.png" height="60" class="d-inline-block align-top" alt=""></a>  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+  <a class="navbar-brand" href="/"><img src="/logo.jpg" height="60" class="d-inline-block align-top" alt=""></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
@@ -7,20 +8,18 @@
       <li class="nav-item active">
         <a class="nav-link" href="/mypage/1">my</a>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          정치
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/page/new/1">최신</a>
-          <a class="dropdown-item" href="/page/hot/1">인기</a>
-          <a class="dropdown-item" href="/write">글쓰기</a>
-        </div>
+      <li class="nav-item">
+        <a class="nav-link" href="/page/new/1">최신</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/page/hot/1">인기</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/write">글쓰기</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/survey/admin">설문등록</a>
       </li>
-
     </ul>
     <% var a = login;
     if(a==null){}else
