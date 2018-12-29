@@ -16,15 +16,23 @@
     <hr>
     <form action="/pan/write" method="post" id="writeForm">
       <div class="form-group">
+        <select name="field" class="form-control">
+          <option selected>분야 선택..</option>
+          <option value="1">정치</option>
+          <option value="2">사회</option>
+          <option value="3">자유</option>
+        </select>
+      </div>
+      <div class="form-group">
         <input type="text" class="form-control form-control-lg" name="title" placeholder="제목" />
       </div>
-      <input type="hidden" name="writer" value=<%=sessionUser.nameJ %>>
       <div class="form-group">
         <textarea name="contents" id="summernote"></textarea>
       </div>
       <div class="form-group">
         <input type="submit" class="btn btn-success" value="글 등록">
       </div>
+
     </form>
     <script>
       $(function() {
@@ -33,7 +41,6 @@
           fontNames: ['맑은고딕', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', ],
           fontNamesIgnoreCheck: ['맑은고딕'],
           focus: true,
-
           callbacks: {
             onImageUpload: function(files, editor, welEditable) {
               for (var i = files.length - 1; i >= 0; i--) {
@@ -45,7 +52,6 @@
         });
 
         function sendFile(file, el) {
-
           var form_data = new FormData();
           form_data.append('file', file);
           $.ajax({
