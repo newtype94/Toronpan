@@ -153,7 +153,8 @@ router.get('/home', function(req, res, next) {
   var now = new Date();
   now = now.toLocaleDateString();
 
-  var poliNew = [];
+  var poliNew;
+  var poliHot;
 
   Board.find({
     field: 1
@@ -161,59 +162,76 @@ router.get('/home', function(req, res, next) {
     board_date: -1
   }).limit(10).exec(function(err, data) {
     if (err) throw err;
-    poliNew=data;
-  });
+    poliNew = data;
 
-  if (checkLogin(sessionUser) == 2) {
-    SurveyDone.findOne({
-      done_people: sessionUser.idK,
-      date: now
-    }, function(err, what) {
+    Board.find({
+      field: 1,
+      like_number: {
+        $gte: 50
+      }
+    }).sort({
+      board_date: -1
+    }).limit(10).exec(function(err, data2) {
       if (err) throw err;
-      if (what) { //SurveyDone에 있다 = 오늘 설문에 참여했다
-        res.render('panHome', {
-          message: null,
-          login: 2,
-          survey: null,
-          poliNew : poliNew
-        });
-      } else { //SurveyDone에 없다 = TodaySurvey에서 오늘 것 찾아준다
-        TodaySurvey.findOne({
+      poliHot = data2;
+
+      if (checkLogin(sessionUser) == 2) {
+
+        SurveyDone.findOne({
+          done_people: sessionUser.idK,
           date: now
-        }, function(err, surveyDB) {
-          if (err) {
-            console.log(err);
-            res.render("error");
-          } else if (surveyDB) { //
-            survey = {};
-            survey["q"] = surveyDB.firstQ;
-            survey["id"] = surveyDB._id;
-            console.log(survey);
+        }, function(err, what) {
+          if (err) throw err;
+          if (what) { //SurveyDone에 있다 = 오늘 설문에 참여했다
             res.render('panHome', {
               message: null,
               login: 2,
-              survey: survey,
-              poliNew : poliNew
-            });
-          } else {
-            res.render('panHome', {
-              message: '오늘 설문이 아직 안 올라왔습니다.',
-              login: 2,
               survey: null,
-              poliNew : poliNew
+              poliNew: poliNew,
+              poliHot: poliHot
+            });
+          } else { //SurveyDone에 없다 = TodaySurvey에서 오늘 것 찾아준다
+            TodaySurvey.findOne({
+              date: now
+            }, function(err, surveyDB) {
+              if (err) {
+                console.log(err);
+                res.render("error");
+              } else if (surveyDB) { //
+                survey = {};
+                survey["q"] = surveyDB.firstQ;
+                survey["id"] = surveyDB._id;
+                console.log(survey);
+                res.render('panHome', {
+                  message: null,
+                  login: 2,
+                  survey: survey,
+                  poliNew: poliNew,
+                  poliHot: poliHot
+                });
+              } else {
+                res.render('panHome', {
+                  message: '오늘 설문이 아직 안 올라왔습니다.',
+                  login: 2,
+                  survey: null,
+                  poliNew: poliNew,
+                  poliHot: poliHot
+                });
+              }
             });
           }
         });
+      } else {
+        res.render('panHome', {
+          message: null,
+          login: 0,
+          survey: null,
+          poliNew: poliNew,
+          poliHot: poliHot
+        });
       }
     });
-  } else {
-    res.render('panHome', {
-      message: '로그인이 안되었습니다',
-      login: 0,
-      survey: null,
-      poliNew : poliNew
-    });
-  }
+  });
 });
 
 //관리자 설문 등록 알고리즘
@@ -758,16 +776,16 @@ router.post('/pan/write', function(req, res) {
   now = now.toLocaleDateString();
   var sessionUser = req.user;
   if (sessionUser == null) {
-    req.flash('message', '로그인 후 작성 가능합니다');
     res.render('panHome', {
-      message: req.flash('message'),
-      login: 0
+      message: '로그인 후 작성 가능합니다',
+      login: 0,
+      survey: null
     });
   } else if (sessionUser.nameJ == null) {
-    req.flash('message', '회원등록(10초 소요) 후 작성 가능합니다');
     res.render('panHome', {
-      message: req.flash('message'),
-      login: 1
+      message: '회원등록(10초 소요) 후 작성 가능합니다',
+      login: 1,
+      survey: null
     });
   } else {
     WriteLimit.findOne({

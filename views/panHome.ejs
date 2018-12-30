@@ -21,10 +21,19 @@
         </span>
       </div>
     </div>
+
     <% } %>
     <% if(poliNew != null){ %>
-    <%= poliNew %>
+    +++++++++++++++++++++++++++++++++++
+    <%= poliNew[0] %>
     <% }%>
+
+
+    <% if(poliHot != null){ %>
+      ============================================
+    <%= poliHot[0] %>
+    <% }%>
+
     <div class="row">
       <div class="col-md-12">
         <form class="form-inline my-2 my-lg-0 mr-sm-2" action="/pan/search/1" method="post">
