@@ -67,8 +67,8 @@
           <div class="col-md-12">
             <% if(login==0){ %>
             <h3>로그인을 하지 않아 댓글을 달 수 없습니다</h3>
-            <% } else if(login==2){ %>
-            <h3>가입을 하지 않아 댓글을 달 수 없습니다. 로그아웃 후 다시 로그인하여 가입을 진행해주세요</h3>
+            <% } else if(login==1){ %>
+            <h3>가입을 하지 않아 댓글을 달 수 없습니다</h3>
             <% } else { %>
             <form action="/comment/write" method="post">
               <input type="hidden" name="id" value="<%=pan._id%>">

@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var littleCommentSchema = new Schema({
     contents : String,
     writer : String,
+    sideJ : String,
     comment_date : {type: Date, default: Date.now()}
 });
 

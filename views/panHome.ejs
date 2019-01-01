@@ -9,52 +9,25 @@
 <body>
   <% include ./header %>
   <div class="container">
-    <% if(message != null){ %>
-    <div class="row mt-2 mb-4">
+    <% if((message != null)&&(message != "")){ %>
+    <div class="row mt-2 mb-2">
       <div class="col-md-12">
-        <span class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
           <strong>알림</strong>
           <%=message%>
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-        </span>
+        </div>
       </div>
     </div>
-
     <% } %>
-    <% if(poliNew != null){ %>
-    +++++++++++++++++++++++++++++++++++
-    <%= poliNew[0] %>
-    <% }%>
 
 
-    <% if(poliHot != null){ %>
-      ============================================
-    <%= poliHot[0] %>
-    <% }%>
-
-    <div class="row">
-      <div class="col-md-12">
-        <form class="form-inline my-2 my-lg-0 mr-sm-2" action="/pan/search/1" method="post">
-          <select class="form-control" name="where">
-            <option value="최신">최신</option>
-            <option value="인기">인기</option>
-          </select>
-          <select class="form-control mr-sm-2" name="how">
-            <option value="제목">제목</option>
-            <option value="제목">내용</option>
-            <option value="제목+내용">제목+내용</option>
-          </select>
-          <input class="form-control mr-sm-2" name="what" type="text" type="search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
-        </form>
-      </div>
-    </div>
     <% if(survey != null){ %>
     <div class="row">
       <div class="col-md-12">
-        <div class="card border-info mb-5" style="max-width: 20rem;">
+        <div class="card border-info mt-2 mb-2" style="max-width: 20rem;">
           <div class="card-header text-center">오늘의 설문</div>
           <div class="card-body text-info">
             <h4 class="card-title">
@@ -74,6 +47,123 @@
       </div>
     </div>
     <% }%>
+
+    <% if(login == 1){ %>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card border-info mt-3 mb-3" style="max-width: 20rem;">
+          <div class="card-header text-center">회원가입</div>
+          <div class="card-body text-info">
+            <h4 class="card-title">
+              추후 수정이 불가하니, 정확하게 입력해주세요
+            </h4>
+            <form action="/joinDB" method="post">
+              <div class="form-group">
+                <label for="nameJ">활동하실 닉네임<input type="text" class="form-control" name="nameJ" id="nameJ" /></label>
+              </div>
+              <div class="radio">
+                <label for="m"><input type="radio" name="genderJ" value="male" id="m" />남 </label>
+                <label for="f"><input type="radio" name="genderJ" value="female" id="f" />여</label>
+              </div>
+              <div class="form-group">
+                <label for="ageJ">출생 연도
+                  <input type="text" class="form-control" name="ageJ" id="ageJ" />
+                </label>
+              </div>
+              <div class="radio">
+                <label for="left"><input type="radio" name="sideJ" value="left" id="left" />진보 </label>
+                <label for="right"><input type="radio" name="sideJ" value="right" id="right" />보수 </label>
+              </div>
+              <button class="btn btn-danger">중복체크</button>
+              <button type="submit" class="btn btn-primary">가입</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }%>
+
+    <div class="row mt-3 mb-3">
+      <div class="col-md-12">
+        <form class="form-inline" action="/pan/search/1" method="post">
+          <select class="form-control" name="where">
+            <option value="최신">최신</option>
+            <option value="인기">인기</option>
+          </select>
+          <select class="form-control mr-sm-2" name="how">
+            <option value="제목">제목</option>
+            <option value="제목">내용</option>
+            <option value="제목+내용">제목+내용</option>
+          </select>
+          <input class="form-control mr-sm-2" name="what" type="text" type="search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="row mt-3 mb-3">
+      <% if(poliNew != null){ %>
+      <div class="col-md-6">
+        <table class="table">
+          <colgroup>
+       <col span="1" style="width: 20%;">
+       <col span="1" style="width: 70%;">
+       <col span="1" style="width: 10%;">
+    </colgroup>
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">정치-최신</th>
+              <th scope="col">더보기</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><%= poliNew[0].board_date.toLocaleDateString(); %></td>
+              <td><%=poliNew[0].title%></td>
+              <td><%=poliNew[0].like_number%></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <% }%>
+
+      <% if(poliHot != null){ %>
+      <div class="col-md-6">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">Handle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <% }%>
+
+    </div>
   </div>
 </body>
 

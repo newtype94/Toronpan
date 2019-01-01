@@ -3,12 +3,12 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
-  idK: String,
-  nameK: String,
-  nameJ: String,
+  idK: String, //카카오 토큰
+  nameK: String, //실명
+  nameJ: String, //정치판 닉네임
   genderJ: String,
   ageJ: Number,
-  sideJ: String,
+  sideJ: String, //
   exp: Number,
   level: Number
 });
