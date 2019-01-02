@@ -10,37 +10,34 @@
   <div class="container">
 
     <div class="row">
-      <div class="col-md-3 text-center">
+      <div class="col-12 text-center">
         <%= title%>
-      </div>
-      <div class="col-md-9 text-center">
-
       </div>
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-2 text-center">작성자</div>
-      <div class="col-md-6 text-center">제목</div>
-      <div class="col-md-2 text-center">좋아요</div>
-      <div class="col-md-2 text-center">시간</div>
+      <div class="col-2 text-center">작성자</div>
+      <div class="col-6 text-center">제목</div>
+      <div class="col-2 text-center">좋아요</div>
+      <div class="col-2 text-center">시간</div>
     </div>
     <hr>
     <% if (panArr !== null){
     for(var i = 0; i < panArr.length; i++) { %>
     <div class="row" style="height:50px;">
-      <div class="col-md-2 text-center">
+      <div class="col-xs-2 text-center">
         <%=panArr[i].writer%>
         </h3>
       </div>
-      <div class="col-md-6 text-center" style="text-align:left;">
+      <div class="col-xs-6 text-center" style="text-align:left;">
         <button class="btn btn-outline-dark" onclick="location.href='/pan/<%= panArr[i]._id%>'">
           <%=panArr[i].title%>
         </button>
       </div>
-      <div class="col-md-2 text-center">
+      <div class="col-xs-2 text-center">
         <%= panArr[i].like_number%>
       </div>
-      <div class="col-md-2 text-center">
+      <div class="col-xs-2 text-center">
         <% var now = new Date(); now = now.toLocaleDateString();
         if (now==panArr[i].board_date.toLocaleDateString()){ %>
         <%= panArr[i].board_date.toLocaleTimeString(); %>
@@ -51,7 +48,7 @@
     </div>
     <%  }} %>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-xs-12">
         <nav aria-label="Page navigation example" style="padding:30px;">
           <ul class="pagination justify-content-center">
             <% var start=page;

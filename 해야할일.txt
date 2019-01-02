@@ -1,10 +1,13 @@
 
 회원가입 완료, 글쓰기 완료, 정산 완료, 수정 완료 시 확인 차 alert띄우기
+https://coding-factory.tistory.com/196
+
 
 홈에 정치,사회,자유 - 최신, 인기로 6개 항목 표시
   프로미스는 안쓰고 걍 콜백 중첩으로 하기
 
 회원가입시 중복체크 AJAX
+http://kingchobocoding.tistory.com/11
 form으로 이상한 값 넘어오면 회원가입 실패 처리
 
 글쓰기 전에 설문체크
