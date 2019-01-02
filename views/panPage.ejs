@@ -25,19 +25,20 @@
     <% if (panArr !== null){
     for(var i = 0; i < panArr.length; i++) { %>
     <div class="row" style="height:50px;">
-      <div class="col-xs-2 text-center">
+      <div class="col-2 text-center">
+        <a href="/pan/<%=panArr[i]._id%>" class="list-group-item list-group-item-action">
         <%=panArr[i].writer%>
-        </h3>
+      </a>
       </div>
-      <div class="col-xs-6 text-center" style="text-align:left;">
-        <button class="btn btn-outline-dark" onclick="location.href='/pan/<%= panArr[i]._id%>'">
+      <div class="col-6 text-center" style="text-align:left;">
+        <a href="/pan/<%=panArr[i]._id%>" class="list-group-item list-group-item-action">
           <%=panArr[i].title%>
-        </button>
+        </a>
       </div>
-      <div class="col-xs-2 text-center">
+      <div class="col-2 text-center">
         <%= panArr[i].like_number%>
       </div>
-      <div class="col-xs-2 text-center">
+      <div class="col-2 text-center">
         <% var now = new Date(); now = now.toLocaleDateString();
         if (now==panArr[i].board_date.toLocaleDateString()){ %>
         <%= panArr[i].board_date.toLocaleTimeString(); %>
@@ -48,7 +49,7 @@
     </div>
     <%  }} %>
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-12">
         <nav aria-label="Page navigation example" style="padding:30px;">
           <ul class="pagination justify-content-center">
             <% var start=page;
@@ -94,9 +95,9 @@
       </div>
     </div>
   </div>
-  <div class="container">
-    <hr>
-    <% include ./footer %><br></div>
+
+
+    <% include ./footer %>
 
 </body>
 

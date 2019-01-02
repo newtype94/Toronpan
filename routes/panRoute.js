@@ -109,10 +109,10 @@ router.post('/joinDB', function(req, res) {
   }, function(err, board) {
     if (err) {
       console.log(err);
-      req.flash('message','오류가 발생하여 회원가입이 실패했습니다')
+      req.flash('message', '오류가 발생하여 회원가입이 실패했습니다')
       res.redirect('/home');
     }
-    req.flash('message','회원가입이 성공적으로 이루어졌습니다')
+    req.flash('message', '회원가입이 성공적으로 이루어졌습니다')
     res.redirect('/home');
   });
 });
@@ -664,50 +664,16 @@ router.get('/write', function(req, res, next) {
   var now = new Date();
   now = now.toLocaleDateString();
   var sessionUser = req.user;
-  if (checkLogin(req.user) == 0){
-      req.flash('message', '로그인 후에 글을 작성할 수 있습니다');
-      res.redirect("/home");
-  }
-  else if (checkLogin(req.user) == 1){
+  if (checkLogin(req.user) == 0) {
+    req.flash('message', '로그인 후에 글을 작성할 수 있습니다');
+    res.redirect("/home");
+  } else if (checkLogin(req.user) == 1) {
     req.flash('message', '회원가입(10초 정도 소요) 후에 글을 작성할 수 있습니다');
     res.redirect("/home");
   } else {
-    WriteLimit.findOne({
-      $and: [{
-        writer: sessionUser._id
-      }, {
-        date: now
-      }]
-    }, function(err, what) {
-      if (!err && !what) { //오늘 글을 쓴적이 없음
-        var writeLimit = new WriteLimit();
-        writeLimit.writer = sessionUser._id;
-        writeLimit.howMany = 0;
-        writeLimit.date = now;
-        writeLimit.save();
-        writeLimit.save(function(err) {
-          if (err) {
-            console.log(err);
-            res.redirect('/');
-          }
-          res.render('panWrite', {
-            sessionUser: sessionUser,
-            login: 1
-          });
-        });
-      } else if (!err && what) {
-        console.log(what);
-        console.log(sessionUser.level);
-        if (what.howMany >= sessionUser.level) { //글쓰기 limit 초과
-          req.flash('message', '오늘의 가능한 글쓰기 수 초과..');
-          res.redirect("/home");
-        } else if (what.howMany < sessionUser.level) { //글쓴적은 있는데 limit 초과안함
-          res.render('panWrite', {
-            sessionUser: sessionUser,
-            login: 1
-          });
-        }
-      }
+    res.render('panWrite', {
+      sessionUser: sessionUser,
+      login: 2
     });
   }
 });
@@ -717,76 +683,39 @@ router.post('/pan/write', function(req, res) {
   var now = new Date();
   now = now.toLocaleDateString();
   var sessionUser = req.user;
-  if (sessionUser == null) {
+  if (checkLogin(sessionUser) == 0) {
     req.flash('message', '로그인 먼저 해주세요');
     res.redirect("/home");
-  } else if (sessionUser.nameJ == null) {
-    req.flash('message', '회원가입 먼저 해주세요(10초 소요)');
+  } else if (checkLogin(sessionUser) == 1) {
+    req.flash('message', '메인 화면에서 회원가입 먼저 해주세요');
     res.redirect("/home");
   } else {
-    WriteLimit.findOne({
-      writer: sessionUser._id,
-      date: now
-    }, function(err, what) {
-      if (!err && !what) { //오늘 글을 쓴적이 없음
-        var writeLimit = new WriteLimit();
-        writeLimit.writer = sessionUser._id;
-        writeLimit.howMany = 0;
-        writeLimit.date = now;
-        writeLimit.save();
-        writeLimit.save(function(err) {
-          if (err) {
-            console.log(err);
-            res.redirect('/');
-          }
-          res.render('panWrite', {
-            sessionUser: sessionUser,
-            login: 1
-          });
-        });
-      } else if (!err && what) {
-        if (what.howMany >= sessionUser.level) { //글쓰기 limit 초과
-          req.flash('message', '오늘의 가능한 글쓰기 수 초과..');
-          res.redirect("/home");
-        } else if (what.howMany < sessionUser.level) { //글쓴적은 있는데 limit 초과안함
-          var board = new Board();
-          if (req.body.title == "") {
-            board.title = "제목 없음";
-          } else {
-            board.title = req.body.title;
-          }
-          board.contents = req.body.contents;
-          board.field = req.body.field;
-          board.writer = sessionUser.nameJ;
-          board.writer_id = sessionUser._id;
-          board.board_date = Date.now();
-          board.like_number = 0;
-          board.exp_done = false;
-          board.exp_done_howmuch = 0;
-          board.hit = 0;
-
-          board.save(function(err) {
-            if (err) {
-              console.log(err);
-              res.redirect('/');
-            }
-            WriteLimit.findOneAndUpdate({
-              writer: sessionUser._id,
-              date: now
-            }, {
-              $inc: {
-                howMany: 1
-              }
-            }, function() {
-              req.flash('message', '성공적으로 등록되었습니다..');
-              res.redirect("/home");
-            });
-          });
-        }
+    var board = new Board();
+    if (req.body.title == "") {
+      board.title = "제목 없음";
+    } else {
+      board.title = req.body.title;
+    }
+    board.contents = req.body.contents;
+    board.field = req.body.field;
+    board.writer = sessionUser.nameJ;
+    board.writer_id = sessionUser._id;
+    board.board_date = Date.now();
+    board.like_number = 0;
+    board.exp_done = false;
+    board.exp_done_howmuch = 0;
+    board.hit = 0;
+    board.save(function(err) {
+      if (err) {
+        console.log(err);
+        res.redirect('/');
       }
+      req.flash('message', '성공적으로 등록되었습니다..');
+      res.redirect("/home");
     });
   }
 });
+
 
 //사진 업로드 알고리즘
 router.post('/upload', uploadSetting.single('file'), function(req, res) {

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light sticky-top mb-3" style="background-color: #e3f2fd;">
+<nav class="navbar navbar-expand-lg navbar-light sticky-top mb-3" style="background-color: lavender;">
   <a class="navbar-brand" href="/"><img src="/logo.png" height="40" class="d-inline-block align-top" alt=""></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -8,33 +8,53 @@
       <li class="nav-item active">
         <a class="nav-link" href="/mypage/1">my</a>
       </li>
-
       <li class="nav-item dropdown">
-       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-         정치
-       </a>
-       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-         <a class="dropdown-item" href="/page/new/1">최신</a>
-         <div class="dropdown-divider"></div>
-         <a class="dropdown-item" href="/page/hot/1">인기</a>
-       </div>
-     </li>
-     <li class="nav-item">
-       <a class="nav-link" href="/write">글쓰기</a>
-     </li>
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          정치
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/page/new/1">최신</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/page/hot/1">인기</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          사회
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/page/new/1">최신</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/page/hot/1">인기</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          자유
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/page/new/1">최신</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/page/hot/1">인기</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/write">글쓰기</a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" href="/survey/admin">설문등록</a>
       </li>
       <li class="nav-item">
-        <% var a = login;
-        if(a==null){
 
-        }else if(a==0){ %>
-        <a href="/kakao"><img src="/kakao.png" height="50"></a>
-        <% }else{ %>
-        <a href="/logout"><img src="/logout.png" height="50"></a>
-        <% }%>
       </li>
     </ul>
+    <% var a = login;
+    if(a==null){
+
+    }else if(a==0){ %>
+    <a href="/kakao"><img src="/kakao.png" height="50"></a>
+    <% }else{ %>
+    <a href="/logout"><img src="/logout.png" height="50"></a>
+    <% }%>
   </div>
 </nav>
