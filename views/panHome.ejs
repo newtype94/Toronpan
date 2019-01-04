@@ -101,50 +101,10 @@
     </div>
 
     <div class="row my-3">
-      <% if(poliNew != null){ %>
       <div class="col-md-6">
-        <table class="table">
-          <colgroup>
-            <col span="1" style="width: 25%;">
-            <col span="1" style="width: 75%;">
-          </colgroup>
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">정치</th>
-              <th scope="col">최신</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% for(var i = 0; i < poliNew.length; i++) { %>
-            <tr>
-              <td>
-                <p class="font-weight-light">
-                  <% var now = new Date(); now = now.toLocaleDateString();
-                if (now==poliNew[i].board_date.toLocaleDateString()){ %>
-                  <%= poliNew[i].board_date.toLocaleTimeString(); %>
-                  <% }else{ %>
-                  <%= poliNew[i].board_date.toLocaleDateString().slice(5,10) %>
-                  <% } %>
-                </p>
-              </td>
-              <td>
-                <a href="/pan/<%=poliNew[i]._id%>" class="list-group-item list-group-item-action">
-                <%=poliNew[i].title%>
-                <span class="font-weight-bold">
-                  (<%=poliNew[i].like_number%>)
-                </span>
-              </a>
-              </td>
-            </tr>
-            <% } %>
-          </tbody>
-        </table>
       </div>
-      <% }%>
-
-      <% if(poliHot != null){ %>
-
-      <% }%>
+      <div class="col-md-6">
+      </div>
 
     </div>
   </div>

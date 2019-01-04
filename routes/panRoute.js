@@ -371,8 +371,8 @@ router.get('/page/new/:page', function(req, res, next) {
   if (page == "") {
     page = 1;
   }
-  var skipSize = (page - 1) * 7;
-  var limitSize = 7;
+  var skipSize = (page - 1) * 3;
+  var limitSize = 3;
   var pageNum = 1;
 
   Board.count({}, function(err, totalCount) {
@@ -767,7 +767,7 @@ router.get('/pan/:id', function(req, res) {
             whatBoard: req.params.id
           }, function(err, commentDB) {
             res.render('pan', {
-              login: 1,
+              login: 2,
               pan: panDB,
               comment: commentDB,
               sessionUser: sessionUser
