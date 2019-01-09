@@ -11,13 +11,17 @@
 <body>
   <% include ./header %>
   <div class="container">
-    <hr>
-    <div class="text-center">글쓰기</div>
-    <hr>
+    <div class="row">
+      <div class="col-12">
+        <div class="alert alert-warning text-center" role="alert">
+          글쓰기
+        </div>
+      </div>
+    </div>
     <form action="/pan/write" method="post" id="writeForm">
       <div class="form-group">
-        <select name="field" class="form-control">
-          <option selected>분야 선택..</option>
+        <select id="field" name="field" class="form-control">
+          <option value="0">분야 선택..</option>
           <option value="1">정치</option>
           <option value="2">사회</option>
           <option value="3">자유</option>
@@ -32,50 +36,69 @@
       <div class="form-group">
         <input type="submit" class="btn btn-success" value="글 등록">
       </div>
-
     </form>
-    <script>
-      $(function() {
-        $('#summernote').summernote({
-          height: 400,
-          fontNames: ['맑은고딕', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', ],
-          fontNamesIgnoreCheck: ['맑은고딕'],
-          focus: true,
-          callbacks: {
-            onImageUpload: function(files, editor, welEditable) {
-              for (var i = files.length - 1; i >= 0; i--) {
-                sendFile(files[i], this);
-              }
+  </div>
+
+  <script>
+    $(function() {
+      $('#summernote').summernote({
+        height: 400,
+        fontNames: ['맑은고딕', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', ],
+        fontNamesIgnoreCheck: ['맑은고딕'],
+        focus: true,
+        callbacks: {
+          onImageUpload: function(files, editor, welEditable) {
+            for (var i = files.length - 1; i >= 0; i--) {
+              sendFile(files[i], this);
             }
           }
-
-        });
-
-        function sendFile(file, el) {
-          var form_data = new FormData();
-          form_data.append('file', file);
-          $.ajax({
-            data: form_data, //client -> server
-            dataType: 'json', //server -> client
-            type: "POST",
-            url: '/upload',
-            cache: false,
-            contentType: false,
-            enctype: 'multipart/form-data',
-            processData: false,
-            success: function(data) {
-              if ((data) && (typeof data !== "object"))
-                data = $.parseJSON(data);
-              if (data.err)
-                alert(data.error);
-              else if (data.path)
-                $(el).summernote('editor.insertImage', data.path);
-            }
-          });
         }
+
       });
-    </script>
-  </div>
+
+      function sendFile(file, el) {
+        var form_data = new FormData();
+        form_data.append('file', file);
+        $.ajax({
+          data: form_data, //client -> server
+          dataType: 'json', //server -> client
+          type: "POST",
+          url: '/upload',
+          cache: false,
+          contentType: false,
+          enctype: 'multipart/form-data',
+          processData: false,
+          success: function(data) {
+            if ((data) && (typeof data !== "object"))
+              data = $.parseJSON(data);
+            if (data.err)
+              alert(data.error);
+            else if (data.path)
+              $(el).summernote('editor.insertImage', data.path);
+          }
+        });
+      }
+
+      var wf = document.getElementById("writeForm");
+
+      wf.onsubmit = function(){
+        var field = document.getElementById("field");
+        if (field.value=="0"){
+          field.focus();
+          alert("글의 분야를 선택해주세요");
+          return false;
+        } else {
+          var submitEnd = confirm('글을 마무리 하셨나요? 확인 누르면 제출됩니다.');
+          if (submitEnd) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
+
+    });
+  </script>
 </body>
 
 </html>

@@ -8,13 +8,13 @@
 <body>
   <% include ./header %>
   <div class="container">
-
     <div class="row">
-      <div class="col-12 text-center">
+      <div class="col-12">
+      <div class="alert alert-warning" role="alert">
         <%= title%>
       </div>
+      </div>
     </div>
-    <hr>
     <% if (panArr !== null){
     for(var i = 0; i < panArr.length; i++) { %>
     <div class="row">
