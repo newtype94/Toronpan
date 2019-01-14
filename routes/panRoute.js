@@ -29,7 +29,6 @@ function checkLogin(user) {
     return 2;
 }
 
-
 //+++++++++++++++login++++++++++++++
 // localhost:3000/login/kakao로 들어오면(get으로 들어오면) passport.authenticate를 실행(여기서는 임의로 login-kakao로 이름을 줌)
 router.get('/kakao', passport.authenticate('login-kakao'));
@@ -138,6 +137,10 @@ router.get('/home', function(req, res, next) {
 
   var poliNew;
   var poliHot;
+  var sociNew;
+  var sociHot;
+  var freeNew;
+  var freeHot;
 
   Board.find({
     field: 1
@@ -158,59 +161,118 @@ router.get('/home', function(req, res, next) {
       if (err) throw err;
       poliHot = data;
 
-      if (checkLogin(sessionUser) == 2) {
-        SurveyDone.findOne({
-          done_people: sessionUser.idK,
-          date: now
-        }, function(err, what) {
+      Board.find({
+        field: 2
+      }).sort({
+        board_date: -1
+      }).limit(10).exec(function(err, data) {
+        if (err) throw err;
+        sociNew = data;
+
+        Board.find({
+          field: 2,
+          like_number: {
+            $gte: 50
+          }
+        }).sort({
+          board_date: -1
+        }).limit(10).exec(function(err, data) {
           if (err) throw err;
-          if (what) { //SurveyDone에 있다 = 오늘 설문에 참여했다
-            res.render('panHome', {
-              message: req.flash('message'),
-              login: 2,
-              survey: null,
-              poliNew: poliNew,
-              poliHot: poliHot
-            });
-          } else { //SurveyDone에 없다 = TodaySurvey에서 오늘 것 찾아준다
-            TodaySurvey.findOne({
-              date: now
-            }, function(err, surveyDB) {
-              if (err) {
-                console.log(err);
-                res.render("error");
-              } else if (surveyDB) { //
-                survey = {};
-                survey["q"] = surveyDB.firstQ;
-                survey["id"] = surveyDB._id;
-                res.render('panHome', {
-                  message: req.flash('message'),
-                  login: 2,
-                  survey: survey,
-                  poliNew: poliNew,
-                  poliHot: poliHot
+          sociHot = data;
+
+          Board.find({
+            field: 3
+          }).sort({
+            board_date: -1
+          }).limit(10).exec(function(err, data) {
+            if (err) throw err;
+            freeNew = data;
+
+            Board.find({
+              field: 3,
+              like_number: {
+                $gte: 50
+              }
+            }).sort({
+              board_date: -1
+            }).limit(10).exec(function(err, data) {
+              if (err) throw err;
+              freeHot = data;
+
+              if (checkLogin(sessionUser) == 2) {
+                SurveyDone.findOne({
+                  done_people: sessionUser.idK,
+                  date: now
+                }, function(err, what) {
+                  if (err) throw err;
+                  if (what) { //SurveyDone에 있다 = 오늘 설문에 참여했다
+                    res.render('panHome', {
+                      message: req.flash('message'),
+                      login: 2,
+                      survey: null,
+                      poliNew: poliNew,
+                      poliHot: poliHot,
+                      sociNew: sociNew,
+                      sociHot: sociHot,
+                      freeNew: freeNew,
+                      freeHot: freeHot
+                    });
+                  } else { //SurveyDone에 없다 = TodaySurvey에서 오늘 것 찾아준다
+                    TodaySurvey.findOne({
+                      date: now
+                    }, function(err, surveyDB) {
+                      if (err) {
+                        console.log(err);
+                        res.render("error");
+                      } else if (surveyDB) { //
+                        survey = {};
+                        survey["q"] = surveyDB.firstQ;
+                        survey["id"] = surveyDB._id;
+                        res.render('panHome', {
+                          message: req.flash('message'),
+                          login: 2,
+                          survey: survey,
+                          poliNew: poliNew,
+                          poliHot: poliHot,
+                          sociNew: sociNew,
+                          sociHot: sociHot,
+                          freeNew: freeNew,
+                          freeHot: freeHot
+                        });
+                      } else {
+                        res.render('panHome', {
+                          message: '오늘 설문이 아직 안 올라왔습니다.',
+                          login: 2,
+                          survey: null,
+                          poliNew: poliNew,
+                          poliHot: poliHot,
+                          sociNew: sociNew,
+                          sociHot: sociHot,
+                          freeNew: freeNew,
+                          freeHot: freeHot
+                        });
+                      }
+                    });
+                  }
                 });
               } else {
                 res.render('panHome', {
-                  message: '오늘 설문이 아직 안 올라왔습니다.',
-                  login: 2,
+                  message: req.flash('message'),
+                  login: checkLogin(sessionUser),
                   survey: null,
                   poliNew: poliNew,
-                  poliHot: poliHot
+                  poliHot: poliHot,
+                  sociNew: sociNew,
+                  sociHot: sociHot,
+                  freeNew: freeNew,
+                  freeHot: freeHot
                 });
               }
+
             });
-          }
+          });
         });
-      } else {
-        res.render('panHome', {
-          message: req.flash('message'),
-          login: checkLogin(sessionUser),
-          survey: null,
-          poliNew: poliNew,
-          poliHot: poliHot
-        });
-      }
+      });
     });
   });
 });
@@ -362,23 +424,39 @@ router.get('/user/expup/:panid', function(req, res, next) {
 });
 
 //최신글 페이징
-router.get('/page/new/:page', function(req, res, next) {
+router.get('/page/:field/new/:page', function(req, res, next) {
   var login = 0;
   if (req.user != null) {
     login = 1;
   }
   var page = req.params.page;
+  var fieldText = req.params.field;
+  var field;
+
+  if (fieldText == "poli") {
+    field = 1;
+  } else if (fieldText == "soci") {
+    field = 2;
+  } else {
+    field = 3;
+  }
+
   if (page == "") {
     page = 1;
   }
+
   var skipSize = (page - 1) * 3;
   var limitSize = 3;
   var pageNum = 1;
 
-  Board.count({}, function(err, totalCount) {
+  Board.count({
+    field: field
+  }, function(err, totalCount) {
     if (err) throw err;
     pageNum = Math.ceil(totalCount / limitSize);
-    Board.find({}).sort({
+    Board.find({
+      field: field
+    }).sort({
       board_date: -1
     }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
       if (err) throw err;
@@ -387,6 +465,7 @@ router.get('/page/new/:page', function(req, res, next) {
         panArr: panArr,
         pagination: pageNum,
         page: page,
+        field: field,
         title: "최신글"
       });
     });
@@ -394,21 +473,34 @@ router.get('/page/new/:page', function(req, res, next) {
 });
 
 //인기글 페이징
-router.get('/page/hot/:page', function(req, res, next) {
+router.get('/page/:field/hot/:page', function(req, res, next) {
   var login = 0;
   if (req.user != null) {
     login = 1;
   }
 
   var page = req.params.page;
+  var fieldText = req.params.field;
+  var field;
+
+  if (fieldText == "poli") {
+    field = 1;
+  } else if (fieldText == "soci") {
+    field = 2;
+  } else {
+    field = 3;
+  }
+
   if (page == "") {
     page = 1;
   }
+
   var skipSize = (page - 1) * 7;
   var limitSize = 7;
   var pageNum = 1;
 
   Board.count({
+    field: field,
     like_number: {
       $gte: 50
     }
@@ -416,6 +508,7 @@ router.get('/page/hot/:page', function(req, res, next) {
     if (err) throw err;
     pageNum = Math.ceil(totalCount / limitSize);
     Board.find({
+      field: field,
       like_number: {
         $gte: 50
       }
@@ -428,8 +521,8 @@ router.get('/page/hot/:page', function(req, res, next) {
         panArr: panArr,
         pagination: pageNum,
         page: page,
-        title: "인기글",
-        formBack: null
+        field: field,
+        title: "인기글"
       });
     });
   });
@@ -696,6 +789,8 @@ router.post('/pan/write', function(req, res) {
     } else {
       board.title = req.body.title;
     }
+
+    console.log(req.body.field);
     board.contents = req.body.contents;
     board.field = req.body.field;
     board.writer = sessionUser.nameJ;
