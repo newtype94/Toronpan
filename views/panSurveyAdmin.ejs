@@ -11,16 +11,43 @@
   <div class="container">
     <h1>일일단위 설문 주제 선정</h1>
     <div class="row">
-      <form action="/survey/new" method="post">
-        <label for="firstQ">(관리자용)새로운 설문 주제<input type="text" name="firstQ" id="firstQ" /></label>
-        <button type="submit">오늘 등록완료</button>
-      </form>
+      <div class="col-12">
+        <form action="/survey/new" method="post">
+          <label for="firstQ">(관리자용)새로운 설문 주제<input type="text" name="firstQ" id="firstQ" /></label>
+          <button type="submit">오늘 등록완료</button>
+        </form>
+      </div>
+      <div class="col-12">
+        <label for="email">이메일 주소</label>
+        <input type="email" class="form-control" id="id" name="id" placeholder="이메일을 입력하세요" />
+        <div id="checkMsg"></div>
+        <button type="submit" id="checkbtn" class="btn btn-default">중복확인</button>
+      </div>
     </div>
-    <br>
   </div>
-  <div class="container">
-    <hr>
-    <% include ./footer %><br></div>
 </body>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#checkbtn').on('click', function() {
+      if ($('#id').val() == "") {
+        $('#checkMsg').html('<p style="color:red">아이디 먼저 입력하셈</p');
+      } else {
+        $.ajax({
+          type: 'post',
+          url: '/idcheck/' + $('#id').val(),
+          dataType: 'json',
+          success: function(json) {
+            var comment = $.parseJSON(json);
+            if (comment.count == 0) {
+              $('#checkMsg').html('<p style="color:blue">사용가능</p>');
+            } else {
+              $('#checkMsg').html('<p style="color:red">사용불가능</p>');
+            }
+          }
+        });
+      }
+    });
+  });
+</script>
 
 </html>

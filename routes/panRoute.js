@@ -85,6 +85,19 @@ router.get('/', function(req, res, next) {
   res.redirect('/home');
 });
 
+router.post('/idcheck/:check', function(req, res) {
+  var sending = {};
+  var forCheck = req.params.check;
+  User.count({
+    nameJ: forCheck
+  }, function(err, count) {
+    if (err) throw err;
+    sending["count"] = count;
+    var sendingString = JSON.stringify(sending);
+    res.json(sendingString);
+  });
+});
+
 //회원가입 알고리즘
 router.post('/joinDB', function(req, res) {
   var newUser = new User();

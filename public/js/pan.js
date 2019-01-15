@@ -177,7 +177,4 @@ $(function() {
 
   $('#getFirstComment').click(); //최신댓글 trigger
 
-  $('.goBack').click(function() {
-    window.history.back();
-  });
 });
