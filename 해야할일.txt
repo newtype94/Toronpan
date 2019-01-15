@@ -5,11 +5,11 @@ https://coding-factory.tistory.com/196
 
 회원가입시 중복체크 AJAX
 http://kingchobocoding.tistory.com/11
-form으로 이상한 값 넘어오면 회원가입 실패 처리
+panRoute : req.body 값 검증하여 이상하면 회원가입 실패 처리
 
 글쓰기 전에 설문체크
 
-login 1단계면 글 읽기 진입 불가 설정
+login 레벨 1이면 글 읽기 진입 불가 설정
 
 panpage 및 panhome 프론트 잡기
 
