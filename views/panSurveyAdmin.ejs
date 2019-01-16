@@ -17,37 +17,8 @@
           <button type="submit">오늘 등록완료</button>
         </form>
       </div>
-      <div class="col-12">
-        <label for="email">이메일 주소</label>
-        <input type="email" class="form-control" id="id" name="id" placeholder="이메일을 입력하세요" />
-        <div id="checkMsg"></div>
-        <button type="submit" id="checkbtn" class="btn btn-default">중복확인</button>
-      </div>
     </div>
   </div>
 </body>
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('#checkbtn').on('click', function() {
-      if ($('#id').val() == "") {
-        $('#checkMsg').html('<p style="color:red">아이디 먼저 입력하셈</p');
-      } else {
-        $.ajax({
-          type: 'post',
-          url: '/idcheck/' + $('#id').val(),
-          dataType: 'json',
-          success: function(json) {
-            var comment = $.parseJSON(json);
-            if (comment.count == 0) {
-              $('#checkMsg').html('<p style="color:blue">사용가능</p>');
-            } else {
-              $('#checkMsg').html('<p style="color:red">사용불가능</p>');
-            }
-          }
-        });
-      }
-    });
-  });
-</script>
 
 </html>

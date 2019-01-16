@@ -47,41 +47,6 @@
     </div>
     <% }%>
 
-    <% if(login == 1){ %>
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="card border-info mt-3 mb-3" style="max-width: 20rem;">
-          <div class="card-header text-center">회원가입</div>
-          <div class="card-body text-info">
-            <h4 class="card-title">
-              추후 수정이 불가하니, 정확하게 입력해주세요
-            </h4>
-            <form action="/joinDB" method="post">
-              <div class="form-group">
-                <label for="nameJ">활동하실 닉네임<input type="text" class="form-control" name="nameJ" id="nameJ" /></label>
-              </div>
-              <div class="radio">
-                <label for="m"><input type="radio" name="genderJ" value="male" id="m" />남 </label>
-                <label for="f"><input type="radio" name="genderJ" value="female" id="f" />여</label>
-              </div>
-              <div class="form-group">
-                <label for="ageJ">출생 연도
-                  <input type="text" class="form-control" name="ageJ" id="ageJ" />
-                </label>
-              </div>
-              <div class="radio">
-                <label for="left"><input type="radio" name="sideJ" value="left" id="left" />진보 </label>
-                <label for="right"><input type="radio" name="sideJ" value="right" id="right" />보수 </label>
-              </div>
-              <button class="btn btn-danger">중복체크</button>
-              <button type="submit" class="btn btn-primary">가입</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <% }%>
-
     <div class="row mt-3 mb-3">
       <div class="col-12">
         <form class="form-inline" action="/pan/search/1" method="post">
@@ -100,7 +65,71 @@
       </div>
     </div>
 
+    <% if(login == 1){ %>
+    <div class="row">
+      <div class="col-12">
+        <div class="card border-info mt-3 mb-3" style="max-width: 20rem;">
+          <div class="card-header text-center">회원가입</div>
+          <div class="card-body text-info">
+            <h4 class="card-title">
+              추후 수정이 불가하니, 정확하게 입력해주세요
+            </h4>
+            <form action="/joinDB" method="post">
+              <div class="form-group">
+                <label for="nameJ">활동하실 닉네임
+                  <input type="text" class="form-control" name="nameJ" id="nameJ" /></label>
+                <div id="checkMsg"></div>
+              </div>
+              <div class="form-group">
+                <div class="radio">
+                  <label for="m"><input type="radio" name="genderJ" value="male" id="m" />남 </label>
+                  <label for="f"><input type="radio" name="genderJ" value="female" id="f" />여</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="ageJ">출생 연도
+                  <input type="text" class="form-control" name="ageJ" id="ageJ" />
+                </label>
+              </div>
+              <div class="form-group">
+                <div class="radio">
+                  <label for="left"><input type="radio" name="sideJ" value="left" id="left" />진보 </label>
+                  <label for="right"><input type="radio" name="sideJ" value="right" id="right" />보수 </label>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">가입</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }%>
+
   </div>
 </body>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#nameJ")
+      .keyup(function() {
+        if ($('#nameJ').val() != "") {
+          $.ajax({
+            type: 'post',
+            url: '/idcheck/' + $('#nameJ').val(),
+            dataType: 'json',
+            success: function(json) {
+              var comment = $.parseJSON(json);
+              if (comment.count == 0) {
+                $('#checkMsg').html('<p class="text-primary">사용할 수 있습니다</p>');
+              } else {
+                $('#checkMsg').html('<p class="text-danger">이미 존재하는 닉네임입니다</p>');
+              }
+            }
+          });
+        }
+      })
+      .keyup();
+  });
+</script>
 
 </html>
