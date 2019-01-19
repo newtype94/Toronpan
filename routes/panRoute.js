@@ -100,32 +100,68 @@ router.post('/idcheck/:check', function(req, res) {
 
 //회원가입 알고리즘
 router.post('/joinDB', function(req, res) {
+
   var newUser = new User();
   var idK = req.user.idK;
+
   var nameJ = req.body.nameJ;
   var genderJ = req.body.genderJ;
-  var ageJ = req.body.ageJ;
+  var yearJ = req.body.yearJ;
   var sideJ = req.body.sideJ;
+  var ageJ = 20;
 
-  User.findOneAndUpdate({
-    idK: idK
-  }, {
-    $set: {
-      nameJ: nameJ,
-      genderJ: genderJ,
-      ageJ: ageJ,
-      sideJ: sideJ,
-      level: 1,
-      exp: 0
-    }
-  }, function(err, board) {
-    if (err) {
-      console.log(err);
-      req.flash('message', '오류가 발생하여 회원가입이 실패했습니다')
+  User.count({
+    nameJ: nameJ
+  }, function(err, count) {
+    if (err) throw err;
+    if(count==0){
+      //조건 한번 더 검증
+      if ((genderJ == "m") || (genderJ == "f")) {
+        if (yearJ > 1800) {
+          if ((sideJ == "left") || (sideJ == "right")) { //검증완료
+            ageJ = Math.floor((2019 - yearJ + 1) / 10) * 10;
+            if (ageJ == 0)
+              ageJ = 10;
+            else if (ageJ > 70)
+              ageJ = 70;
+
+            User.findOneAndUpdate({
+              idK: idK
+            }, {
+              $set: {
+                nameJ: nameJ,
+                genderJ: genderJ,
+                sideJ: sideJ,
+                yearJ: yearJ,
+                ageJ: ageJ,
+                level: 1,
+                exp: 0
+              }
+            }, function(err, board) {
+              if (err) {
+                console.log(err);
+                req.flash('message', '오류가 발생하여 회원가입이 실패했습니다');
+                res.redirect('/home');
+              }
+              req.flash('message', '회원가입이 성공적으로 이루어졌습니다');
+              res.redirect('/home');
+            });
+          }else{
+            req.flash('message', '오류가 발생하여 회원가입이 실패했습니다');
+            res.redirect('/home');
+          }
+        }else{
+          req.flash('message', '오류가 발생하여 회원가입이 실패했습니다');
+          res.redirect('/home');
+        }
+      }else{
+        req.flash('message', '오류가 발생하여 회원가입이 실패했습니다');
+        res.redirect('/home');
+      }
+    }else{
+      req.flash('message', '오류가 발생하여 회원가입이 실패했습니다');
       res.redirect('/home');
     }
-    req.flash('message', '회원가입이 성공적으로 이루어졌습니다')
-    res.redirect('/home');
   });
 });
 
