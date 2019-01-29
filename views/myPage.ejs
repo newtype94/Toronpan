@@ -26,18 +26,19 @@
               성향 : 보수
               <% } %>
             </p>
-            <p>출생연도 :
-              <%= me.ageJ %>
+            <p>연령대 :
+              <%= me.ageJ %>대
             </p>
-            <p>오늘 쓴 글 :
-              <%= todayWrite %> 개</p>
             <p>레벨 :
               <%= me.level %>
             </p>
             <p>누적경험치 :
               <%= me.exp %>
             </p>
-
+            <!--
+            <p>오늘 쓴 글 :
+              <%= todayWrite %> 개</p>
+            -->
           </div>
         </div>
       </div>
@@ -64,7 +65,7 @@
           <div class="col-md-5 text-center uk-button-group">
             <div class="uk-inline">
               <% if(panArr[i].exp_done==false){ %>
-              <button type="button" class="btn btn-success" onclick='location.href="/user/expup/<%= panArr[i]._id %>"'>정산</button>
+              <button id="bill" type="button" class="btn btn-success" onclick='location.href="/user/expup/<%= panArr[i]._id %>"'>정산</button>
               <% }else{ %>
               <span>정산완료 :
                 <%= panArr[i].exp_done_howmuch %></span>
@@ -116,9 +117,23 @@
       </div>
     </div>
   </div>
-  <div class="container">
-    <hr>
-    <% include ./footer %><br></div>
+  <% include ./footer %>
 </body>
+  <script>
+    $(function() {
+
+      var bill = document.getElementById("bill");
+
+      bill.onclick = function() {
+        var submitEnd = confirm('정산하시겠습니까? 한번 정산된 글로는 추후 경험치를 획득할 수 없습니다');
+        if (submitEnd) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+    });
+  </script>
 
 </html>

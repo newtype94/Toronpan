@@ -114,51 +114,42 @@ router.post('/joinDB', function(req, res) {
     nameJ: nameJ
   }, function(err, count) {
     if (err) throw err;
-    if(count==0){
-      //조건 한번 더 검증
-      if ((genderJ == "m") || (genderJ == "f")) {
-        if (yearJ > 1800) {
-          if ((sideJ == "left") || (sideJ == "right")) { //검증완료
-            ageJ = Math.floor((2019 - yearJ + 1) / 10) * 10;
-            if (ageJ == 0)
-              ageJ = 10;
-            else if (ageJ > 70)
-              ageJ = 70;
+    if (count == 0) { //닉네임 중복체크
+      if (((genderJ == "m") || (genderJ == "f")) &&
+        ((yearJ >= 1905) && (yearJ <= 2019)) &&
+        ((sideJ == "left") || (sideJ == "right"))) { //나머지 정보 한번더 검증
+        ageJ = Math.floor((2019 - yearJ + 1) / 10) * 10;
+        if (ageJ == 0)
+          ageJ = 10;
+        else if (ageJ > 70)
+          ageJ = 70;
 
-            User.findOneAndUpdate({
-              idK: idK
-            }, {
-              $set: {
-                nameJ: nameJ,
-                genderJ: genderJ,
-                sideJ: sideJ,
-                yearJ: yearJ,
-                ageJ: ageJ,
-                level: 1,
-                exp: 0
-              }
-            }, function(err, board) {
-              if (err) {
-                console.log(err);
-                req.flash('message', '오류가 발생하여 회원가입이 실패했습니다');
-                res.redirect('/home');
-              }
-              req.flash('message', '회원가입이 성공적으로 이루어졌습니다');
-              res.redirect('/home');
-            });
-          }else{
+        User.findOneAndUpdate({
+          idK: idK
+        }, {
+          $set: {
+            nameJ: nameJ,
+            genderJ: genderJ,
+            sideJ: sideJ,
+            yearJ: yearJ,
+            ageJ: ageJ,
+            level: 1,
+            exp: 0
+          }
+        }, function(err, board) {
+          if (err) {
+            console.log(err);
             req.flash('message', '오류가 발생하여 회원가입이 실패했습니다');
             res.redirect('/home');
           }
-        }else{
-          req.flash('message', '오류가 발생하여 회원가입이 실패했습니다');
+          req.flash('message', '회원가입이 성공적으로 이루어졌습니다');
           res.redirect('/home');
-        }
-      }else{
+        });
+      } else {
         req.flash('message', '오류가 발생하여 회원가입이 실패했습니다');
         res.redirect('/home');
       }
-    }else{
+    } else {
       req.flash('message', '오류가 발생하여 회원가입이 실패했습니다');
       res.redirect('/home');
     }
@@ -978,6 +969,9 @@ router.get('/mypage/:page', function(req, res) {
         console.log("레벨업 성공..");
       });
     });
+
+    //1일 글쓰기 제한은 나중에 추가~
+    /*
     WriteLimit.findOne({
       $and: [{
         writer: sessionUser._id
@@ -989,6 +983,7 @@ router.get('/mypage/:page', function(req, res) {
       if (what)
         todayWrite = what.howMany;
     });
+    */
 
     Board.count({
       writer_id: sessionUser._id
@@ -1007,8 +1002,7 @@ router.get('/mypage/:page', function(req, res) {
           pagination: pageNum,
           page: page,
           title: "마이페이지",
-          me: sessionUser,
-          todayWrite: todayWrite
+          me: sessionUser
         });
       });
     });
