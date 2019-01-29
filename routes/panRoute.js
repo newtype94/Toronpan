@@ -570,11 +570,13 @@ router.get('/page/:field/hot/:page', function(req, res, next) {
 
 //search 알고리즘
 router.post('/pan/search/:page', function(req, res) {
+  var field = req.body.field;
   var where = req.body.where;
   var how = req.body.how;
   var what = req.body.what;
 
   var formBack = [];
+  formBack['field'] = field;
   formBack['where'] = where;
   formBack['how'] = how;
   formBack['what'] = what;
@@ -589,7 +591,9 @@ router.post('/pan/search/:page', function(req, res) {
 
   if (where == "최신") { //최신
     if (how == "제목") { //최신 -> 제목
-      Board.count({
+      Board.find({
+        field:field
+      }).count({
         title: {
           $regex: ".*" + what + ".*"
         }
@@ -615,7 +619,9 @@ router.post('/pan/search/:page', function(req, res) {
         });
       });
     } else if (how == "내용") { //최신 -> 내용
-      Board.count({
+      Board.find({
+        field:field
+      }).count({
         contents: {
           $regex: ".*" + what + ".*"
         }
@@ -641,7 +647,9 @@ router.post('/pan/search/:page', function(req, res) {
         });
       });
     } else { //최신 -> 내용+내용
-      Board.count({
+      Board.find({
+        field:field
+      }).count({
         $or: [{
           title: {
             $regex: ".*" + what + ".*"
@@ -681,7 +689,9 @@ router.post('/pan/search/:page', function(req, res) {
     }
   } else if (where == "인기") { //인기
     if (how == "제목") { //인기 -> 제목
-      Board.count({
+      Board.find({
+        field:field
+      }).count({
         like_number: {
           $gte: 50
         },
@@ -713,7 +723,9 @@ router.post('/pan/search/:page', function(req, res) {
         });
       });
     } else if (how == "내용") { //인기 -> 내용
-      Board.count({
+      Board.find({
+        field:field
+      }).count({
         like_number: {
           $gte: 50
         },
@@ -745,7 +757,9 @@ router.post('/pan/search/:page', function(req, res) {
         });
       });
     } else { //인기 -> 제목+내용
-      Board.count({
+      Board.find({
+        field:field
+      }).count({
         like_number: {
           $gte: 50
         },
