@@ -592,7 +592,7 @@ router.post('/pan/search/:page', function(req, res) {
   if (where == "최신") { //최신
     if (how == "제목") { //최신 -> 제목
       Board.find({
-        field:field
+        field: field
       }).count({
         title: {
           $regex: ".*" + what + ".*"
@@ -620,7 +620,7 @@ router.post('/pan/search/:page', function(req, res) {
       });
     } else if (how == "내용") { //최신 -> 내용
       Board.find({
-        field:field
+        field: field
       }).count({
         contents: {
           $regex: ".*" + what + ".*"
@@ -648,7 +648,7 @@ router.post('/pan/search/:page', function(req, res) {
       });
     } else { //최신 -> 내용+내용
       Board.find({
-        field:field
+        field: field
       }).count({
         $or: [{
           title: {
@@ -690,7 +690,7 @@ router.post('/pan/search/:page', function(req, res) {
   } else if (where == "인기") { //인기
     if (how == "제목") { //인기 -> 제목
       Board.find({
-        field:field
+        field: field
       }).count({
         like_number: {
           $gte: 50
@@ -724,7 +724,7 @@ router.post('/pan/search/:page', function(req, res) {
       });
     } else if (how == "내용") { //인기 -> 내용
       Board.find({
-        field:field
+        field: field
       }).count({
         like_number: {
           $gte: 50
@@ -758,7 +758,7 @@ router.post('/pan/search/:page', function(req, res) {
       });
     } else { //인기 -> 제목+내용
       Board.find({
-        field:field
+        field: field
       }).count({
         like_number: {
           $gte: 50
@@ -811,6 +811,7 @@ router.get('/write', function(req, res, next) {
   var now = new Date();
   now = now.toLocaleDateString();
   var sessionUser = req.user;
+
   if (checkLogin(req.user) == 0) {
     req.flash('message', '로그인 후에 글을 작성할 수 있습니다');
     res.redirect("/home");
@@ -818,9 +819,22 @@ router.get('/write', function(req, res, next) {
     req.flash('message', '회원가입(10초 정도 소요) 후에 글을 작성할 수 있습니다');
     res.redirect("/home");
   } else {
-    res.render('panWrite', {
-      sessionUser: sessionUser,
-      login: 2
+    SurveyDone.findOne({
+      done_people: sessionUser.idK,
+      date: now
+    }, function(err, what) {
+      if (err) {
+        console.log(err);
+        res.redirect("/");
+      } else if (what) {
+        res.render('panWrite', {
+          login: 2,
+          sessionUser: sessionUser
+        });
+      } else {
+        req.flash('message', '설문을 먼저 해주세요..');
+        res.redirect("/home");
+      }
     });
   }
 });
