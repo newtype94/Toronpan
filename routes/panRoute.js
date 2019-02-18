@@ -980,7 +980,7 @@ router.get('/mypage/:page', function(req, res) {
   var limitSize = 7;
   var pageNum = 1;
 
-  if (sessionUser == null) {
+  if (checkLogin(sessionUser) == 0) {
     req.flash('message', '로그인 해주세요');
     res.redirect("/home");
   } else {
@@ -994,24 +994,9 @@ router.get('/mypage/:page', function(req, res) {
           level: parseInt((userDB.exp) / 50) + 1
         }
       }, function() {
-        console.log("레벨업 성공..");
+        console.log("Level Up Complete..");
       });
     });
-
-    //1일 글쓰기 제한은 나중에 추가~
-    /*
-    WriteLimit.findOne({
-      $and: [{
-        writer: sessionUser._id
-      }, {
-        date: now
-      }]
-    }, function(err, what) {
-      if (err) throw err
-      if (what)
-        todayWrite = what.howMany;
-    });
-    */
 
     Board.count({
       writer_id: sessionUser._id
@@ -1019,13 +1004,14 @@ router.get('/mypage/:page', function(req, res) {
       if (err) throw err;
       pageNum = Math.ceil(totalCount / limitSize);
       Board.find({
-        writer_id: req.user._id
+        writer_id: sessionUser._id
       }).sort({
         board_date: -1
       }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
         if (err) throw err;
+        console.log("here");
         res.render('myPage', {
-          login: 1,
+          login: 2,
           panArr: panArr,
           pagination: pageNum,
           page: page,

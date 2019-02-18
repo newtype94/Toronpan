@@ -1,14 +1,7 @@
 
-
-
-
 수정 완료 시 확인 차 alert띄워야함
 https://coding-factory.tistory.com/196
 
-글쓰기 전에 설문체크
+mypage 서버에러 수정
 
 login 레벨 1이면 글 읽기 진입 불가 설정
-
-panpage 및 panhome 프론트 잡기
-
-댓글 list그룹으로 모양빼기
