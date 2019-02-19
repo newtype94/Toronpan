@@ -967,11 +967,6 @@ router.get('/pan/:id', function(req, res) {
 router.get('/mypage/:page', function(req, res) {
   var sessionUser = req.user;
 
-  //today 작성 글 개수
-  var now = new Date();
-  now = now.toLocaleDateString();
-  var todayWrite = 0;
-
   //마이페이지 페이징
   var page = req.params.page;
   if (page == null)
@@ -982,6 +977,9 @@ router.get('/mypage/:page', function(req, res) {
 
   if (checkLogin(sessionUser) == 0) {
     req.flash('message', '로그인 해주세요');
+    res.redirect("/home");
+  } else if (checkLogin(sessionUser) == 1) {
+    req.flash('message', '가입을 완료해주세요');
     res.redirect("/home");
   } else {
     User.findOne({
@@ -1009,7 +1007,7 @@ router.get('/mypage/:page', function(req, res) {
         board_date: -1
       }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
         if (err) throw err;
-        console.log("here");
+        console.log();
         res.render('myPage', {
           login: 2,
           panArr: panArr,
@@ -1020,6 +1018,7 @@ router.get('/mypage/:page', function(req, res) {
         });
       });
     });
+
   }
 });
 
