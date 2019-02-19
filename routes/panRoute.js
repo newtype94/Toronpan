@@ -1007,7 +1007,9 @@ router.get('/mypage/:page', function(req, res) {
         board_date: -1
       }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
         if (err) throw err;
-        console.log();
+        console.log(sessionUser);
+        console.log(err);
+        console.log(panArr);
         res.render('myPage', {
           login: 2,
           panArr: panArr,
