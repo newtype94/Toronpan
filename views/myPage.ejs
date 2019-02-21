@@ -60,13 +60,13 @@
           <div class="col-md-5 text-center uk-button-group">
             <div class="uk-inline">
               <% if(panArr[i].exp_done==false){ %>
-              <button id="bill" type="button" class="btn btn-success" onclick='location.href="/user/expup/<%= panArr[i]._id %>"'>정산</button>
+              <a id="bill" class="btn btn-success" data-link='/user/expup/<%= panArr[i]._id %>'>정산</a>
               <% }else{ %>
               <span>정산완료 :
                 <%= panArr[i].exp_done_howmuch %></span>
               <% } %>
-              <button type="button" class="btn btn-warning" onclick="location.href='/pan/update/<%= panArr[i]._id %>'">수정</button>
-              <button type="button" class="btn btn-danger" onclick="location.href='/pan/remove/<%= panArr[i]._id %>'">삭제</a></button>
+              <a class="btn btn-warning" onclick="location.href='/pan/update/<%= panArr[i]._id %>'">수정</a>
+              <a id="deletes" class="btn btn-danger" data-link="location.href='/pan/remove/<%= panArr[i]._id %>'">삭제</a>
             </div>
           </div>
         </div>
@@ -118,11 +118,20 @@
     $(function() {
 
       var bill = document.getElementById("bill");
+      var deletes = document.getElementById("deletes");
 
       bill.onclick = function() {
-        var submitEnd = confirm('정산하시겠습니까? 한번 정산된 글로는 추후 경험치를 획득할 수 없습니다');
-        if (submitEnd) {
-          return true;
+        if (confirm('정산하시겠습니까? 한번 정산된 글로는 추후 경험치를 획득할 수 없습니다')) {
+          return $("#bill").attr("data-link");
+        } else {
+          return false;
+        }
+      }
+
+      deletes.onclick = function() {
+        if (confirm('삭제하시겠습니까? 한번 삭제된 글은 복구할 수 없습니다')) {
+          alert($("#deletes").attr("data-link"));
+          return $("#deletes").attr("data-link");
         } else {
           return false;
         }
