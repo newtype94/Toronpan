@@ -10,64 +10,93 @@
 
 <body>
   <% include ./header %>
+
   <div class="container">
-    <hr>
-    <div class="text-center">글쓰기</div>
-    <hr>
-    <form action="/pan/updating/<%= pan._id %>" method="post" id="writeForm">
-      <div class="form-group">
-        <input type="text" class="form-control" name="title" value="<%= pan.title%>"/>
+    <div class="row">
+      <div class="col-12">
+        <div class="alert alert-warning text-center" role="alert">
+          <%if(pan.field==1){%>
+          정치
+          <%}else if(pan.field==2){%>
+          사회
+          <%}else if(pan.field==3){%>
+          자유
+          <%}%>
+          - 글 수정
+        </div>
       </div>
-      <input type="hidden" name="writer" value=<%=sessionUser.nameJ %>>
-      <div class="form-group">
-        <textarea name="contents" id="summernote"><%- pan.contents%></textarea>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <form action="/pan/updating/<%= pan._id %>" method="post" id="writeForm">
+          <div class="form-group">
+            <input type="text" placeholder="제목" class="form-control" name="title" value="<%= pan.title%>" />
+          </div>
+          <input type="hidden" name="writer" value=<%=sessionUser.nameJ %>>
+          <div class="form-group">
+            <textarea name="contents" id="summernote"><%= pan.contents%></textarea>
+          </div>
+          <div class="form-group">
+            <input type="submit" class="btn btn-success" value="글 등록">
+          </div>
+        </form>
       </div>
-      <div class="form-group">
-        <input type="submit" class="btn btn-success" value="글 등록">
-      </div>
-    </form>
-    <script>
-      $(function() {
-        $('#summernote').summernote({
-          height: 400,
-          fontNames: ['맑은고딕', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', ],
-          fontNamesIgnoreCheck: ['맑은고딕'],
-          focus: true,
-          callbacks: {
-            onImageUpload: function(files, editor, welEditable) {
-              for (var i = files.length - 1; i >= 0; i--) {
-                sendFile(files[i], this);
-              }
+    </div>
+  </div>
+  </form>
+  <script>
+    $(function() {
+      $('#summernote').summernote({
+        height: 400,
+        fontNames: ['맑은고딕', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', ],
+        fontNamesIgnoreCheck: ['맑은고딕'],
+        focus: true,
+        callbacks: {
+          onImageUpload: function(files, editor, welEditable) {
+            for (var i = files.length - 1; i >= 0; i--) {
+              sendFile(files[i], this);
             }
           }
-
-        });
-
-        function sendFile(file, el) {
-          var form_data = new FormData();
-          form_data.append('file', file);
-          $.ajax({
-            data: form_data, //client -> server
-            dataType: 'json', //server -> client
-            type: "POST",
-            url: '/upload',
-            cache: false,
-            contentType: false,
-            enctype: 'multipart/form-data',
-            processData: false,
-            success: function(data) {
-              if ((data) && (typeof data !== "object"))
-                data = $.parseJSON(data);
-              if (data.err)
-                alert(data.error);
-              else if (data.path)
-                $(el).summernote('editor.insertImage', data.path);
-            }
-          });
         }
+
       });
-    </script>
-  </div>
+
+      function sendFile(file, el) {
+        var form_data = new FormData();
+        form_data.append('file', file);
+        $.ajax({
+          data: form_data, //client -> server
+          dataType: 'json', //server -> client
+          type: "POST",
+          url: '/upload',
+          cache: false,
+          contentType: false,
+          enctype: 'multipart/form-data',
+          processData: false,
+          success: function(data) {
+            if ((data) && (typeof data !== "object"))
+              data = $.parseJSON(data);
+            if (data.err)
+              alert(data.error);
+            else if (data.path)
+              $(el).summernote('editor.insertImage', data.path);
+          }
+        });
+      }
+
+      var wf = document.getElementById("writeForm");
+
+      wf.onsubmit = function() {
+        var submitEnd = confirm('글을 마무리 하셨나요? 확인 누르면 제출됩니다.');
+        if (submitEnd) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    });
+  </script>
+
 </body>
 
 </html>

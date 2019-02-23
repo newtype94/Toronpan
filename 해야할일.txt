@@ -1,7 +1,7 @@
+마이페이지 모양 빼기
 
-수정 완료 시 확인 차 alert띄워야함
-https://coding-factory.tistory.com/196
+panhome 모양 빼기
 
-mypage 서버에러 수정
+panpage 모양 빼기
 
-login 레벨 1이면 글 읽기 진입 불가 설정
+댓글 모양 빼기

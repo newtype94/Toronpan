@@ -858,7 +858,6 @@ router.post('/pan/write', function(req, res) {
       board.title = req.body.title;
     }
 
-    console.log(req.body.field);
     board.contents = req.body.contents;
     board.field = req.body.field;
     board.writer = sessionUser.nameJ;
@@ -942,6 +941,9 @@ router.get('/pan/:id', function(req, res) {
         res.redirect("/home");
       }
     });
+  } else if (checkLogin(sessionUser) == 1) {
+    req.flash('message', '자신의 정보를 입력하여 가입을 마무리해주세요..');
+    res.redirect("/home");
   } else {
     console.log('hi');
     Board.findOneAndUpdate({
@@ -1043,7 +1045,7 @@ router.get('/pan/update/:id', function(req, res) {
       res.render('panUpdate', {
         pan: panDB,
         sessionUser: sessionUser,
-        login: 1
+        login: 2
       });
     });
   }
@@ -1069,8 +1071,8 @@ router.post('/pan/updating/:id', function(req, res) {
       error: "database failure"
     });
   });
-
-  res.redirect("/mypage/1");
+  req.flash('message', '글 수정 완료하였습니다.');
+  res.redirect('/home');
 });
 
 
