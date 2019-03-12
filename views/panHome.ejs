@@ -10,7 +10,7 @@
   <% include ./header %>
   <div class="container">
     <% if((message != null)&&(message != "")){ %>
-    <div class="row mt-2 mb-2">
+    <div class="row mt-2 mb-2"> //알림
       <div class="col-12">
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
           <strong>알림</strong>
@@ -23,37 +23,7 @@
     </div>
     <% } %>
 
-    <% if(survey != null){ %>
-    <div class="row">
-      <div class="col-12">
-        <div class="card border-info mt-2 mb-2" style="max-width: 20rem;">
-          <div class="card-header text-center">오늘의 설문</div>
-          <div class="card-body text-info">
-            <h4 class="card-title">
-              <%= survey.q %>
-            </h4>
-            <form action="/survey/do" method="post">
-              <div class="radio">
-                <label for="degree_1"><input type="radio" name="degree" value="1" id="degree_1" />1점</label>
-                <label for="degree_2"><input type="radio" name="degree" value="2" id="degree_2" />2점</label>
-                <label for="degree_3"><input type="radio" name="degree" value="3" id="degree_3" />3점</label>
-                <label for="degree_4"><input type="radio" name="degree" value="4" id="degree_4" />4점</label>
-                <label for="degree_5"><input type="radio" name="degree" value="5" id="degree_5" />5점</label>
-              </div>
-              <input type="hidden" name="firstID" value="<%= survey.id %>" />
-              <button type="submit" class="btn btn-danger">오늘의 설문 제출</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <% }%>
-    <div class="row mt-2 mb-2">
-      <div class="col-12">
-        <%=poliNew%>
-      </div>
-    </div>
-    <div class="row mt-2 mb-2">
+    <div class="row mt-2 mb-2"> //검색
       <div class="col-12">
         <form action="/pan/search/1" method="post">
           <div class="form-row">
@@ -88,8 +58,34 @@
       </div>
     </div>
 
+    <% if(survey != null){ %>
+    <div class="row"> //설문
+      <div class="col-12">
+        <div class="card border-info mt-2 mb-2" style="max-width: 20rem;">
+          <div class="card-header text-center">오늘의 설문</div>
+          <div class="card-body text-info">
+            <h4 class="card-title">
+              <%= survey.q %>
+            </h4>
+            <form action="/survey/do" method="post">
+              <div class="radio">
+                <label for="degree_1"><input type="radio" name="degree" value="1" id="degree_1" />1점</label>
+                <label for="degree_2"><input type="radio" name="degree" value="2" id="degree_2" />2점</label>
+                <label for="degree_3"><input type="radio" name="degree" value="3" id="degree_3" />3점</label>
+                <label for="degree_4"><input type="radio" name="degree" value="4" id="degree_4" />4점</label>
+                <label for="degree_5"><input type="radio" name="degree" value="5" id="degree_5" />5점</label>
+              </div>
+              <input type="hidden" name="firstID" value="<%= survey.id %>" />
+              <button type="submit" class="btn btn-danger">오늘의 설문 제출</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }%>
+
     <% if(login == 1){ %>
-    <div class="row mt-2 mb-2">
+    <div class="row mt-2 mb-2"> //회원가입
       <div class="col-12">
         <div class="card border-info mt-3 mb-3" style="max-width: 20rem;">
           <div class="card-header text-center">회원가입</div>
@@ -244,6 +240,39 @@
       </div>
     </div>
     <% }%>
+
+    <div class="row mt-2 mb-2">
+      <div class="col-md-6 col-12">
+        <% if (poliNew !== null){%>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">정치-최신</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td><%=poliNew[0].title%></td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <%}%>
+        <%=poliNew%>
+      </div>
+      <div class="col-md-6 col-12">
+        <%=poliHot%>
+      </div>
+    </div>
 
   </div>
   <% include ./footer %>
