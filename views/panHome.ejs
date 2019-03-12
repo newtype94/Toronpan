@@ -10,7 +10,7 @@
   <% include ./header %>
   <div class="container">
     <% if((message != null)&&(message != "")){ %>
-    <div class="row mt-2 mb-2"> //알림
+    <div class="row mt-2 mb-2">
       <div class="col-12">
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
           <strong>알림</strong>
@@ -23,7 +23,7 @@
     </div>
     <% } %>
 
-    <div class="row mt-2 mb-2"> //검색
+    <div class="row mt-2 mb-2"> 
       <div class="col-12">
         <form action="/pan/search/1" method="post">
           <div class="form-row">
@@ -85,7 +85,7 @@
     <% }%>
 
     <% if(login == 1){ %>
-    <div class="row mt-2 mb-2"> //회원가입
+    <div class="row mt-2 mb-2">
       <div class="col-12">
         <div class="card border-info mt-3 mb-3" style="max-width: 20rem;">
           <div class="card-header text-center">회원가입</div>
@@ -243,31 +243,30 @@
 
     <div class="row mt-2 mb-2">
       <div class="col-md-6 col-12">
-        <% if (poliNew !== null){%>
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">정치-최신</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td><%=poliNew[0].title%></td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-        <%}%>
-        <%=poliNew%>
+        <a href="/page/poli/new/1" class="btn btn-outline-dark">정치 - 최신</a>
+
+        <% if (poliNew !== null){
+        for(var i = 0; i < poliNew.length; i++) { %>
+        <div class="list-group">
+          <a href="/pan/<%=poliNew[i]._id%>" class="list-group-item list-group-item-action">
+            <div class="row">
+              <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
+                <%=poliNew[i].title%>
+              </div>
+              <div class="col-4">
+                <span style="float:right;">
+                <% var now = new Date(); now = now.toLocaleDateString();
+                if (now==poliNew[i].board_date.toLocaleDateString()){ %>
+                <%= poliNew[i].board_date.toLocaleTimeString().slice(0,5) %>
+                <% }else{ %>
+                <%= poliNew[i].board_date.toLocaleDateString().slice(5,10) %>
+                <% } %>
+              </span>
+              </div>
+            </div>
+          </a>
+        </div>
+        <%  }} %>
       </div>
       <div class="col-md-6 col-12">
         <%=poliHot%>

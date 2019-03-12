@@ -189,7 +189,7 @@ router.get('/home', function(req, res, next) {
   }).limit(10).exec(function(err, data) {
     if (err) throw err;
     poliNew = data;
-
+    
     Board.find({
       field: 1,
       like_number: {
