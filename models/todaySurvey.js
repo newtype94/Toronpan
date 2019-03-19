@@ -13,6 +13,8 @@ var todaySurvey = new Schema({
   first_1 : [user],
   first_2 : [user],
   first_3 : [user],
+  first_4 : [user],
+  first_5 : [user],
   date: {type: Date, default: Date.now().toLocaleDateString}
 });
 
