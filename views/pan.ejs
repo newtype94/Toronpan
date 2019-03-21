@@ -18,16 +18,16 @@
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-4"></div>
-      <div class="col-md-2">조회수 :
+      <div class="col-4"></div>
+      <div class="col-2">조회수 :
         <%= pan.hit %>
       </div>
-      <div class="col-md-2">작성자 :
+      <div class="col-2">작성자 :
         <%= pan.writer %>
       </div>
-      <div class="col-md-2">좋아요 : <span id="like_number">
+      <div class="col-2">좋아요 : <span id="like_number">
           <%= pan.like_number%></span></div>
-      <div class="col-md-2">
+      <div class="col-2">
         <%= pan.board_date.toLocaleString()%>
       </div>
     </div>
@@ -35,25 +35,25 @@
   <div class="container">
     <hr>
     <div class="row" style="padding-top:20px; padding-bottom:20px;">
-      <div class="col-md-12">
+      <div class="col-12">
         <%= pan.contents%>
       </div>
     </div>
     <div class="row" style="margin-top:20px; margin-bottom:20px;">
-      <div class='col-md-4'></div>
-      <div class="col-md-4" style="text-align : center; font-weight: bold;">
+      <div class='col-4'></div>
+      <div class="col-4" style="text-align : center; font-weight: bold;">
         <button class="btn btn-primary" id="like" data-panId="<%= pan._id %>">좋아요</button>
         <button class="btn btn-danger" id="dislike" data-panId="<%= pan._id %>">싫어요</button>
       </div>
-      <div class='col-md-4'></div>
+      <div class='col-4'></div>
     </div>
   </div>
   <div class="container">
     <hr>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-6">
         <div class="row">
-          <div class="col-md-12 text-center">
+          <div class="col-12 text-center">
             <button class="btn btn-success getComment " data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</button>
             <button class="btn btn-primary getComment" data-page="1" data-where="hot">인기 댓글</button></div>
         </div>
@@ -61,7 +61,7 @@
         <div class="row" id="commentBox"></div>
         <div id="pagingBox"></div>
         <div class="row" style="padding-top:10px; padding-bottom:10px;">
-          <div class="col-md-12">
+          <div class="col-12">
             <% if(login==0){ %>
             <h3>로그인을 하지 않아 댓글을 달 수 없습니다</h3>
             <% } else if(login==1){ %>
@@ -80,7 +80,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6"></div>
+      <div class="col-6"></div>
     </div>
   </div>
 
