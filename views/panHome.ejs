@@ -242,108 +242,125 @@
     <% }%>
 
     <div class="row mt-2 mb-2">
-      <div class="col-md-6 col-12">
-        <a href="/page/poli/new/1" class="btn btn-outline-dark">정치 - 최신</a>
-        <% if (poliNew !== null){
-        for(var i = 0; i < poliNew.length; i++) { %>
-        <div class="list-group">
-          <a href="/pan/<%=poliNew[i]._id%>" class="list-group-item list-group-item-action">
-            <div class="row">
-              <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
-                <%=poliNew[i].title%>
+      <div class="col-md-6 col-12 mb-2">
+        <div class="card">
+          <div class="card-header">
+            <a href="/page/poli/new/1" class="btn-outline-dark">정치 - 최신</a>
+          </div>
+          <% if (poliNew !== null){
+          for(var i = 0; i < poliNew.length; i++) { %>
+          <div class="list-group">
+            <a href="/pan/<%=poliNew[i]._id%>" class="list-group-item list-group-item-action">
+              <div class="row">
+                <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
+                  <%=poliNew[i].title%>
+                </div>
+                <div class="col-4">
+                  <span style="float:right;">
+                    <% var now = new Date(); now = now.toLocaleDateString();
+                  if (now==poliNew[i].board_date.toLocaleDateString()){ %>
+                    <%= poliNew[i].board_date.toLocaleTimeString().slice(0,5) %>
+                    <% }else{ %>
+                    <%= poliNew[i].board_date.toLocaleDateString().slice(5,10) %>
+                    <% } %>
+                  </span>
+                </div>
               </div>
-              <div class="col-4">
-                <span style="float:right;">
-                <% var now = new Date(); now = now.toLocaleDateString();
-                if (now==poliNew[i].board_date.toLocaleDateString()){ %>
-                <%= poliNew[i].board_date.toLocaleTimeString().slice(0,5) %>
-                <% }else{ %>
-                <%= poliNew[i].board_date.toLocaleDateString().slice(5,10) %>
-                <% } %>
-              </span>
-              </div>
-            </div>
-          </a>
+            </a>
+          </div>
+          <%  }} %>
         </div>
-        <%  }} %>
       </div>
-      <div class="col-md-6 col-12">
-        <a href="/page/poli/hot/1" class="btn btn-outline-dark">정치 - 인기</a>
-        <% if (poliHot !== null){
+
+      <div class="col-md-6 col-12 mb-2">
+        <div class="card">
+          <div class="card-header">
+            <a href="/page/poli/hot/1" class="btn-outline-dark">정치 - 인기</a>
+          </div>
+          <% if (poliHot !== null){
         for(var i = 0; i < poliHot.length; i++) { %>
-        <div class="list-group">
-          <a href="/pan/<%=poliHot[i]._id%>" class="list-group-item list-group-item-action">
-            <div class="row">
-              <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
-                <%=poliHot[i].title%>
-              </div>
-              <div class="col-4">
-                <span style="float:right;">
-                <% var now = new Date(); now = now.toLocaleDateString();
+          <div class="list-group">
+            <a href="/pan/<%=poliHot[i]._id%>" class="list-group-item list-group-item-action">
+              <div class="row">
+                <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
+                  <%=poliHot[i].title%>
+                </div>
+                <div class="col-4">
+                  <span style="float:right;">
+                    <% var now = new Date(); now = now.toLocaleDateString();
                 if (now==poliHot[i].board_date.toLocaleDateString()){ %>
-                <%= poliHot[i].board_date.toLocaleTimeString().slice(0,5) %>
-                <% }else{ %>
-                <%= poliHot[i].board_date.toLocaleDateString().slice(5,10) %>
-                <% } %>
-              </span>
+                    <%= poliHot[i].board_date.toLocaleTimeString().slice(0,5) %>
+                    <% }else{ %>
+                    <%= poliHot[i].board_date.toLocaleDateString().slice(5,10) %>
+                    <% } %>
+                  </span>
+                </div>
               </div>
-            </div>
-          </a>
+            </a>
+          </div>
+          <%  }} %>
         </div>
-        <%  }} %>
       </div>
     </div>
 
     <div class="row mt-2 mb-2">
-      <div class="col-md-6 col-12">
-        <a href="/page/soci/new/1" class="btn btn-outline-dark">사회 - 최신</a>
-        <% if (sociNew !== null){
+      <div class="col-md-6 col-12 mb-2">
+        <div class="card">
+          <div class="card-header">
+            <a href="/page/soci/new/1" class="btn-outline-dark">사회 - 최신</a>
+          </div>
+          <% if (sociNew !== null){
         for(var i = 0; i < sociNew.length; i++) { %>
-        <div class="list-group">
-          <a href="/pan/<%=sociNew[i]._id%>" class="list-group-item list-group-item-action">
-            <div class="row">
-              <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
-                <%=sociNew[i].title%>
-              </div>
-              <div class="col-4">
-                <span style="float:right;">
-                <% var now = new Date(); now = now.toLocaleDateString();
+          <div class="list-group">
+            <a href="/pan/<%=sociNew[i]._id%>" class="list-group-item list-group-item-action">
+              <div class="row">
+                <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
+                  <%=sociNew[i].title%>
+                </div>
+                <div class="col-4">
+                  <span style="float:right;">
+                    <% var now = new Date(); now = now.toLocaleDateString();
                 if (now==sociNew[i].board_date.toLocaleDateString()){ %>
-                <%= sociNew[i].board_date.toLocaleTimeString().slice(0,5) %>
-                <% }else{ %>
-                <%= sociNew[i].board_date.toLocaleDateString().slice(5,10) %>
-                <% } %>
-              </span>
+                    <%= sociNew[i].board_date.toLocaleTimeString().slice(0,5) %>
+                    <% }else{ %>
+                    <%= sociNew[i].board_date.toLocaleDateString().slice(5,10) %>
+                    <% } %>
+                  </span>
+                </div>
               </div>
-            </div>
-          </a>
+            </a>
+          </div>
+          <%  }} %>
         </div>
-        <%  }} %>
       </div>
-      <div class="col-md-6 col-12">
-        <a href="/page/soci/hot/1" class="btn btn-outline-dark">사회 - 인기</a>
-        <% if (sociHot !== null){
+      <div class="col-md-6 col-12 mb-2">
+        <div class="card">
+          <div class="card-header">
+            <a href="/page/soci/hot/1" class="btn-outline-dark">사회 - 인기</a>
+          </div>
+          <% if (sociHot !== null){
         for(var i = 0; i < sociHot.length; i++) { %>
-        <div class="list-group">
-          <a href="/pan/<%=sociHot[i]._id%>" class="list-group-item list-group-item-action">
-            <div class="row">
-              <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
-                <%=sociHot[i].title%>
-              </div>
-              <div class="col-4">
-                <span style="float:right;">
-                <% var now = new Date(); now = now.toLocaleDateString();
+          <div class="list-group">
+            <a href="/pan/<%=sociHot[i]._id%>" class="list-group-item list-group-item-action">
+              <div class="row">
+                <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
+                  <%=sociHot[i].title%>
+                </div>
+                <div class="col-4">
+                  <span style="float:right;">
+                    <% var now = new Date(); now = now.toLocaleDateString();
                 if (now==sociHot[i].board_date.toLocaleDateString()){ %>
-                <%= sociHot[i].board_date.toLocaleTimeString().slice(0,5) %>
-                <% }else{ %>
-                <%= sociHot[i].board_date.toLocaleDateString().slice(5,10) %>
-                <% } %>
-              </span>
+                    <%= sociHot[i].board_date.toLocaleTimeString().slice(0,5) %>
+                    <% }else{ %>
+                    <%= sociHot[i].board_date.toLocaleDateString().slice(5,10) %>
+                    <% } %>
+                  </span>
+                </div>
               </div>
-            </div>
-          </a>
+            </a>
+          </div>
+          <%  }} %>
         </div>
-        <%  }} %>
       </div>
     </div>
 
