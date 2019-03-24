@@ -9,8 +9,15 @@
   <% include ./header %>
   <div class="container">
     <div class="row">
-      <div class="col-md-3">
-        <div class="card border-info mb-5" style="max-width: 20rem;">
+      <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+          마이 페이지
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card border-info mb-2" style="max-width: 20rem;">
           <div class="card-header text-center">
             <%= me.nameJ %>
           </div>
@@ -37,56 +44,47 @@
           </div>
         </div>
       </div>
-      <div class="col-md-9">
-        <hr>
-        <div class="row">
-          <div class="col-md-6 text-center">제목</div>
-          <div class="col-md-1 text-center">인정</div>
-          <div class="col-md-2 text-center">시간</div>
-          <div class="col-md-3 text-center">권한</div>
-        </div>
-        <hr>
-        <% if (panArr !== null){
+    </div>
+    <% if (panArr !== null){
     for(var i = 0; i < panArr.length; i++) { %>
-        <div class="row" style="height:50px;">
-          <div class="col-md-5">
-            <button class="btn btn-outline-dark" onclick="location.href='/pan/<%= panArr[i]._id%>'">
-              <%=panArr[i].title%>
-            </button>
-          </div>
-          <div class="col-md-2 text-center">
-            <%= panArr[i].like_number%>
-          </div>
-          <div class="col-md-5 text-center uk-button-group">
-            <div class="uk-inline">
-              <% if(panArr[i].exp_done==false){ %>
-              <a href='/user/expup/<%= panArr[i]._id %>' class="btn btn-success bill">정산</a>
-              <% }else{ %>
-              <span>정산완료(<%= panArr[i].exp_done_howmuch %>)</span>
-              <% } %>
-              <a class="btn btn-warning" href='/pan/update/<%= panArr[i]._id %>'>수정</a>
-              <a href='/pan/remove/<%= panArr[i]._id %>' class="btn btn-danger deletes">삭제</a>
-            </div>
-          </div>
-        </div>
-        <br>
-        <%  }} %>
+    <div class="row mb-2">
+      <div class="col-md-6 col-12">
+        <a href="/pan/<%= panArr[i]._id%>" class="list-group-item list-group-item-action" style="overflow:hidden; text-overflow:ellipsis;">
+          <%=panArr[i].title%>
+        </a>
+      </div>
+      <div class="col-md-6 col-12">
+
+        <% if(panArr[i].exp_done==false){ %>
+        <a href='/user/expup/<%= panArr[i]._id %>' class="btn btn-success bill"><i class="far fa-heart"></i>
+          <%= panArr[i].like_number%> 정산</a>
+        <% }else{ %>
+        <span><i class="fas fa-heart"></i>
+          <%= panArr[i].exp_done_howmuch %> 정산완료</span>
+        <% } %>
+        <a class="btn btn-warning" href='/pan/update/<%= panArr[i]._id %>'>수정</a>
+        <a href='/pan/remove/<%= panArr[i]._id %>' class="btn btn-danger deletes">삭제</a>
+      </div>
+    </div>
+    <%  }} %>
+    <div class="row">
+      <div class="col-12">
         <nav aria-label="Page navigation example" style="padding:30px;">
           <ul class="pagination justify-content-center">
             <% var start=page;
-    if((start%10)==0){
-      start--;
-    }
-    while((start%10)!=0){
-      start--;
-    }
-    start++;
-    if((start+9)>pagination){
-      end=pagination;
-    }else{
-      end=start+9;
-    }
-    if(start!==1){ %>
+        if((start%10)==0){
+          start--;
+        }
+        while((start%10)!=0){
+          start--;
+        }
+        start++;
+        if((start+9)>pagination){
+          end=pagination;
+        }else{
+          end=start+9;
+        }
+        if(start!==1){ %>
             <li class="page-item">
               <a class="page-link" href="./<%=start-1%>" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
@@ -94,11 +92,16 @@
               </a>
             </li>
             <% }
-     for(var i=start; i<=end; i++){ %>
+            for(var i=start; i<=end; i++){
+            if(i==page){ %>
+            <li class="page-item active"><a class="page-link" href="./<%=i%>" class="page-link">
+                <%=i%></a></li>
+            <% } else{%>
             <li class="page-item"><a class="page-link" href="./<%=i%>" class="page-link">
                 <%=i%></a></li>
+            <% } %>
             <%}
-    if(end!=pagination){ %>
+        if(end!=pagination){ %>
             <li class="page-item">
               <a class="page-link" href="./<%=end+1%>" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
@@ -111,28 +114,29 @@
       </div>
     </div>
   </div>
+  </div>
   <% include ./footer %>
 </body>
-  <script>
-    $(function() {
+<script>
+  $(function() {
 
-      $(".bill").click(function() {
-        if (confirm('정산하시겠습니까? 한번 정산된 글로는 추후 경험치를 획득할 수 없습니다')) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-
-      $(".deletes").click(function() {
-        if (confirm('삭제하시겠습니까? 한번 삭제된 글은 복구할 수 없습니다')) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-
+    $(".bill").click(function() {
+      if (confirm('정산하시겠습니까? 한번 정산된 글로는 추후 경험치를 획득할 수 없습니다')) {
+        return true;
+      } else {
+        return false;
+      }
     });
-  </script>
+
+    $(".deletes").click(function() {
+      if (confirm('삭제하시겠습니까? 한번 삭제된 글은 복구할 수 없습니다')) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+  });
+</script>
 
 </html>

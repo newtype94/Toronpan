@@ -1049,8 +1049,8 @@ router.get('/mypage/:page', function(req, res) {
   var page = req.params.page;
   if (page == null)
     page = 1;
-  var skipSize = (page - 1) * 7;
-  var limitSize = 7;
+  var skipSize = (page - 1) * 1;
+  var limitSize = 1;
   var pageNum = 1;
 
   if (checkLogin(sessionUser) == 0) {

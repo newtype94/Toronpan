@@ -36,11 +36,12 @@
             <span class="float-right font-weight-light">
               <i class="fas fa-heart"></i>
               <%= panArr[i].like_number%>
-              <i class="fas fa-calendar-alt"></i>
               <% var now = new Date(); now = now.toLocaleDateString();
             if (now==panArr[i].board_date.toLocaleDateString()){ %>
+              <i class="far fa-clock"></i>
               <%= panArr[i].board_date.toLocaleTimeString().slice(0,5) %>
               <% }else{ %>
+                <i class="fas fa-calendar-alt"></i>
               <%= panArr[i].board_date.toLocaleDateString().slice(5,10) %>
               <% } %>
             </span>
