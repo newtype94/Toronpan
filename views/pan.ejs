@@ -172,7 +172,7 @@
         var newHot = $(this).attr("data-where");
         var panId = $("#dislike").attr("data-panId");
         $.ajax({
-          url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId,
+          url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId +"/left",
           type: "get",
           dataType: 'json',
           success: function(json) {

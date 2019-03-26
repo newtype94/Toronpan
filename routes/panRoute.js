@@ -1001,15 +1001,10 @@ router.get('/pan/:id', function(req, res) {
         }, {
           new: true
         }, function(err, panDB) {
-          Comment.find({
-            whatBoard: req.params.id
-          }, function(err, commentDB) {
-            res.render('pan', {
-              login: 2,
-              pan: panDB,
-              comment: commentDB,
-              sessionUser: sessionUser
-            });
+          res.render('pan', {
+            login: 2,
+            pan: panDB,
+            sessionUser: sessionUser
           });
         });
       } else {
@@ -1021,7 +1016,6 @@ router.get('/pan/:id', function(req, res) {
     req.flash('message', '자신의 정보를 입력하여 가입을 마무리해주세요..');
     res.redirect("/home");
   } else {
-    console.log('hi');
     Board.findOneAndUpdate({
       _id: req.params.id
     }, {
@@ -1034,7 +1028,6 @@ router.get('/pan/:id', function(req, res) {
       res.render('pan', {
         login: checkLogin(sessionUser),
         pan: panDB,
-        comment: null,
         sessionUser: sessionUser
       });
     });
@@ -1165,7 +1158,7 @@ router.get('/pan/remove/:id', function(req, res) {
 });
 
 //댓글 페이징 AJAX
-router.get('/commentpage/:where/:page/:panid', function(req, res, next) {
+router.get('/commentpage/:where/:page/:panid/:side', function(req, res, next) {
   console.log(req.params);
   var page = req.params.page;
   if (page == "") {
