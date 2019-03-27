@@ -50,7 +50,7 @@
   </div>
   <div class="container">
     <hr>
-    <div class="row mt-3 mb-3">
+    <div class="row mt-3">
       <div class="col-12">
         <% if(login==2){ %>
         <form action="/comment/write" method="post">
@@ -84,36 +84,39 @@
           회원가입이 완료되지 않아 댓글을 볼 수 없습니다
         </div>
       </div>
-    <% }else if(sessionUser.sideJ="left"){ %>
+    <% }else if(sessionUser.sideJ=="left"){ %>
       <div class="row">
         <div class="col-md-6 col-12">
-          <div id="ourBox"></div>
+          진보
+          <div id="ourBox" data-side="left"></div>
           <div id="ourPaging"></div>
         </div>
         <div class="col-md-6 col-12">
+          보수
           <div id="otherBox"></div>
           <div id="otherPaging"></div>
         </div>
       </div>
-    <% }else if(sessionUser.sideJ="right"){ %>
+    <% }else if(sessionUser.sideJ=="right"){ %>
       <div class="row">
         <div class="col-md-6 col-12">
+          진보
           <div id="otherBox"></div>
           <div id="otherPaging"></div>
         </div>
         <div class="col-md-6 col-12">
-          <div id="ourBox"></div>
+          보수
+          <div id="ourBox" data-side="right"></div>
           <div id="ourPaging"></div>
         </div>
       </div>
     <% }%>
+  </div>
 
     <% include ./footer %>
 
     <script>
       $(function() {
-
-
         $("#like").click(function() {
           var panId = $("#like").attr("data-panId");
           $.ajax({
@@ -187,16 +190,15 @@
           });
         });
 
-        $(document).on("click", '.littleCommentOpen', function() {
-          $(this).parent().siblings().filter('.littleCommentBox').toggle();
-        });
+        var ourSide = $("#ourBox").attr("data-side");
 
         $(document).on("click", '.getOurs', function() {
           var thisPage = $(this).attr("data-page");
           var newHot = $(this).attr("data-where");
           var panId = $("#dislike").attr("data-panId");
+
           $.ajax({
-            url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId + "/left",
+            url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId + "/" + ourSide,
             type: "get",
             dataType: 'json',
             success: function(json) {
@@ -276,6 +278,10 @@
               $("#ourBox").html(comments);
               $("#ourPaging").html(paging);
 
+              $(document).on("click", '.littleCommentOpen', function() {
+                $(this).parent().siblings().filter('.littleCommentBox').slideToggle();
+              });
+
               $('.littleCommentOpen').click(); //대댓글 감추기 trigger - 댓글 생성 함수에 걸림
             },
             error: function(request, status, error) {
@@ -288,8 +294,16 @@
           var thisPage = $(this).attr("data-page");
           var newHot = $(this).attr("data-where");
           var panId = $("#dislike").attr("data-panId");
+          var ourSide = $("#ourBox").attr("data-side");
+
+          if(ourSide=="left"){
+            otherSide = "right";
+          } else if(ourSide=="right"){
+            otherSide = "left";
+          }
+
           $.ajax({
-            url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId + "/right",
+            url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId + "/" + otherSide,
             type: "get",
             dataType: 'json',
             success: function(json) {
@@ -359,15 +373,14 @@
               $("#otherBox").html(comments);
               $("#otherPaging").html(paging);
 
-              $('.littleCommentOpen').click(); //대댓글 감추기 trigger - 댓글 생성 함수에 걸림
             },
             error: function(request, status, error) {
               alert("에러");
             }
           })
         });
-
-        $('#getFirstComment').click(); //최신댓글 trigger - window onload에 걸림
+        if((ourSide=="left")||(ourside=="right"))
+          $('#getFirstComment').click(); //최신댓글 trigger - window onload에 걸림
       });
     </script>
 

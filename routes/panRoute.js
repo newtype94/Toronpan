@@ -1169,14 +1169,14 @@ router.get('/commentpage/:sort/:page/:panid/:side', function(req, res, next) {
 
   Comment.count({
     whatBoard: req.params.panid,
-    sideJ : req.params.side
+    sideJ: req.params.side
   }, function(err, totalCount) {
     if (err) throw err;
     pageNum = Math.ceil(totalCount / limitSize);
     if (req.params.sort == "new") {
       Comment.find({
         whatBoard: req.params.panid,
-        sideJ : req.params.side
+        sideJ: req.params.side
       }).sort({
         comment_date: -1
       }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
@@ -1184,14 +1184,13 @@ router.get('/commentpage/:sort/:page/:panid/:side', function(req, res, next) {
         var pageJson = {};
         pageJson["pageNum"] = pageNum;
         panArr.push(pageJson); //panArr에 페이지 개수만 꼽사리..
-        console.log(panArr)
         var intoString = JSON.stringify(panArr); // panArr은 객체이고, 객체를 string으로 바꾸고
         res.json(intoString); //json으로써 보내면 json의 배열로 인식해준다.
       });
     } else if (req.params.sort == "hot") {
       Comment.find({
-        whatBoard: req.params.panid
-        sideJ : req.params.side
+        whatBoard: req.params.panid,
+        sideJ: req.params.side
       }).sort({
         like_number: -1
       }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
@@ -1199,7 +1198,6 @@ router.get('/commentpage/:sort/:page/:panid/:side', function(req, res, next) {
         var pageJson = {};
         pageJson["pageNum"] = pageNum;
         panArr.push(pageJson); //panArr에 페이지 개수만 꼽사리..
-        console.log(panArr)
         var intoString = JSON.stringify(panArr); // panArr은 객체이고, 객체를 string으로 바꾸고
         res.json(intoString); //json으로써 보내면 json의 배열로 인식해준다.
       });
@@ -1216,18 +1214,32 @@ router.post('/littlecomment/write', function(req, res) {
   littleComment.writer = req.user.nameJ;
   littleComment.comment_date = Date.now();
 
-  Comment.findOneAndUpdate({
+  console.log(req.body);
+
+  Comment.findOne({
     _id: req.body.id
-  }, {
-    $push: {
-      littleComment: littleComment
-    }
-  }, function(err, board) {
+  }, function(err, comment) {
+    console.log(comment);
     if (err) {
       console.log(err);
       res.redirect('back');
+    } else if (comment.sideJ == req.user.sideJ) {
+      Comment.findOneAndUpdate({
+        _id: req.body.id
+      }, {
+        $push: {
+          littleComment: littleComment
+        }
+      }, function(err, board) {
+        if (err) {
+          console.log(err);
+          res.redirect('back');
+        }
+        res.redirect('back');
+      });
+    } else {
+      res.redirect('back');
     }
-    res.redirect('back');
   });
 });
 
@@ -1237,9 +1249,9 @@ router.post('/comment/write', function(req, res) {
   comment.whatBoard = req.body.id;
   comment.contents = req.body.contents;
   comment.writer = req.user.nameJ;
+  comment.sideJ = req.user.sideJ;
   comment.like_number = 0;
   comment.comment_date = Date.now();
-  console.log(comment);
 
   comment.save(function(err) {
     if (err) {
