@@ -1158,8 +1158,7 @@ router.get('/pan/remove/:id', function(req, res) {
 });
 
 //댓글 페이징 AJAX
-router.get('/commentpage/:where/:page/:panid/:side', function(req, res, next) {
-  console.log(req.params);
+router.get('/commentpage/:sort/:page/:panid/:side', function(req, res, next) {
   var page = req.params.page;
   if (page == "") {
     page = 1;
@@ -1169,13 +1168,15 @@ router.get('/commentpage/:where/:page/:panid/:side', function(req, res, next) {
   var pageNum = 1;
 
   Comment.count({
-    whatBoard: req.params.panid
+    whatBoard: req.params.panid,
+    sideJ : req.params.side
   }, function(err, totalCount) {
     if (err) throw err;
     pageNum = Math.ceil(totalCount / limitSize);
-    if (req.params.where == "new") {
+    if (req.params.sort == "new") {
       Comment.find({
-        whatBoard: req.params.panid
+        whatBoard: req.params.panid,
+        sideJ : req.params.side
       }).sort({
         comment_date: -1
       }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
@@ -1187,9 +1188,10 @@ router.get('/commentpage/:where/:page/:panid/:side', function(req, res, next) {
         var intoString = JSON.stringify(panArr); // panArr은 객체이고, 객체를 string으로 바꾸고
         res.json(intoString); //json으로써 보내면 json의 배열로 인식해준다.
       });
-    } else if (req.params.where == "hot") {
+    } else if (req.params.sort == "hot") {
       Comment.find({
         whatBoard: req.params.panid
+        sideJ : req.params.side
       }).sort({
         like_number: -1
       }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
