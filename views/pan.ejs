@@ -219,7 +219,7 @@
                   '<button class="commentDislike btn btn-danger" data-commentid="' + comment[i]._id + '"><i class="far fa-thumbs-down"></i></button>' +
                   '<button class="littleCommentOpen btn btn-success"><i class="far fa-comment"></i></button>' +
                   '</div>' +
-                  '<form class="littleCommentBox mt-2" action="/littlecomment/write" method="post">' +
+                  '<form class="littleCommentBox mt-2" action="/littlecomment/write" method="post" style="display:none">' +
                   '<input type="hidden" name="id" value="' + comment[i]._id + '">' +
                   '<textarea class="form-control mb-2" name="contents" row="3"></textarea>' +
                   '<input class="btn btn-primary" type="submit" value="댓글 입력">' +
@@ -278,16 +278,15 @@
               $("#ourBox").html(comments);
               $("#ourPaging").html(paging);
 
-              $(document).on("click", '.littleCommentOpen', function() {
-                $(this).parent().siblings().filter('.littleCommentBox').slideToggle();
-              });
-
-              $('.littleCommentOpen').click(); //대댓글 감추기 trigger - 댓글 생성 함수에 걸림
             },
             error: function(request, status, error) {
               alert("에러");
             }
           })
+        });
+
+        $(document).on("click", '.littleCommentOpen', function() {
+          $(this).parent().siblings().filter('.littleCommentBox').slideToggle();
         });
 
         $(document).on("click", '.getOthers', function() {
@@ -356,15 +355,15 @@
 
               if (start != 1) { //앞에 페이지 더있다 [<]
                 var tmp = start - 1;
-                paging += '<li><button class="page-link getOurs" data-page="' + tmp + '" data-where="' + newHot + '"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button></li>';
+                paging += '<li><button class="page-link getOthers" data-page="' + tmp + '" data-where="' + newHot + '"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button></li>';
               }
               for (var i = start; i <= end; i++) { //당장 보이는 페이지들
-                paging += '<li><button class="page-link getOurs" data-page="' + i + '" data-where="' + newHot + '">' + i + '</button></li>';
+                paging += '<li><button class="page-link getOthers" data-page="' + i + '" data-where="' + newHot + '">' + i + '</button></li>';
               }
 
               if (end != pageNum) { //보이는 마지막 부분이 전체 pageNum보다 작음 [>]
                 var tmp = end + 1;
-                paging += '<li><button class="page-link getOurs" data-page="' + tmp + '" data-where="' + newHot + '"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button></li>'
+                paging += '<li><button class="page-link getOthers" data-page="' + tmp + '" data-where="' + newHot + '"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button></li>'
               }
 
               paging += '</ul></nav>';
