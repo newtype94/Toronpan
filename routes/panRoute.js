@@ -689,7 +689,6 @@ router.post('/pan/search/:page', function(req, res) {
             panArr: panArr,
             pagination: pageNum,
             page: page,
-            title: "검색된 최신글",
             formBack: formBack
           });
         });
@@ -717,7 +716,6 @@ router.post('/pan/search/:page', function(req, res) {
             panArr: panArr,
             pagination: pageNum,
             page: page,
-            title: "검색된 최신글",
             formBack: formBack
           });
         });
@@ -757,7 +755,6 @@ router.post('/pan/search/:page', function(req, res) {
             panArr: panArr,
             pagination: pageNum,
             page: page,
-            title: "검색된 최신글",
             formBack: formBack
           });
         });
@@ -793,7 +790,6 @@ router.post('/pan/search/:page', function(req, res) {
             panArr: panArr,
             pagination: pageNum,
             page: page,
-            title: "검색된 인기글",
             formBack: formBack
           });
         });
@@ -827,7 +823,6 @@ router.post('/pan/search/:page', function(req, res) {
             panArr: panArr,
             pagination: pageNum,
             page: page,
-            title: "검색된 인기글",
             formBack: formBack
           });
         });
@@ -873,7 +868,6 @@ router.post('/pan/search/:page', function(req, res) {
             panArr: panArr,
             pagination: pageNum,
             page: page,
-            title: "검색된 인기글",
             formBack: formBack
           });
         });
