@@ -10,30 +10,28 @@
   <% include ./header %>
   <div class="container">
     <div class="row">
-      <div class="row">
         <div class="col-12">
           <div class="alert alert-warning" role="alert">
-            <b>
-              <%= formBack.where %>글</b> 중에서 <b>
-              <%= formBack.how %></b>에 <b>"
-              <%= formBack.what %>"</b>가 포함된 글 목록입니다.
+              <%= formBack.where %>
+              <% if(formBack.field==1){ %>
+              정치 게시판
+              <%} else if(formBack.field==2){ %>
+              사회 게시판
+              <%} else if(formBack.field==3){ %>
+              자유 게시판
+              <%}%>
+              <%= formBack.how %>
+              <%= formBack.what %>
             <form id="searchForm" method="post">
+              <input type="hidden" name="field" value="<%= formBack.field %>">
               <input type="hidden" name="where" value="<%= formBack.where %>">
               <input type="hidden" name="how" value="<%= formBack.how %>">
               <input type="hidden" name="what" value="<%= formBack.what %>">
             </form>
           </div>
         </div>
-      </div>
     </div>
-    <hr>
-    <div class="row">
-      <div class="col-md-2 text-center">작성자</div>
-      <div class="col-md-6 text-center">제목</div>
-      <div class="col-md-2 text-center">좋아요</div>
-      <div class="col-md-2 text-center">시간</div>
-    </div>
-    <hr>
+
     <% if (panArr !== null){
     for(var i = 0; i < panArr.length; i++) { %>
     <div class="row">
