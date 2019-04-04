@@ -2,7 +2,6 @@
 <html>
 
 <head>
-  <link rel='stylesheet' href='/stylesheets/panStyle.css' />
   <% include ./head %>
   <script src="/js/pan.js"></script>
 </head>
@@ -22,7 +21,7 @@
         <span style="float:left">
           <i class="far fa-eye"></i>
           <%= pan.hit %>&nbsp
-          <i class="far fa-thumbs-up"></i>
+          <i class="fas fa-heart"></i>
           <span id="like_number">
             <%= pan.like_number%></span>
         </span>
@@ -44,8 +43,8 @@
     </div>
     <div class="row" style="margin-top:20px; margin-bottom:20px;">
       <div class="col-12 text-center">
-        <button class="btn btn-primary" id="like" data-panId="<%= pan._id %>">좋아요</button>
-        <button class="btn btn-danger" id="dislike" data-panId="<%= pan._id %>">싫어요</button>
+        <button class="btn btn-primary" id="like" data-panId="<%= pan._id %>"><i class="fas fa-heart"></i></button>
+        <button class="btn btn-danger" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-heart-broken"></i></button>
       </div>
     </div>
   </div>
