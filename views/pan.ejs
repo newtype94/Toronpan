@@ -36,16 +36,14 @@
     <hr>
     <div class="row" style="padding-top:20px; padding-bottom:20px;">
       <div class="col-12">
-        <%= pan.contents%>
+        <%- pan.contents%>
       </div>
     </div>
     <div class="row" style="margin-top:20px; margin-bottom:20px;">
-      <div class='col-4'></div>
-      <div class="col-4" style="text-align : center; font-weight: bold;">
+      <div class="col-12 text-center">
         <button class="btn btn-primary" id="like" data-panId="<%= pan._id %>">좋아요</button>
         <button class="btn btn-danger" id="dislike" data-panId="<%= pan._id %>">싫어요</button>
       </div>
-      <div class='col-4'></div>
     </div>
   </div>
   <div class="container">
