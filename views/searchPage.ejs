@@ -10,26 +10,26 @@
   <% include ./header %>
   <div class="container">
     <div class="row">
-        <div class="col-12">
-          <div class="alert alert-warning" role="alert">
-              <%= formBack.where %>
-              <% if(formBack.field==1){ %>
-              정치 게시판
-              <%} else if(formBack.field==2){ %>
-              사회 게시판
-              <%} else if(formBack.field==3){ %>
-              자유 게시판
-              <%}%>
-              <%= formBack.how %>
-              <%= formBack.what %>
-            <form id="searchForm" method="post">
-              <input type="hidden" name="field" value="<%= formBack.field %>">
-              <input type="hidden" name="where" value="<%= formBack.where %>">
-              <input type="hidden" name="how" value="<%= formBack.how %>">
-              <input type="hidden" name="what" value="<%= formBack.what %>">
-            </form>
-          </div>
+      <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+          <%= formBack.where %>
+          <% if(formBack.field==1){ %>
+          정치
+          <%} else if(formBack.field==2){ %>
+          사회
+          <%} else if(formBack.field==3){ %>
+          자유
+          <%}%>
+          <%= formBack.how %>
+          <%= formBack.what %>
+          <form id="searchForm" method="post">
+            <input type="hidden" name="field" value="<%= formBack.field %>">
+            <input type="hidden" name="where" value="<%= formBack.where %>">
+            <input type="hidden" name="how" value="<%= formBack.how %>">
+            <input type="hidden" name="what" value="<%= formBack.what %>">
+          </form>
         </div>
+      </div>
     </div>
 
     <% if (panArr !== null){
@@ -79,7 +79,7 @@
         }
         if(start!==1){ %>
             <li class="page-item">
-              <a class="page-link" href="./<%=start-1%>" aria-label="Previous">
+              <a class="page-link" data-link="./<%=start-1%>" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
                 <span class="sr-only">Previous</span>
               </a>
@@ -87,57 +87,16 @@
             <% }
             for(var i=start; i<=end; i++){
             if(i==page){ %>
-            <li class="page-item active"><a class="page-link" href="./<%=i%>" class="page-link">
+            <li class="page-item active"><a data-link="./<%=i%>" class="page-link">
                 <%=i%></a></li>
             <% } else{%>
-            <li class="page-item"><a class="page-link" href="./<%=i%>" class="page-link">
+            <li class="page-item"><a data-link="./<%=i%>" class="page-link">
                 <%=i%></a></li>
             <% } %>
             <%}
         if(end!=pagination){ %>
             <li class="page-item">
-              <a class="page-link" href="./<%=end+1%>" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-            <%} %>
-          </ul>
-        </nav>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <nav aria-label="Page navigation example" style="padding:30px;">
-          <ul class="pagination justify-content-center">
-            <% var start=page;
-        if((start%10)==0){
-          start--;
-        }
-        while((start%10)!=0){
-          start--;
-        }
-        start++;
-        if((start+9)>pagination){
-          end=pagination;
-        }else{
-          end=start+9;
-        }
-        if(start!==1){ %>
-            <li class="page-item">
-              <a class="page-link" href="./<%=start-1%>" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-            <% }
-         for(var i=start; i<=end; i++){ %>
-            <li class="page-item"><a class="page-link" href="./<%=i%>" class="page-link">
-                <%=i%></a></li>
-            <%}
-        if(end!=pagination){ %>
-            <li class="page-item">
-              <a class="page-link" href="./<%=end+1%>" aria-label="Next">
+              <a data-link="./<%=end+1%>" class="page-link" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
                 <span class="sr-only">Next</span>
               </a>
@@ -149,6 +108,15 @@
     </div>
   </div>
   <% include ./footer %>
+  <script>
+    $(document).ready(function() {
+      $('.page-link').click(function() {
+        var a = document.getElementById('searchForm');
+        a.action = $(this).attr('data-link');
+        a.submit();
+      });
+    });
+  </script>
 </body>
 
 </html>

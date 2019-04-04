@@ -651,11 +651,17 @@ router.post('/pan/search/:page', function(req, res) {
   var how = req.body.how;
   var what = req.body.what;
 
+  if(what==null){
+    console.log('flag');
+  }
+
   var formBack = [];
   formBack['field'] = field;
   formBack['where'] = where;
   formBack['how'] = how;
   formBack['what'] = what;
+
+  console.log(formBack);
 
   var page = req.params.page;
   if (page == "") {

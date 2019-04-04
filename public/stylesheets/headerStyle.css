@@ -5,31 +5,30 @@
   margin-left: auto;
 }
 
-
-.bordered{
-  border : 1px solid black;
+.bordered {
+  border: 1px solid black;
   border-radius: 5px;
-  padding:5px;
+  padding: 5px;
 }
 
-.fontCenter{
-  font-size:18px;
+.fontCenter {
+  font-size: 18px;
   font-weight: bold;
-  text-align:center;
+  text-align: center;
 }
 
-.bordered:hover{
+.bordered:hover {
   background-color: black;
 }
 
-.bordered:active{
+.bordered:active {
   background-color: white;
 }
 
-a:visited{
+a:visited {
   background-color: red;
 }
 
-a{
+a {
   text-decoration: none;
 }
