@@ -47,14 +47,13 @@
     </div>
     <% if (panArr !== null){
     for(var i = 0; i < panArr.length; i++) { %>
-    <div class="row mb-2">
-      <div class="col-md-6 col-12">
+    <div class="row">
+      <div class="col-md-6 col-12 mb-2">
         <a href="/pan/<%= panArr[i]._id%>" class="list-group-item list-group-item-action" style="overflow:hidden; text-overflow:ellipsis;">
           <%=panArr[i].title%>
         </a>
       </div>
-      <div class="col-md-6 col-12">
-
+      <div class="col-md-6 col-12 mb-2">
         <% if(panArr[i].exp_done==false){ %>
         <a href='/user/expup/<%= panArr[i]._id %>' class="btn btn-success bill"><i class="far fa-heart"></i>
           <%= panArr[i].like_number%> 정산</a>
