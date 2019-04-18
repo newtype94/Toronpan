@@ -45,7 +45,8 @@ router.get('/oauth', passport.authenticate('login-kakao', {
 }));
 
 passport.use('login-kakao', new KakaoStrategy({
-    clientID: '9f5501a5d47b1972524194b4bca7420e',
+    clientID: '821e43ce93b80abfa3186378bfa483cf', //for local
+    //clientID: '9f5501a5d47b1972524194b4bca7420e', //for web
     clientSecret: 'obFC84IQrZ1mYVGx6ogpeEvdsRWO5d0R',
     callbackURL: '/oauth'
   },

@@ -17,9 +17,13 @@ var app = express();
 //mongoDB + mongoose
 
 
-// var promise = mongoose.connect('mongodb://localhost/mydb', {
-// var promise = mongoose.connect('mongodb://newtype94:dydgns88!@ds057816.mlab.com:57816/heroku_66g54sp8', {
-var promise = mongoose.connect('mongodb://newtype94:dydgns88!@ds057816.mlab.com:57816/heroku_66g54sp8', {
+//mlab DB 연결
+//var promise = mongoose.connect('mongodb://newtype94:dydgns88!@ds057816.mlab.com:57816/heroku_66g54sp8', {
+
+//로컬 DB 연결
+//var promise = mongoose.connect('mongodb://localhost/mydb', {
+
+var promise = mongoose.connect('mongodb://localhost/mydb', {
     useMongoClient: true
 });
 var db = mongoose.connection;
