@@ -67,7 +67,7 @@
             <h4 class="card-title">
               <%= survey.q %>
             </h4>
-            <form action="/survey/do" method="post">
+            <form action="/survey/do" method="post" id="surveyForm">
               <div class="radio">
                 <label for="degree_1"><input type="radio" name="degree" value="1" id="degree_1" />1점</label>
                 <label for="degree_2"><input type="radio" name="degree" value="2" id="degree_2" />2점</label>
@@ -393,34 +393,51 @@
       })
       .keyup();
 
-    var wf = document.getElementById("writeForm");
 
-    wf.onsubmit = function() {
-      if (checkNick == 0) {
-        $("#nameJ").focus();
-        alert("닉네임을 입력해주세요");
-        return false;
-      } else if ($("input[name=genderJ]:checked").val() == null) {
-        $("input[name=genderJ]").focus();
-        alert("성별을 선택해주세요");
-        return false;
-      } else if ($("select[name=yearJ]").val() == "") {
-        $("select[name=yearJ]").focus();
-        alert("출생연도를 선택해주세요");
-        return false;
-      } else if ($("input[name=sideJ]:checked").val() == null) {
-        $("input[name=sideJ]").focus();
-        alert("성향을 선택해주세요");
-        return false;
-      } else {
-        var submitEnd = confirm('가입이 완료됩니다.');
-        if (submitEnd) {
-          return true;
-        } else {
+
+    var wf = document.getElementById("writeForm");
+    if (wf != null) {
+      wf.onsubmit = function() {
+        if (checkNick == 0) {
+          $("#nameJ").focus();
+          alert("닉네임을 입력해주세요");
           return false;
+        } else if ($("input[name=genderJ]:checked").val() == null) {
+          $("input[name=genderJ]").focus();
+          alert("성별을 선택해주세요");
+          return false;
+        } else if ($("select[name=yearJ]").val() == "") {
+          $("select[name=yearJ]").focus();
+          alert("출생연도를 선택해주세요");
+          return false;
+        } else if ($("input[name=sideJ]:checked").val() == null) {
+          $("input[name=sideJ]").focus();
+          alert("성향을 선택해주세요");
+          return false;
+        } else {
+          var submitEnd = confirm('가입이 완료됩니다.');
+          if (submitEnd) {
+            return true;
+          } else {
+            return false;
+          }
         }
       }
     }
+
+    var sf = document.getElementById("surveyForm");
+    if (sf != null) {
+      sf.onsubmit = function() {
+        if ($('input[name="degree"]:checked').val() == null){
+          alert('선택지 중 하나를 고르세요');
+          return false;
+        }
+        else{
+          return true;
+        }
+      }
+    }
+
   });
 </script>
 

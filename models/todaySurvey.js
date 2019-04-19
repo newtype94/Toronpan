@@ -1,20 +1,19 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var user = new Schema({
+var stone = new Schema({
   idK: String,
   genderJ: String,
   ageJ: Number,
   sideJ: String,
+  degree: Number
 });
 
 var todaySurvey = new Schema({
   firstQ : String,
-  first_1 : [user],
-  first_2 : [user],
-  first_3 : [user],
-  first_4 : [user],
-  first_5 : [user],
+  case1 : [stone],
+  secondQ : String,
+  case2 : [stone],
   date: {type: Date, default: Date.now().toLocaleDateString}
 });
 

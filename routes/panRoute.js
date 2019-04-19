@@ -355,14 +355,17 @@ router.post('/survey/do', function(req, res) {
   var sessionUser = req.user;
   var todaySurvey = new TodaySurvey();
   var degree = req.body.degree; // 1,2,3,4,5 셋 중 하나 반환
-  console.log(degree)
   var now = new Date();
   now = now.toLocaleDateString();
-  var user = {};
-  user["idK"] = sessionUser.idK;
-  user["genderJ"] = sessionUser.genderJ;
-  user["ageJ"] = sessionUser.ageJ;
-  user["sideJ"] = sessionUser.sideJ;
+  var case1 = {};
+
+
+  case1["idK"] = sessionUser.idK;
+  case1["genderJ"] = sessionUser.genderJ;
+  case1["ageJ"] = sessionUser.ageJ;
+  case1["sideJ"] = sessionUser.sideJ;
+  case1["degree"] = degree;
+
 
   if (sessionUser != null) {
     SurveyDone.findOne({
@@ -389,84 +392,12 @@ router.post('/survey/do', function(req, res) {
             if (err || !db) {
               req.flash('message', '설문 참여중 오류가 발생했습니다');
               res.redirect("/home");
-            } else if (degree == 1) {
+            } else if (degree != null) {
               TodaySurvey.findOneAndUpdate({
                   _id: req.body.firstID,
                 }, {
                   $push: {
-                    first_1: user
-                  }
-                },
-                function(err, db) {
-                  if (!err && db) {
-                    req.flash('message', '설문에 참여해주셔서 감사합니다');
-                    res.redirect("/home");
-                  } else {
-                    req.flash('message', '설문 참여중 오류가 발생했습니다');
-                    res.redirect("/home");
-                  }
-                }
-              );
-            } else if (degree == 2) {
-              TodaySurvey.findOneAndUpdate({
-                  _id: req.body.firstID,
-                }, {
-                  $push: {
-                    first_2: user
-                  }
-                },
-                function(err, db) {
-                  if (!err && db) {
-                    req.flash('message', '설문에 참여해주셔서 감사합니다');
-                    res.redirect("/home");
-                  } else {
-                    req.flash('message', '설문 참여중 오류가 발생했습니다');
-                    res.redirect("/home");
-                  }
-                }
-              );
-            } else if (degree == 3) {
-              TodaySurvey.findOneAndUpdate({
-                  _id: req.body.firstID,
-                }, {
-                  $push: {
-                    first_3: user
-                  }
-                },
-                function(err, db) {
-                  if (!err && db) {
-                    req.flash('message', '설문에 참여해주셔서 감사합니다');
-                    res.redirect("/home");
-                  } else {
-                    req.flash('message', '설문 참여중 오류가 발생했습니다');
-                    res.redirect("/home");
-                  }
-                }
-              );
-            } else if (degree == 4) {
-              TodaySurvey.findOneAndUpdate({
-                  _id: req.body.firstID,
-                }, {
-                  $push: {
-                    first_4: user
-                  }
-                },
-                function(err, db) {
-                  if (!err && db) {
-                    req.flash('message', '설문에 참여해주셔서 감사합니다');
-                    res.redirect("/home");
-                  } else {
-                    req.flash('message', '설문 참여중 오류가 발생했습니다');
-                    res.redirect("/home");
-                  }
-                }
-              );
-            } else if (degree == 5) {
-              TodaySurvey.findOneAndUpdate({
-                  _id: req.body.firstID,
-                }, {
-                  $push: {
-                    first_5: user
+                    case1 : case1
                   }
                 },
                 function(err, db) {
