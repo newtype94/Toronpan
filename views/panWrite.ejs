@@ -62,6 +62,7 @@
       function sendFile(file, el) {
         var form_data = new FormData();
         form_data.append('file', file);
+        form_data.append('folder', "it's folder link");
         $.ajax({
           data: form_data, //client -> server
           dataType: 'json', //server -> client

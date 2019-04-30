@@ -892,6 +892,8 @@ router.post('/upload', uploadSetting.single('file'), function(req, res) {
 
   var tmpPath = req.file.path;
   var fileName = req.file.filename;
+  console.log(req.file);
+  console.log(req.folder);
 
   var newPath = "./public/images/" + fileName;
 
@@ -902,9 +904,7 @@ router.post('/upload', uploadSetting.single('file'), function(req, res) {
       sending["err"] = err;
     }
     sending["path"] = newPath.substring(8, newPath.length);
-    console.log(typeof(sending));
     var sendingString = JSON.stringify(sending);
-    console.log(typeof(sendingString));
     res.json(sendingString);
   });
 });
