@@ -31,6 +31,7 @@
           </div>
           <div class="form-group">
             <input type="text" class="form-control form-control-lg" name="title" placeholder="제목" />
+            <input id="DC" type="hidden" name="deleteCode" value="" />
           </div>
           <div class="form-group">
             <textarea name="contents" id="summernote"></textarea>
@@ -45,6 +46,19 @@
 
   <script>
     $(function() {
+      var deleteCode = makeDC();
+
+      function makeDC() {
+        var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+        var string_length = 25;
+        var output = '';
+        for (var i=0; i<string_length; i++) {
+          var rnum = Math.floor(Math.random() * chars.length);
+          output += chars.substring(rnum,rnum+1);
+        }
+        return output;
+      }
+
       $('#summernote').summernote({
         height: 300,
         fontNames: ['맑은고딕', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', ],
@@ -62,7 +76,8 @@
       function sendFile(file, el) {
         var form_data = new FormData();
         form_data.append('file', file);
-        form_data.append('folder', "it's folder link");
+        form_data.append('deleteCode', deleteCode);
+        console.log(form_data);
         $.ajax({
           data: form_data, //client -> server
           dataType: 'json', //server -> client
@@ -76,9 +91,11 @@
             if ((data) && (typeof data !== "object"))
               data = $.parseJSON(data);
             if (data.err)
-              alert(data.error);
-            else if (data.path)
+              alert("이미지 전송 오류");
+            else if (data.path){
               $(el).summernote('editor.insertImage', data.path);
+              $("#DC").val(deleteCode);
+            }
           }
         });
       }

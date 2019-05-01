@@ -6,7 +6,7 @@ var multer = require('multer');
 var uploadSetting = multer({
   dest: "./tmp",
   limits: {
-    fileSize: 10 * 1024 * 1024
+    fileSize: 6 * 1024 * 1024
   }
 });
 var fs = require('fs');
@@ -19,6 +19,7 @@ var User = require('../models/user');
 var WriteLimit = require('../models/writeLimit');
 var TodaySurvey = require('../models/todaySurvey');
 var SurveyDone = require('../models/surveyDone');
+var DeleteMatch = require('../models/deleteMatch');
 
 function checkLogin(user) {
   if (user == null) //로그인 X
@@ -331,7 +332,7 @@ router.post('/survey/new', function(req, res) {
   if ((firstQ != null) && (sessionUser != null)) {
     todaySurvey.firstQ = firstQ;
     todaySurvey.date = now;
-    todaySurvey.save();
+
     todaySurvey.save(function(err) {
       if (err) {
         console.log(err);
@@ -875,10 +876,18 @@ router.post('/pan/write', function(req, res) {
     board.exp_done = false;
     board.exp_done_howmuch = 0;
     board.hit = 0;
+
     board.save(function(err) {
       if (err) {
         console.log(err);
         res.redirect('/');
+      }
+      if(req.body.deleteCode!=""){
+        var deleteMatch = new DeleteMatch();
+        deleteMatch.pan_id = board._id;
+        deleteMatch.idK = sessionUser.idK;
+        deleteMatch.delete_code = req.body.deleteCode;
+        deleteMatch.save();
       }
       req.flash('message', '성공적으로 등록되었습니다..');
       res.redirect("/home");
@@ -892,10 +901,16 @@ router.post('/upload', uploadSetting.single('file'), function(req, res) {
 
   var tmpPath = req.file.path;
   var fileName = req.file.filename;
-  console.log(req.file);
-  console.log(req.folder);
+  //var deleteCode = req.body.deleteCode;
 
-  var newPath = "./public/images/" + fileName;
+  var deleteCode = JSON.stringify(req.body);
+  deleteCode = deleteCode.substring(15, deleteCode.length-2);
+  console.log(deleteCode);
+
+  //폴더 없으면 생성
+  !fs.existsSync("./public/images/" + deleteCode) && fs.mkdirSync("./public/images/" + deleteCode);
+
+  var newPath = "./public/images/" + deleteCode + "/" + fileName;
 
   fs.rename(tmpPath, newPath, function(err) {
     var sending = {};
