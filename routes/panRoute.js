@@ -1099,13 +1099,20 @@ router.post('/pan/updating/:id', function(req, res) {
 
 /* 글 삭제 */
 router.get('/pan/remove/:id', function(req, res) {
+  var sessionUser = req.user;
+
+  //deleteMatch로 code조회
+  //{ fs모듈로 폴더 통째로 날림 + deleteMatch DB날림}
+  
   Board.remove({
-    _id: req.params.id
+    _id: req.params.id,
+    writer_id : sessionUser._id
   }, function(err, output) {
     if (err) return res.status(500).json({
       error: "database failure"
     });
-    else res.redirect("/mypage/1");
+    else
+      res.redirect("/mypage/1");
   });
 });
 
