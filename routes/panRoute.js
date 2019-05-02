@@ -848,7 +848,7 @@ router.get('/write', function(req, res, next) {
   }
 });
 
-//글쓰기 알고리즘
+//글쓰기 DB 적용
 router.post('/pan/write', function(req, res) {
   var now = new Date();
   now = now.toLocaleDateString();
@@ -882,15 +882,13 @@ router.post('/pan/write', function(req, res) {
         console.log(err);
         res.redirect('/');
       }
-      if(req.body.deleteCode!=""){
         var deleteMatch = new DeleteMatch();
         deleteMatch.pan_id = board._id;
         deleteMatch.idK = sessionUser.idK;
         deleteMatch.delete_code = req.body.deleteCode;
         deleteMatch.save();
-      }
-      req.flash('message', '성공적으로 등록되었습니다..');
-      res.redirect("/home");
+        req.flash('message', '성공적으로 등록되었습니다..');
+        res.redirect("/home");
     });
   }
 });
@@ -1058,16 +1056,23 @@ router.get('/pan/update/:id', function(req, res) {
       if (err) return res.status(500).json({
         error: "database failure"
       });
-      res.render('panUpdate', {
-        pan: panDB,
-        sessionUser: sessionUser,
-        login: 2
+
+      DeleteMatch.findOne({
+        pan_id:req.params.id,
+        idK:sessionUser.idK
+      },function(err, dmDB){
+        res.render('panUpdate', {
+          pan: panDB,
+          sessionUser: sessionUser,
+          login: 2,
+          deleteCode: dmDB.delete_code
+        });
       });
     });
   }
 });
 
-//글 수정 알고리즘
+//글 수정 DB 적용
 router.post('/pan/updating/:id', function(req, res) {
   var title = "제목없음"
   if (req.body.title)

@@ -47,6 +47,7 @@
   <script>
     $(function() {
       var deleteCode = makeDC();
+      $("#DC").val(deleteCode); //submit -> deleteMatch저장
 
       function makeDC() {
         var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -76,8 +77,7 @@
       function sendFile(file, el) {
         var form_data = new FormData();
         form_data.append('file', file);
-        form_data.append('deleteCode', deleteCode);
-        console.log(form_data);
+        form_data.append('deleteCode', deleteCode); // -> 이미지 업로드 경로 정보
         $.ajax({
           data: form_data, //client -> server
           dataType: 'json', //server -> client
@@ -94,7 +94,6 @@
               alert("이미지 전송 오류");
             else if (data.path){
               $(el).summernote('editor.insertImage', data.path);
-              $("#DC").val(deleteCode);
             }
           }
         });

@@ -31,10 +31,11 @@
         <form action="/pan/updating/<%= pan._id %>" method="post" id="writeForm">
           <div class="form-group">
             <input type="text" placeholder="제목" class="form-control" name="title" value="<%= pan.title%>" />
+            <input id="DC" type="hidden" name="deleteCode" value= " <%= deleteCode %>"  />
           </div>
           <input type="hidden" name="writer" value=<%=sessionUser.nameJ %>>
           <div class="form-group">
-            <textarea name="contents" id="summernote"><%= pan.contents%></textarea>
+            <textarea name="contents" id="summernote"><%- pan.contents%></textarea>
           </div>
           <div class="form-group">
             <input type="submit" class="btn btn-success" value="글 등록">
@@ -46,6 +47,8 @@
   </form>
   <script>
     $(function() {
+      var deleteCode = "<%=deleteCode%>";
+
       $('#summernote').summernote({
         height: 400,
         fontNames: ['맑은고딕', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', ],
@@ -64,6 +67,7 @@
       function sendFile(file, el) {
         var form_data = new FormData();
         form_data.append('file', file);
+        form_data.append('deleteCode', deleteCode);
         $.ajax({
           data: form_data, //client -> server
           dataType: 'json', //server -> client
