@@ -398,7 +398,7 @@ router.post('/survey/do', function(req, res) {
                   _id: req.body.firstID,
                 }, {
                   $push: {
-                    case1 : case1
+                    case1: case1
                   }
                 },
                 function(err, db) {
@@ -584,7 +584,7 @@ router.post('/pan/search/:page', function(req, res) {
   var how = req.body.how;
   var what = req.body.what;
 
-  if(what==null){
+  if (what == null) {
     console.log('flag');
   }
 
@@ -882,13 +882,13 @@ router.post('/pan/write', function(req, res) {
         console.log(err);
         res.redirect('/');
       }
-        var deleteMatch = new DeleteMatch();
-        deleteMatch.pan_id = board._id;
-        deleteMatch.idK = sessionUser.idK;
-        deleteMatch.delete_code = req.body.deleteCode;
-        deleteMatch.save();
-        req.flash('message', '성공적으로 등록되었습니다..');
-        res.redirect("/home");
+      var deleteMatch = new DeleteMatch();
+      deleteMatch.pan_id = board._id;
+      deleteMatch.idK = sessionUser.idK;
+      deleteMatch.delete_code = req.body.deleteCode;
+      deleteMatch.save();
+      req.flash('message', '성공적으로 등록되었습니다..');
+      res.redirect("/home");
     });
   }
 });
@@ -899,10 +899,9 @@ router.post('/upload', uploadSetting.single('file'), function(req, res) {
 
   var tmpPath = req.file.path;
   var fileName = req.file.filename;
-  //var deleteCode = req.body.deleteCode;
 
   var deleteCode = JSON.stringify(req.body);
-  deleteCode = deleteCode.substring(15, deleteCode.length-2);
+  deleteCode = deleteCode.substring(15, deleteCode.length - 2);
   console.log(deleteCode);
 
   //폴더 없으면 생성
@@ -1058,9 +1057,9 @@ router.get('/pan/update/:id', function(req, res) {
       });
 
       DeleteMatch.findOne({
-        pan_id:req.params.id,
-        idK:sessionUser.idK
-      },function(err, dmDB){
+        pan_id: req.params.id,
+        idK: sessionUser.idK
+      }, function(err, dmDB) {
         res.render('panUpdate', {
           pan: panDB,
           sessionUser: sessionUser,
@@ -1101,17 +1100,38 @@ router.post('/pan/updating/:id', function(req, res) {
 router.get('/pan/remove/:id', function(req, res) {
   var sessionUser = req.user;
 
-  //deleteMatch로 code조회
-  //{ fs모듈로 폴더 통째로 날림 + deleteMatch DB날림}
-  
+  DeleteMatch.findOne({
+    pan_id: req.params.id,
+    idK: sessionUser.idK
+  }, function(err, data) {
+    var deleteFolderRecursive = function(path) {
+      //existsSync: 파일이나 폴더가 존재하는 파악
+      if (fs.existsSync(path)) {
+        //readdirSync(path): 디렉토리 안의 파일의 이름을 배열로 반환
+        fs.readdirSync(path).forEach(function(file, index){
+          var curPath = path + "/" + file;
+          //lstatSync: stat값을 반환함, isDirectory(): 디렉토리인지 파악
+          if (fs.lstatSync(curPath).isDirectory()) {
+            deleteFolderRecursive(curPath); //재귀(reCurse)
+          } else { //delete file
+            fs.unlinkSync(curPath); //unlinkSync : 파일 삭제
+          }
+        });
+        fs.rmdirSync(path);  //rmdirSync : 폴더 삭제
+      }
+    };
+    deleteFolderRecursive("./public/images/" + data.delete_code);
+  });
+
   Board.remove({
     _id: req.params.id,
-    writer_id : sessionUser._id
+    writer_id: sessionUser._id
   }, function(err, output) {
-    if (err) return res.status(500).json({
-      error: "database failure"
-    });
-    else
+    if (err) {
+      console.log(err);
+      req.flash('message', '삭제하는데 에러가 발생하였습니다.');
+      res.redirect('/home');
+    } else
       res.redirect("/mypage/1");
   });
 });
