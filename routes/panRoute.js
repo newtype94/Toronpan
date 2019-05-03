@@ -1121,6 +1121,14 @@ router.get('/pan/remove/:id', function(req, res) {
       }
     };
     deleteFolderRecursive("./public/images/" + data.delete_code);
+    DeleteMatch.remove({
+      pan_id: req.params.id,
+      idK: sessionUser.idK
+    }, function(err,data){
+      if(err){
+        console.log(err);
+      }
+    });
   });
 
   Board.remove({
@@ -1131,9 +1139,11 @@ router.get('/pan/remove/:id', function(req, res) {
       console.log(err);
       req.flash('message', '삭제하는데 에러가 발생하였습니다.');
       res.redirect('/home');
-    } else
+    } else {
       res.redirect("/mypage/1");
+    }
   });
+
 });
 
 //댓글 페이징 AJAX
@@ -1198,10 +1208,10 @@ router.post('/littlecomment/write', function(req, res) {
   Comment.findOne({
     _id: req.body.id
   }, function(err, comment) {
-    console.log(comment);
     if (err) {
       console.log(err);
-      res.redirect('back');
+      req.flash('message', '대댓글 작성 중 오류가 발생하였습니다.');
+      res.redirect('/home');
     } else if (comment.sideJ == req.user.sideJ) {
       Comment.findOneAndUpdate({
         _id: req.body.id
@@ -1252,7 +1262,7 @@ router.post('/comment/likes/:id', function(req, res) {
     }, function(err, comment) {
       console.log(comment);
       if ((!err) && comment) {
-        resultJson["error"] = "이미 참여함";
+        resultJson["error"] = "이미 참여했습니다";
         console.log(resultJson);
         res.json(resultJson);
       }
@@ -1282,7 +1292,7 @@ router.post('/comment/likes/:id', function(req, res) {
       }
     );
   } else {
-    resultJson["error"] = "로그인 안함";
+    resultJson["error"] = "로그인 해주세요";
     console.log(resultJson);
     res.json(resultJson);
   }
@@ -1299,7 +1309,7 @@ router.post('/comment/dislikes/:id', function(req, res) {
     }, function(err, comment) {
       console.log(comment);
       if ((!err) && comment) {
-        resultJson["error"] = "이미 참여함";
+        resultJson["error"] = "이미 참여했습니다";
         console.log(resultJson);
         res.json(resultJson);
       }
@@ -1329,13 +1339,13 @@ router.post('/comment/dislikes/:id', function(req, res) {
       }
     );
   } else {
-    resultJson["error"] = "로그인 안함";
+    resultJson["error"] = "로그인 해주세요";
     console.log(resultJson);
     res.json(resultJson);
   }
 });
 
-/*좋아요*/
+// 글 좋아요
 router.post('/pan/likes/:id', function(req, res) {
   var sessionUser = req.user;
   var resultJson = {};
@@ -1345,8 +1355,7 @@ router.post('/pan/likes/:id', function(req, res) {
       likes: sessionUser.nameJ
     }, function(err, board) {
       if ((!err) && board) {
-        resultJson["error"] = "이미 참여함";
-        console.log(resultJson);
+        resultJson["error"] = "이미 참여했습니다";
         res.json(resultJson);
       }
     });
@@ -1368,19 +1377,17 @@ router.post('/pan/likes/:id', function(req, res) {
       function(err, board) {
         if ((!err) && board) {
           resultJson["result"] = board.like_number;
-          console.log(resultJson);
           res.json(resultJson);
         }
       }
     );
   } else {
-    resultJson["error"] = "로그인 안함";
-    console.log(resultJson);
+    resultJson["error"] = "로그인 해주세요";
     res.json(resultJson);
   }
 });
 
-/*싫어요*/
+// 글 싫어요
 router.post('/pan/dislikes/:id', function(req, res) {
   var sessionUser = req.user;
   var resultJson = {};

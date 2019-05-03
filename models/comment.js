@@ -16,7 +16,7 @@ var commentSchema = new Schema({
     sideJ : String, //left,right
     comment_date : {type: Date, default: Date.now()},
     like_number : Number,
-    likes : [String],
+    likes : [String], //좋아요,싫어요 누른 사람들의 nameJ
     littleComment : [littleCommentSchema]
 });
 
