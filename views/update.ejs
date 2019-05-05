@@ -28,7 +28,7 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <form action="/pan/updating/<%= pan._id %>" method="post" id="writeForm">
+        <form action="/update/db/<%= pan._id %>" method="post" id="writeForm">
           <div class="form-group">
             <input type="text" placeholder="제목" class="form-control" name="title" value="<%= pan.title%>" />
             <input id="DC" type="hidden" name="deleteCode" value= " <%= deleteCode %>"  />
@@ -72,7 +72,7 @@
           data: form_data, //client -> server
           dataType: 'json', //server -> client
           type: "POST",
-          url: '/upload',
+          url: '/update/upload',
           cache: false,
           contentType: false,
           enctype: 'multipart/form-data',
@@ -91,7 +91,7 @@
       var wf = document.getElementById("writeForm");
 
       wf.onsubmit = function() {
-        var submitEnd = confirm('글을 마무리 하셨나요? 확인 누르면 제출됩니다.');
+        var submitEnd = confirm('다 수정하셨나요? 확인 누르면 제출됩니다.');
         if (submitEnd) {
           return true;
         } else {

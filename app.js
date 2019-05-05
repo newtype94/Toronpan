@@ -10,22 +10,26 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 var flash = require('connect-flash');
 
-var panRoute = require('./routes/panRoute');
+//router
+var route_main = require('./routes/_main');
+var route_home = require('./routes/_home');
+var route_search = require('./routes/_search');
+var route_join = require('./routes/_join');
+var route_write = require('./routes/_write');
+var route_paging = require('./routes/_paging');
+var route_mypage = require('./routes/_mypage');
+var route_update = require('./routes/_update');
+var route_remove = require('./routes/_remove');
+
 
 var app = express();
 
 //mongoDB + mongoose
 
-
-//mlab DB 연결
-//var promise = mongoose.connect('mongodb://newtype94:dydgns88!@ds057816.mlab.com:57816/heroku_66g54sp8', {
-
-//로컬 DB 연결
-//var promise = mongoose.connect('mongodb://localhost/mydb', {
-
 var promise = mongoose.connect('mongodb://localhost/mydb', {
     useMongoClient: true
 });
+
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -44,7 +48,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-
 //express-session + passport
 app.use(session({ key:'sid', secret: 'secretCode', resave: false, saveUninitialized: true })); // 세션 활성화
 app.use(passport.initialize()); // passport 구동
@@ -53,8 +56,16 @@ app.use(passport.session()); // 세션 연결
 //flash
 app.use(flash());
 
-//대 라우팅
-app.use('/', panRoute);
+//라우팅
+app.all('/*', route_main);
+app.all('/home', route_home);
+app.all('/search/*', route_search);
+app.all('/join/*', route_join);
+app.all('/write/*', route_write);
+app.all('/page/*', route_paging);
+app.all('/mypage/*', route_mypage);
+app.all('/update/*', route_update);
+app.all('/remove/*', route_remove);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

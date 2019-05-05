@@ -25,7 +25,7 @@
 
     <div class="row mt-2 mb-2">
       <div class="col-12">
-        <form action="/pan/search/1" method="post">
+        <form action="/search/1" method="post">
           <div class="form-row">
             <div class="col-4 col-md-2">
               <select class="form-control" name="field">
@@ -93,7 +93,7 @@
             <h4 class="card-title">
               가입 후 수정 불가합니다
             </h4>
-            <form action="/joinDB" method="post" id="writeForm">
+            <form action="/join/db" method="post" id="writeForm">
               <div class="form-group">
                 <label for="nameJ">활동하실 닉네임
                   <input type="text" class="form-control" name="nameJ" id="nameJ" /></label>
@@ -303,67 +303,6 @@
       </div>
     </div>
 
-    <div class="row mt-2 mb-2">
-      <div class="col-md-6 col-12 mb-2">
-        <div class="card">
-          <div class="card-header">
-            <a href="/page/soci/new/1" class="btn-outline-dark">사회 - 최신</a>
-          </div>
-          <% if (sociNew !== null){
-        for(var i = 0; i < sociNew.length; i++) { %>
-          <div class="list-group">
-            <a href="/pan/<%=sociNew[i]._id%>" class="list-group-item list-group-item-action">
-              <div class="row">
-                <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
-                  <%=sociNew[i].title%>
-                </div>
-                <div class="col-4">
-                  <span style="float:right;">
-                    <% var now = new Date(); now = now.toLocaleDateString();
-                if (now==sociNew[i].board_date.toLocaleDateString()){ %>
-                    <%= sociNew[i].board_date.toLocaleTimeString().slice(0,5) %>
-                    <% }else{ %>
-                    <%= sociNew[i].board_date.toLocaleDateString().slice(5,10) %>
-                    <% } %>
-                  </span>
-                </div>
-              </div>
-            </a>
-          </div>
-          <%  }} %>
-        </div>
-      </div>
-      <div class="col-md-6 col-12 mb-2">
-        <div class="card">
-          <div class="card-header">
-            <a href="/page/soci/hot/1" class="btn-outline-dark">사회 - 인기</a>
-          </div>
-          <% if (sociHot !== null){
-        for(var i = 0; i < sociHot.length; i++) { %>
-          <div class="list-group">
-            <a href="/pan/<%=sociHot[i]._id%>" class="list-group-item list-group-item-action">
-              <div class="row">
-                <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
-                  <%=sociHot[i].title%>
-                </div>
-                <div class="col-4">
-                  <span style="float:right;">
-                    <% var now = new Date(); now = now.toLocaleDateString();
-                if (now==sociHot[i].board_date.toLocaleDateString()){ %>
-                    <%= sociHot[i].board_date.toLocaleTimeString().slice(0,5) %>
-                    <% }else{ %>
-                    <%= sociHot[i].board_date.toLocaleDateString().slice(5,10) %>
-                    <% } %>
-                  </span>
-                </div>
-              </div>
-            </a>
-          </div>
-          <%  }} %>
-        </div>
-      </div>
-    </div>
-
   </div>
   <% include ./footer %>
 </body>
@@ -376,7 +315,7 @@
         if ($('#nameJ').val() != "") {
           $.ajax({
             type: 'post',
-            url: '/idcheck/' + $('#nameJ').val(),
+            url: '/join/idcheck/' + $('#nameJ').val(),
             dataType: 'json',
             success: function(json) {
               var comment = $.parseJSON(json);
@@ -392,8 +331,6 @@
         }
       })
       .keyup();
-
-
 
     var wf = document.getElementById("writeForm");
     if (wf != null) {

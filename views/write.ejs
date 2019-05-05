@@ -20,7 +20,7 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <form action="/pan/write" method="post" id="writeForm">
+        <form action="/write/db" method="post" id="writeForm">
           <div class="form-group">
             <select id="field" name="field" class="form-control">
               <option value="0">분야 선택..</option>
@@ -82,7 +82,7 @@
           data: form_data, //client -> server
           dataType: 'json', //server -> client
           type: "POST",
-          url: '/upload',
+          url: '/write/upload',
           cache: false,
           contentType: false,
           enctype: 'multipart/form-data',

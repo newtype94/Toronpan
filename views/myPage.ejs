@@ -55,14 +55,14 @@
       </div>
       <div class="col-md-6 col-12 mb-2">
         <% if(panArr[i].exp_done==false){ %>
-        <a href='/user/expup/<%= panArr[i]._id %>' class="btn btn-success bill"><i class="far fa-heart"></i>
+        <a href='/mypage/expup/<%= panArr[i]._id %>' class="btn btn-success bill"><i class="far fa-heart"></i>
           <%= panArr[i].like_number%> 정산</a>
         <% }else{ %>
         <span><i class="fas fa-heart"></i>
           <%= panArr[i].exp_done_howmuch %> 정산완료</span>
         <% } %>
-        <a class="btn btn-warning" href='/pan/update/<%= panArr[i]._id %>'>수정</a>
-        <a href='/pan/remove/<%= panArr[i]._id %>' class="btn btn-danger deletes">삭제</a>
+        <a class="btn btn-warning" href='/update/render/<%= panArr[i]._id %>'>수정</a>
+        <a href='/remove/<%= panArr[i]._id %>' class="btn btn-danger deletes">삭제</a>
       </div>
     </div>
     <%  }} %>

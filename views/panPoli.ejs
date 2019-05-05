@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <% include ./head %>
+</head>
+
+<body>
+  <% include ./header %>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12">
+        <a href="/pan/<%= pan._id%>">
+          <%= pan.title %></a>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <span style="float:left">
+          <i class="far fa-eye"></i>
+          <%= pan.hit %>&nbsp
+          <i class="fas fa-heart"></i>
+          <span id="like_number">
+            <%= pan.like_number%></span>
+        </span>
+        <span style="float:right">
+          <i class="fas fa-user-edit"></i>
+          <%= pan.writer %>&nbsp
+          <i class="fas fa-calendar-alt"></i>
+          <%= pan.board_date.toLocaleString()%>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <hr>
+    <div class="row" style="padding-top:20px; padding-bottom:20px;">
+      <div class="col-12">
+        <%- pan.contents%>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px; margin-bottom:20px;">
+      <div class="col-12 text-center">
+        <button class="btn btn-primary" id="like" data-panId="<%= pan._id %>"><i class="fas fa-heart"></i></button>
+        <button class="btn btn-danger" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-heart-broken"></i></button>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <hr>
+    <div class="row mt-3">
+      <div class="col-12">
+        <% if(login==2){ %>
+        <form action="/comment/write" method="post">
+          <input type="hidden" name="id" value="<%=pan._id%>">
+          <div class="form-group mb-2">
+            <textarea class="form-control" name="contents" rows="3" placeholder="댓글 입력"></textarea>
+          </div>
+          <div class="form-group mb-2">
+            <button type="submit" class="btn btn-primary">완료</button>
+          </div>
+        </form>
+        <hr>
+        <% } %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <button class="btn btn-success getOurs getOthers" data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</button>
+        <button class="btn btn-primary getOurs getOthers" data-page="1" data-where="hot">인기 댓글</button></div>
+    </div>
+    <hr>
+    <% if(login==0){ %>
+    <div class="row">
+      <div class="col-12">
+        로그인하지 않아 댓글을 볼 수 없습니다
+      </div>
+    </div>
+    <% }else if(login==1){ %>
+    <div class="row">
+      <div class="col-12">
+        회원가입이 완료되지 않아 댓글을 볼 수 없습니다
+      </div>
+    </div>
+    <% }else if(sessionUser.sideJ=="left"){ %>
+    <div class="row">
+      <div class="col-md-6 col-12">
+        <div id="ourBox" data-side="left"></div>
+        <div id="ourPaging"></div>
+      </div>
+      <div class="col-md-6 col-0">
+        <div id="otherBox"></div>
+        <div id="otherPaging"></div>
+      </div>
+    </div>
+    <% }else if(sessionUser.sideJ=="right"){ %>
+    <div class="row">
+      <div class="col-md-6 col-0">
+        <div id="otherBox"></div>
+        <div id="otherPaging"></div>
+      </div>
+      <div class="col-md-6 col-12">
+        <div id="ourBox" data-side="right"></div>
+        <div id="ourPaging"></div>
+      </div>
+    </div>
+    <% }%>
+  </div>
+
+  <% include ./footer %>
+
+  <script>
+    $(function() {
+      $("#like").click(function() {
+        var panId = $("#like").attr("data-panId");
+        $.ajax({
+          url: "/pan/likes/" + panId,
+          type: 'post',
+          dataType: 'json',
+          success: function(data) {
+            if (data.error)
+              alert(data.error);
+            else if (data.result)
+              $('#like_number').html(data.result);
+          },
+          error: function(request, status, error) {
+            alert("에러");
+          }
+        });
+      });
+
+      $("#dislike").click(function() {
+        var panId = $("#dislike").attr("data-panId");
+        $.ajax({
+          url: "/pan/dislikes/" + panId,
+          type: 'post',
+          dataType: 'json',
+          success: function(data) {
+            if (data.error)
+              alert(data.error);
+            else if (data.result)
+              $('#like_number').html(data.result);
+          },
+          error: function(request, status, error) {
+            alert("에러");
+          }
+        });
+      });
+
+      $(document).on("click", '.commentLike', function() { //동적으로 생성된 객체에도 이벤트 부여
+        var commentId = $(this).attr("data-commentid");
+        $.ajax({
+          url: "/comment/likes/" + commentId,
+          type: 'post',
+          dataType: 'json',
+          success: function(data) {
+            if (data.error)
+              alert(data.error);
+            else if (data.result)
+              $('#' + commentId).html(data.result);
+          },
+          error: function(request, status, error) {
+            alert("에러");
+          }
+        });
+      });
+
+      $(document).on("click", '.commentDislike', function() {
+        var commentId = $(this).attr("data-commentid");
+        $.ajax({
+          url: "/comment/dislikes/" + commentId,
+          type: 'post',
+          dataType: 'json',
+          success: function(data) {
+            if (data.error)
+              alert(data.error);
+            else if (data.result)
+              $('#' + commentId).html(data.result);
+          },
+          error: function(request, status, error) {
+            alert("에러");
+          }
+        });
+      });
+
+      var ourSide = $("#ourBox").attr("data-side");
+
+      $(document).on("click", '.getOurs', function() {
+        var thisPage = $(this).attr("data-page");
+        var newHot = $(this).attr("data-where");
+        var panId = $("#dislike").attr("data-panId");
+
+        $.ajax({
+          url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId + "/" + ourSide,
+          type: "get",
+          dataType: 'json',
+          success: function(json) {
+            var comments = ""; //댓글 input
+            var comment = $.parseJSON(json);
+
+            for (var i = 0; i < comment.length - 1; i++) { //배열의 마지막 요소는 {pageNum:N} 임의로 넣은거라서
+
+              comments += '<div class="row">' +
+                '<div class="col-12">' +
+                '<span class="font-weight-bold">' + comment[i].writer + '</span>' +
+                '<span style="float:right;">' + comment[i].comment_date.toLocaleString("ko-KR").slice(0, 10) + " " + comment[i].comment_date.toLocaleString("ko-KR").slice(11, 16) + '</span>' +
+                '<p style="word-wrap:break-word;">' + comment[i].contents + '</p>' +
+                '<input type="hidden" class="commentId" value="' + comment[i]._id + '" />' +
+                '<button type="button" class="btn btn-secondary" disabled id="' + comment[i]._id + '">' + comment[i].like_number + '</button>' +
+                '<div class="btn-group" role="group">' +
+                '<button class="commentLike btn btn-primary" data-commentid="' + comment[i]._id + '"><i class="far fa-thumbs-up"></i></button>' +
+                '<button class="commentDislike btn btn-danger" data-commentid="' + comment[i]._id + '"><i class="far fa-thumbs-down"></i></button>' +
+                '<button class="littleCommentOpen btn btn-success"><i class="far fa-comment"></i></button>' +
+                '</div>' +
+                '<form class="littleCommentBox mt-2" action="/littlecomment/write" method="post" style="display:none">' +
+                '<input type="hidden" name="id" value="' + comment[i]._id + '">' +
+                '<textarea class="form-control mb-2" name="contents" row="3" placeholder="대댓글 입력"></textarea>' +
+                '<input class="btn btn-success" type="submit" value="완료">' +
+                '</form>' +
+                '</div>' + //col-12
+                '</div>' + //row
+
+                '<div class="row littleComment">'; //대댓 영역 시작
+
+              if (comment[i].littleComment !== null) {
+                for (var a = 0; a < comment[i].littleComment.length; a++) {
+                  comments += '<div class="col-1"></div><div class="col-11"><i class="fas fa-reply"></i>' +
+                    '<span>' + comment[i].littleComment[a].writer + " " +
+                    comment[i].littleComment[a].comment_date.toLocaleString("ko-KR").slice(0, 10) + " " +
+                    comment[i].littleComment[a].comment_date.toLocaleString("ko-KR").slice(11, 16) + '</span>' +
+                    '<p style="word-wrap:break-word;">' + comment[i].littleComment[a].contents + '</p></div>';
+                }
+              }
+              comments += '</div></div><hr>'; //대댓 영역 끝 + 전체 comment 끝
+            }
+
+            var pageNum = comment[comment.length - 1].pageNum;
+            var paging = "";
+            paging +=
+              '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">';
+
+            var start = thisPage; //start
+            if ((start % 10) == 0)
+              start--;
+            while ((start % 10) != 0) {
+              start--;
+            }
+            start++;
+
+            if ((start + 9) > pageNum)
+              end = pageNum;
+            else
+              end = start + 9;
+
+            if (start != 1) { //앞에 페이지 더있다 [<]
+              var tmp = start - 1;
+              paging += '<li><button class="page-link getOurs" data-page="' + tmp + '" data-where="' + newHot + '"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button></li>';
+            }
+            for (var i = start; i <= end; i++) { //당장 보이는 페이지들
+              paging += '<li><button class="page-link getOurs" data-page="' + i + '" data-where="' + newHot + '">' + i + '</button></li>';
+            }
+
+            if (end != pageNum) { //보이는 마지막 부분이 전체 pageNum보다 작음 [>]
+              var tmp = end + 1;
+              paging += '<li><button class="page-link getOurs" data-page="' + tmp + '" data-where="' + newHot + '"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button></li>'
+            }
+
+            paging += '</ul></nav>';
+
+            //실제 보이는 부분
+            $("#ourBox").html(comments);
+            $("#ourPaging").html(paging);
+
+          },
+          error: function(request, status, error) {
+            alert("에러");
+          }
+        })
+      });
+
+      $(document).on("click", '.littleCommentOpen', function() {
+        $(this).parent().siblings().filter('.littleCommentBox').slideToggle();
+      });
+
+      $(document).on("click", '.getOthers', function() {
+        var thisPage = $(this).attr("data-page");
+        var newHot = $(this).attr("data-where");
+        var panId = $("#dislike").attr("data-panId");
+        var ourSide = $("#ourBox").attr("data-side");
+
+        if (ourSide == "left") {
+          otherSide = "right";
+        } else if (ourSide == "right") {
+          otherSide = "left";
+        }
+
+        $.ajax({
+          url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId + "/" + otherSide,
+          type: "get",
+          dataType: 'json',
+          success: function(json) {
+            var comments = ""; //댓글 input
+            var comment = $.parseJSON(json);
+
+            for (var i = 0; i < comment.length - 1; i++) { //배열의 마지막 요소는 {pageNum:N} 임의로 넣은거라서
+
+              comments += '<div class="row">' +
+                '<div class="col-12">' +
+                '<span class="font-weight-bold">' + comment[i].writer + '</span>' +
+                '<span style="float:right;">' + comment[i].comment_date.toLocaleString("ko-KR").slice(0, 10) + " " + comment[i].comment_date.toLocaleString("ko-KR").slice(11, 16) + '</span>' +
+                '<p style="word-wrap:break-word;">' + comment[i].contents + '</p>' +
+                '<input type="hidden" class="commentId" value="' + comment[i]._id + '" />' +
+                '<button type="button" class="btn btn-secondary" disabled id="' + comment[i]._id + '">' + comment[i].like_number + '</button>' +
+                '</div>' + //col-12
+                '</div>' + //row
+
+                '<div class="row littleComment">'; //대댓 영역 시작
+
+              if (comment[i].littleComment !== null) {
+                for (var a = 0; a < comment[i].littleComment.length; a++) {
+                  comments += '<div class="col-12">&nbsp<i class="fas fa-reply"></i>' +
+                    '<span> ' + comment[i].littleComment[a].writer + " " +
+                    comment[i].littleComment[a].comment_date.toLocaleString("ko-KR").slice(0, 10) + " " +
+                    comment[i].littleComment[a].comment_date.toLocaleString("ko-KR").slice(11, 16) + '</span>' +
+                    '<p style="word-wrap:break-word;">' + comment[i].littleComment[a].contents + '</p></div>';
+                }
+              }
+              comments += '</div></div><hr>'; //대댓 영역 끝 + 전체 comment 끝
+            }
+
+            var pageNum = comment[comment.length - 1].pageNum;
+            var paging = "";
+            paging +=
+              '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">';
+
+            var start = thisPage; //start
+            if ((start % 10) == 0)
+              start--;
+            while ((start % 10) != 0) {
+              start--;
+            }
+            start++;
+
+            if ((start + 9) > pageNum)
+              end = pageNum;
+            else
+              end = start + 9;
+
+            if (start != 1) { //앞에 페이지 더있다 [<]
+              var tmp = start - 1;
+              paging += '<li><button class="page-link getOthers" data-page="' + tmp + '" data-where="' + newHot + '"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button></li>';
+            }
+            for (var i = start; i <= end; i++) { //당장 보이는 페이지들
+              paging += '<li><button class="page-link getOthers" data-page="' + i + '" data-where="' + newHot + '">' + i + '</button></li>';
+            }
+
+            if (end != pageNum) { //보이는 마지막 부분이 전체 pageNum보다 작음 [>]
+              var tmp = end + 1;
+              paging += '<li><button class="page-link getOthers" data-page="' + tmp + '" data-where="' + newHot + '"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button></li>'
+            }
+
+            paging += '</ul></nav>';
+
+            //실제 보이는 부분
+            $("#otherBox").html(comments);
+            $("#otherPaging").html(paging);
+
+          },
+          error: function(request, status, error) {
+            alert("에러");
+          }
+        })
+      });
+      if ((ourSide == "left") || (ourSide == "right"))
+        $('#getFirstComment').click(); //최신댓글 trigger - window onload에 걸림
+    });
+  </script>
+
+</body>
+
+</html>
