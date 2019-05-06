@@ -18,8 +18,12 @@ var route_join = require('./routes/_join');
 var route_write = require('./routes/_write');
 var route_paging = require('./routes/_paging');
 var route_mypage = require('./routes/_mypage');
+var route_pan = require('./routes/_pan');
 var route_update = require('./routes/_update');
 var route_remove = require('./routes/_remove');
+var route_survey = require('./routes/_survey');
+var route_vote = require('./routes/_vote');
+var route_comment = require('./routes/_comment');
 
 
 var app = express();
@@ -64,8 +68,12 @@ app.all('/join/*', route_join);
 app.all('/write/*', route_write);
 app.all('/page/*', route_paging);
 app.all('/mypage/*', route_mypage);
+app.all('/pan/*', route_pan);
 app.all('/update/*', route_update);
 app.all('/remove/*', route_remove);
+app.all('/survey', route_survey);
+app.all('/vote/*', route_vote);
+app.all('/comment/*', route_comment);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -115,7 +115,7 @@
       $("#like").click(function() {
         var panId = $("#like").attr("data-panId");
         $.ajax({
-          url: "/pan/likes/" + panId,
+          url: "/vote/likes/" + panId,
           type: 'post',
           dataType: 'json',
           success: function(data) {
@@ -133,7 +133,7 @@
       $("#dislike").click(function() {
         var panId = $("#dislike").attr("data-panId");
         $.ajax({
-          url: "/pan/dislikes/" + panId,
+          url: "/vote/dislikes/" + panId,
           type: 'post',
           dataType: 'json',
           success: function(data) {
@@ -192,7 +192,7 @@
         var panId = $("#dislike").attr("data-panId");
 
         $.ajax({
-          url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId + "/" + ourSide,
+          url: "/comment/page/" + newHot + "/" + thisPage + "/" + panId + "/" + ourSide,
           type: "get",
           dataType: 'json',
           success: function(json) {
@@ -213,7 +213,7 @@
                 '<button class="commentDislike btn btn-danger" data-commentid="' + comment[i]._id + '"><i class="far fa-thumbs-down"></i></button>' +
                 '<button class="littleCommentOpen btn btn-success"><i class="far fa-comment"></i></button>' +
                 '</div>' +
-                '<form class="littleCommentBox mt-2" action="/littlecomment/write" method="post" style="display:none">' +
+                '<form class="littleCommentBox mt-2" action="/comment/little/write" method="post" style="display:none">' +
                 '<input type="hidden" name="id" value="' + comment[i]._id + '">' +
                 '<textarea class="form-control mb-2" name="contents" row="3" placeholder="대댓글 입력"></textarea>' +
                 '<input class="btn btn-success" type="submit" value="완료">' +
@@ -296,7 +296,7 @@
         }
 
         $.ajax({
-          url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId + "/" + otherSide,
+          url: "/comment/page/" + newHot + "/" + thisPage + "/" + panId + "/" + otherSide,
           type: "get",
           dataType: 'json',
           success: function(json) {

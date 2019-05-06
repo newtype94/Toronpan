@@ -1,9 +1,9 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var Board = require('../models/board');
-var SurveyDone = require('../models/surveyDone');
-var TodaySurvey = require('../models/todaySurvey');
+const Board = require('../models/board');
+const SurveyDone = require('../models/surveyDone');
+const TodaySurvey = require('../models/todaySurvey');
 
 function checkLogin(user) {
   if (user == null) //로그인 X
@@ -15,8 +15,8 @@ function checkLogin(user) {
 }
 
 router.get('/home', function(req, res, next) {
-  var sessionUser = req.user;
-  var now = new Date();
+  const sessionUser = req.user;
+  let now = new Date();
   now = now.toLocaleDateString();
 
   Board.find({
@@ -57,9 +57,9 @@ router.get('/home', function(req, res, next) {
                 console.log(err);
                 res.render("error");
               } else if (surveyDB) { //
-                survey = {};
-                survey["q"] = surveyDB.firstQ;
-                survey["id"] = surveyDB._id;
+                let survey = {};
+                survey["firstQ"] = surveyDB.firstQ;
+                survey["_id"] = surveyDB._id;
                 res.render('home', {
                   message: req.flash('message'),
                   login: 2,

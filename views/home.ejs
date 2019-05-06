@@ -65,9 +65,9 @@
           <div class="card-header text-center">오늘의 설문</div>
           <div class="card-body text-info">
             <h4 class="card-title">
-              <%= survey.q %>
+              <%= survey.firstQ %>
             </h4>
-            <form action="/survey/do" method="post" id="surveyForm">
+            <form action="/survey" method="post" id="surveyForm">
               <div class="radio">
                 <label for="degree_1"><input type="radio" name="degree" value="1" id="degree_1" />1점</label>
                 <label for="degree_2"><input type="radio" name="degree" value="2" id="degree_2" />2점</label>
@@ -75,7 +75,7 @@
                 <label for="degree_4"><input type="radio" name="degree" value="4" id="degree_4" />4점</label>
                 <label for="degree_5"><input type="radio" name="degree" value="5" id="degree_5" />5점</label>
               </div>
-              <input type="hidden" name="firstID" value="<%= survey.id %>" />
+              <input type="hidden" name="firstID" value="<%= survey._id %>" />
               <button type="submit" class="btn btn-danger">오늘의 설문 제출</button>
             </form>
           </div>
