@@ -42,8 +42,8 @@
     </div>
     <div class="row" style="margin-top:20px; margin-bottom:20px;">
       <div class="col-12 text-center">
-        <button class="btn btn-primary" id="like" data-panId="<%= pan._id %>"><i class="fas fa-heart"></i></button>
-        <button class="btn btn-danger" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-heart-broken"></i></button>
+        <button class="btn btn-danger" id="like" data-panId="<%= pan._id %>"><i class="fas fa-fire-alt"></i>불판으로</button>
+        <button class="btn btn-primary" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-fire-extinguisher"></i></button>
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@
     <div class="row mt-3">
       <div class="col-12">
         <% if(login==2){ %>
-        <form action="/comment/write" method="post">
+        <form action="/commentpoli/write" method="post">
           <input type="hidden" name="id" value="<%=pan._id%>">
           <div class="form-group mb-2">
             <textarea class="form-control" name="contents" rows="3" placeholder="댓글 입력"></textarea>
@@ -66,9 +66,15 @@
       </div>
     </div>
     <div class="row">
+      <% if(login==2){ %>
       <div class="col-12 text-center">
         <button class="btn btn-success getOurs getOthers" data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</button>
         <button class="btn btn-primary getOurs getOthers" data-page="1" data-where="hot">인기 댓글</button></div>
+      <% }else{ %>
+      <div class="col-12 text-center">
+        <button class="btn btn-success">최신 댓글</button>
+        <button class="btn btn-primary">인기 댓글</button></div>
+      <% } %>
     </div>
     <hr>
     <% if(login==0){ %>
@@ -151,7 +157,7 @@
       $(document).on("click", '.commentLike', function() { //동적으로 생성된 객체에도 이벤트 부여
         var commentId = $(this).attr("data-commentid");
         $.ajax({
-          url: "/comment/likes/" + commentId,
+          url: "/commentpoli/likes/" + commentId,
           type: 'post',
           dataType: 'json',
           success: function(data) {
@@ -169,7 +175,7 @@
       $(document).on("click", '.commentDislike', function() {
         var commentId = $(this).attr("data-commentid");
         $.ajax({
-          url: "/comment/dislikes/" + commentId,
+          url: "/commentpoli/dislikes/" + commentId,
           type: 'post',
           dataType: 'json',
           success: function(data) {
@@ -192,7 +198,7 @@
         var panId = $("#dislike").attr("data-panId");
 
         $.ajax({
-          url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId + "/" + ourSide,
+          url: "/commentpoli/page/" + newHot + "/" + thisPage + "/" + panId + "/" + ourSide,
           type: "get",
           dataType: 'json',
           success: function(json) {
@@ -213,7 +219,7 @@
                 '<button class="commentDislike btn btn-danger" data-commentid="' + comment[i]._id + '"><i class="far fa-thumbs-down"></i></button>' +
                 '<button class="littleCommentOpen btn btn-success"><i class="far fa-comment"></i></button>' +
                 '</div>' +
-                '<form class="littleCommentBox mt-2" action="/littlecomment/write" method="post" style="display:none">' +
+                '<form class="littleCommentBox mt-2" action="/commentpoli/little/write" method="post" style="display:none">' +
                 '<input type="hidden" name="id" value="' + comment[i]._id + '">' +
                 '<textarea class="form-control mb-2" name="contents" row="3" placeholder="대댓글 입력"></textarea>' +
                 '<input class="btn btn-success" type="submit" value="완료">' +
@@ -296,7 +302,7 @@
         }
 
         $.ajax({
-          url: "/commentpage/" + newHot + "/" + thisPage + "/" + panId + "/" + otherSide,
+          url: "/commentpoli/page/" + newHot + "/" + thisPage + "/" + panId + "/" + otherSide,
           type: "get",
           dataType: 'json',
           success: function(json) {

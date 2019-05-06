@@ -15,7 +15,7 @@ function checkLogin(user) {
 }
 
 //댓글 페이징 AJAX
-router.get('/comment/page/:sort/:page/:panid', function(req, res, next) {
+router.get('/commentpoli/page/:sort/:page/:panid/:side', function(req, res, next) {
   var page = req.params.page;
   if (page == "") {
     page = 1;
@@ -25,13 +25,15 @@ router.get('/comment/page/:sort/:page/:panid', function(req, res, next) {
   var pageNum = 1;
 
   Comment.count({
-    whatBoard: req.params.panid
+    whatBoard: req.params.panid,
+    sideJ: req.params.side
   }, function(err, totalCount) {
     if (err) throw err;
     pageNum = Math.ceil(totalCount / limitSize);
     if (req.params.sort == "new") {
       Comment.find({
-        whatBoard: req.params.panid
+        whatBoard: req.params.panid,
+        sideJ: req.params.side
       }).sort({
         comment_date: -1
       }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
@@ -44,7 +46,8 @@ router.get('/comment/page/:sort/:page/:panid', function(req, res, next) {
       });
     } else if (req.params.sort == "hot") {
       Comment.find({
-        whatBoard: req.params.panid
+        whatBoard: req.params.panid,
+        sideJ: req.params.side
       }).sort({
         like_number: -1
       }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
@@ -60,12 +63,12 @@ router.get('/comment/page/:sort/:page/:panid', function(req, res, next) {
 });
 
 //댓글 달기
-router.post('/comment/write', function(req, res) {
+router.post('/commentpoli/write', function(req, res) {
   var comment = new Comment();
   comment.whatBoard = req.body.id;
   comment.contents = req.body.contents;
   comment.writer = req.user.nameJ;
-  comment.sideJ = "";
+  comment.sideJ = req.user.sideJ;
   comment.like_number = 0;
   comment.comment_date = Date.now();
 
@@ -77,7 +80,7 @@ router.post('/comment/write', function(req, res) {
 });
 
 //대댓글 달기
-router.post('/comment/little/write', function(req, res) {
+router.post('/commentpoli/little/write', function(req, res) {
 
   var littleComment = new LittleComment();
   littleComment.contents = req.body.contents;
@@ -91,7 +94,7 @@ router.post('/comment/little/write', function(req, res) {
       console.log(err);
       req.flash('message', '대댓글 작성 중 오류가 발생하였습니다.');
       res.redirect('/home');
-    } else{
+    } else if (comment.sideJ == req.user.sideJ) {
       Comment.findOneAndUpdate({
         _id: req.body.id
       }, {
@@ -103,13 +106,15 @@ router.post('/comment/little/write', function(req, res) {
           console.log(err);
         res.redirect('back');
       });
+    } else {
+      res.redirect('back');
     }
   });
 });
 
 
 //댓글 좋아요
-router.post('/comment/likes/:id', function(req, res) {
+router.post('/commentpoli/likes/:id', function(req, res) {
   var sessionUser = req.user;
   var resultJson = {};
   if (sessionUser) {
@@ -127,6 +132,7 @@ router.post('/comment/likes/:id', function(req, res) {
       } else {
         Comment.findOneAndUpdate({
             _id: req.params.id,
+            sideJ : sessionUser.sideJ,
             likes: {
               $nin: [sessionUser.nameJ]
             }
@@ -144,6 +150,10 @@ router.post('/comment/likes/:id', function(req, res) {
             if ((!err) && comment) {
               resultJson["result"] = comment.like_number;
               res.json(resultJson);
+            } else{
+              console.log(err)
+              resultJson["error"] = "오류";
+              res.json(resultJson);
             }
           }
         );
@@ -156,7 +166,7 @@ router.post('/comment/likes/:id', function(req, res) {
 });
 
 //댓글 싫어요
-router.post('/comment/dislikes/:id', function(req, res) {
+router.post('/commentpoli/dislikes/:id', function(req, res) {
   var sessionUser = req.user;
   var resultJson = {};
   if (sessionUser) {
@@ -174,6 +184,7 @@ router.post('/comment/dislikes/:id', function(req, res) {
       } else {
         Comment.findOneAndUpdate({
             _id: req.params.id,
+            sideJ : sessionUser.sideJ,
             likes: {
               $nin: [sessionUser.nameJ]
             }
@@ -190,6 +201,10 @@ router.post('/comment/dislikes/:id', function(req, res) {
           function(err, comment) {
             if ((!err) && comment) {
               resultJson["result"] = comment.like_number;
+              res.json(resultJson);
+            } else{
+              console.log(err)
+              resultJson["error"] = "오류";
               res.json(resultJson);
             }
           }

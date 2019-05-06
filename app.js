@@ -11,20 +11,19 @@ mongoose.Promise = global.Promise;
 var flash = require('connect-flash');
 
 //router
-var route_main = require('./routes/_main');
-var route_home = require('./routes/_home');
-var route_search = require('./routes/_search');
-var route_join = require('./routes/_join');
-var route_write = require('./routes/_write');
-var route_paging = require('./routes/_paging');
-var route_mypage = require('./routes/_mypage');
-var route_pan = require('./routes/_pan');
-var route_update = require('./routes/_update');
-var route_remove = require('./routes/_remove');
-var route_survey = require('./routes/_survey');
-var route_vote = require('./routes/_vote');
 var route_comment = require('./routes/_comment');
-
+var route_commentpoli = require('./routes/_commentPoli');
+var route_home = require('./routes/_home');
+var route_join = require('./routes/_join');
+var route_main = require('./routes/_main');
+var route_mypage = require('./routes/_mypage');
+var route_paging = require('./routes/_paging');
+var route_pan = require('./routes/_pan');
+var route_remove = require('./routes/_remove');
+var route_search = require('./routes/_search');
+var route_survey = require('./routes/_survey');
+var route_update = require('./routes/_update');
+var route_write = require('./routes/_write');
 
 var app = express();
 
@@ -57,23 +56,21 @@ app.use(session({ key:'sid', secret: 'secretCode', resave: false, saveUninitiali
 app.use(passport.initialize()); // passport 구동
 app.use(passport.session()); // 세션 연결
 
-//flash
 app.use(flash());
 
-//라우팅
-app.all('/*', route_main);
+app.all('/comment/*', route_comment); //일반 //(DB)댓글 쓰기, 좋아요, 대댓글 쓰기 //(AJAX)댓글 json
+app.all('/commentPoli/*', route_commentpoli); //정치 //(DB)댓글 쓰기, 좋아요, 대댓글 쓰기 //(AJAX)댓글 json
 app.all('/home', route_home);
-app.all('/search/*', route_search);
 app.all('/join/*', route_join);
-app.all('/write/*', route_write);
-app.all('/page/*', route_paging);
+app.all('/*', route_main);
 app.all('/mypage/*', route_mypage);
-app.all('/pan/*', route_pan);
-app.all('/update/*', route_update);
-app.all('/remove/*', route_remove);
-app.all('/survey', route_survey);
-app.all('/vote/*', route_vote);
-app.all('/comment/*', route_comment);
+app.all('/page/*', route_paging);
+app.all('/pan/*', route_pan); //(DB-AJAX)글 좋아요싫어요 //(렌더링)글 읽기
+app.all('/remove/*', route_remove); //(DB)글 삭제
+app.all('/search/*', route_search); //(렌더링)검색
+app.all('/survey', route_survey); //(DB)설문 참여
+app.all('/update/*', route_update); //(렌더링)글 수정 //(DB)글 수정
+app.all('/write/*', route_write); //(렌더링)글쓰기 //(DB)글쓰기
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -242,45 +242,16 @@
     <% }%>
 
     <div class="row mt-2 mb-2">
-      <div class="col-md-6 col-12 mb-2">
-        <div class="card">
-          <div class="card-header">
-            <a href="/page/poli/new/1" class="btn-outline-dark">정치 - 최신</a>
-          </div>
-          <% if (poliNew !== null){
-          for(var i = 0; i < poliNew.length; i++) { %>
-          <div class="list-group">
-            <a href="/pan/<%=poliNew[i]._id%>" class="list-group-item list-group-item-action">
-              <div class="row">
-                <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
-                  <%=poliNew[i].title%>
-                </div>
-                <div class="col-4">
-                  <span style="float:right;">
-                    <% var now = new Date(); now = now.toLocaleDateString();
-                  if (now==poliNew[i].board_date.toLocaleDateString()){ %>
-                    <%= poliNew[i].board_date.toLocaleTimeString().slice(0,5) %>
-                    <% }else{ %>
-                    <%= poliNew[i].board_date.toLocaleDateString().slice(5,10) %>
-                    <% } %>
-                  </span>
-                </div>
-              </div>
-            </a>
-          </div>
-          <%  }} %>
-        </div>
-      </div>
 
       <div class="col-md-6 col-12 mb-2">
         <div class="card">
-          <div class="card-header">
-            <a href="/page/poli/hot/1" class="btn-outline-dark">정치 - 인기</a>
+          <div class="card-header bg-danger">
+            <a href="/page/poli/hot/1" class="text-white">정치 불판</a>
           </div>
           <% if (poliHot !== null){
         for(var i = 0; i < poliHot.length; i++) { %>
           <div class="list-group">
-            <a href="/pan/<%=poliHot[i]._id%>" class="list-group-item list-group-item-action">
+            <a href="/pan/poli/<%=poliHot[i]._id%>" class="list-group-item list-group-item-action">
               <div class="row">
                 <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
                   <%=poliHot[i].title%>
@@ -292,6 +263,35 @@
                     <%= poliHot[i].board_date.toLocaleTimeString().slice(0,5) %>
                     <% }else{ %>
                     <%= poliHot[i].board_date.toLocaleDateString().slice(5,10) %>
+                    <% } %>
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+          <%  }} %>
+        </div>
+      </div>
+      <div class="col-md-6 col-12 mb-2">
+        <div class="card">
+          <div class="card-header bg-dark">
+            <a href="/page/poli/new/1" class="text-white">정치 최신</a>
+          </div>
+          <% if (poliNew !== null){
+            for(var i = 0; i < poliNew.length; i++) { %>
+          <div class="list-group">
+            <a href="/pan/poli/<%=poliNew[i]._id%>" class="list-group-item list-group-item-action">
+              <div class="row">
+                <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
+                  <%=poliNew[i].title%>
+                </div>
+                <div class="col-4">
+                  <span style="float:right;">
+                    <% var now = new Date(); now = now.toLocaleDateString();
+                        if (now==poliNew[i].board_date.toLocaleDateString()){ %>
+                    <%= poliNew[i].board_date.toLocaleTimeString().slice(0,5) %>
+                    <% }else{ %>
+                    <%= poliNew[i].board_date.toLocaleDateString().slice(5,10) %>
                     <% } %>
                   </span>
                 </div>
@@ -365,11 +365,10 @@
     var sf = document.getElementById("surveyForm");
     if (sf != null) {
       sf.onsubmit = function() {
-        if ($('input[name="degree"]:checked').val() == null){
+        if ($('input[name="degree"]:checked').val() == null) {
           alert('선택지 중 하나를 고르세요');
           return false;
-        }
-        else{
+        } else {
           return true;
         }
       }
