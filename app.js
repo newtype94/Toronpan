@@ -60,11 +60,11 @@ app.use(flash());
 
 app.all('/comment/*', route_comment); //일반 //(DB)댓글 쓰기, 좋아요, 대댓글 쓰기 //(AJAX)댓글 json
 app.all('/commentPoli/*', route_commentpoli); //정치 //(DB)댓글 쓰기, 좋아요, 대댓글 쓰기 //(AJAX)댓글 json
-app.all('/home', route_home);
-app.all('/join/*', route_join);
-app.all('/*', route_main);
-app.all('/mypage/*', route_mypage);
-app.all('/page/*', route_paging);
+app.all('/home', route_home); //(렌더링)홈
+app.all('/join/*', route_join); //(DB) 회원가입
+app.all('/*', route_main); //(passport)로그인 처리
+app.all('/mypage/*', route_mypage); //(렌더링)마이 페이지 //(DB)레벨 동기화
+app.all('/page/*', route_paging); //(렌더링)메뉴별 페이지
 app.all('/pan/*', route_pan); //(DB-AJAX)글 좋아요싫어요 //(렌더링)글 읽기
 app.all('/remove/*', route_remove); //(DB)글 삭제
 app.all('/search/*', route_search); //(렌더링)검색

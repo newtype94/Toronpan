@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
   idK: String, //카카오 토큰
   nameK: String, //실명
-  nameJ: String, //정치판 닉네임
+  nameJ: String, //토론판 닉네임
   genderJ: String, //m , f
   yearJ: Number, //연령대
   ageJ: Number, //출생연도
