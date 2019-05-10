@@ -11,6 +11,7 @@ mongoose.Promise = global.Promise;
 var flash = require('connect-flash');
 
 //router
+var route_admin = require('./routes/_admin');
 var route_comment = require('./routes/_comment');
 var route_commentpoli = require('./routes/_commentPoli');
 var route_home = require('./routes/_home');
@@ -58,6 +59,7 @@ app.use(passport.session()); // 세션 연결
 
 app.use(flash());
 
+app.all('/admin/*', route_admin); //(렌더링)관리자 페이지 //(DB)설문 등록
 app.all('/comment/*', route_comment); //일반 //(DB)댓글 쓰기, 좋아요, 대댓글 쓰기 //(AJAX)댓글 json
 app.all('/commentPoli/*', route_commentpoli); //정치 //(DB)댓글 쓰기, 좋아요, 대댓글 쓰기 //(AJAX)댓글 json
 app.all('/home', route_home); //(렌더링)홈
