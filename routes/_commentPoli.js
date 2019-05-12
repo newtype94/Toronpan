@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Board = require('../models/board');
-const Comment = require('../models/comment');
+const Comment = require('../models/commentPoli');
 const LittleComment = require('../models/littleComment');
 
 function checkLogin(user) {
@@ -70,6 +70,8 @@ router.post('/commentpoli/write', function(req, res) {
   comment.writer = req.user.nameJ;
   comment.sideJ = req.user.sideJ;
   comment.like_number = 0;
+  comment.exp_done = false;
+  comment.exp_done_howmuch = 0;
   comment.comment_date = Date.now();
 
   comment.save(function(err) {

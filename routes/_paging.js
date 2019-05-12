@@ -46,7 +46,7 @@ router.get('/page/:field/new/:page', function(req, res, next) {
         pagination: pageNum,
         page: page,
         field: field,
-        title: "최신글"
+        title: "new"
       });
     });
   });
@@ -102,7 +102,7 @@ router.get('/page/:field/hot/:page', function(req, res, next) {
         pagination: pageNum,
         page: page,
         field: field,
-        title: "인기글"
+        title: "hot"
       });
     });
   });

@@ -1,8 +1,10 @@
-var express = require('express');
+const express = require('express');
 var router = express.Router();
 
-var Board = require('../models/board');
-var User = require('../models/user');
+const Board = require('../models/board');
+const User = require('../models/user');
+const Comment = require('../models/comment');
+const CommentPoli = require('../models/commentPoli');
 
 function checkLogin(user) {
   if (user == null) //로그인 X
@@ -14,15 +16,17 @@ function checkLogin(user) {
 }
 
 //렌더링
-router.get('/mypage/:page', function(req, res) {
-  var sessionUser = req.user;
+router.get('/mypage/:what/:page', function(req, res) {
+  const sessionUser = req.user;
 
-  var page = req.params.page;
+  let page = req.params.page;
+  const what = req.params.what;
+
   if (page == null)
     page = 1;
-  var skipSize = (page - 1) * 1;
-  var limitSize = 1;
-  var pageNum = 1;
+  const skipSize = (page - 1) * 1;
+  const limitSize = 1;
+  let pageNum = 1;
 
   if (checkLogin(sessionUser) == 0) {
     req.flash('message', '로그인 해주세요');
@@ -41,31 +45,82 @@ router.get('/mypage/:page', function(req, res) {
           level: parseInt((userDB.exp) / 50) + 1
         }
       }, function() {
-        console.log("Level Up Complete..");
       });
     });
 
-    Board.count({
-      writer_id: sessionUser._id
-    }, function(err, totalCount) {
-      if (err) throw err;
-      pageNum = Math.ceil(totalCount / limitSize);
-      Board.find({
+    if (what == "board") {
+      Board.count({
         writer_id: sessionUser._id
-      }).sort({
-        board_date: -1
-      }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
+      }, function(err, totalCount) {
         if (err) throw err;
-        res.render('myPage', {
-          login: 2,
-          panArr: panArr,
-          pagination: pageNum,
-          page: page,
-          title: "마이페이지",
-          me: sessionUser
+        pageNum = Math.ceil(totalCount / limitSize);
+        Board.find({
+          writer_id: sessionUser._id
+        }).sort({
+          board_date: -1
+        }).skip(skipSize).limit(limitSize).exec(function(err, data) {
+          if (err) throw err;
+          res.render('myPage', {
+            login: 2,
+            pan: data,
+            comment: null,
+            commentPoli:null,
+            pagination: pageNum,
+            page: page,
+            title: "마이페이지",
+            me: sessionUser
+          });
         });
       });
-    });
+    }else if(what=="comment"){
+      Comment.count({
+        writer: sessionUser.nameJ
+      }, function(err, totalCount) {
+        if (err) throw err;
+        pageNum = Math.ceil(totalCount / limitSize);
+        Comment.find({
+          writer: sessionUser.nameJ
+        }).sort({
+          board_date: -1
+        }).skip(skipSize).limit(limitSize).exec(function(err, data) {
+          if (err) throw err;
+          res.render('myPage', {
+            login: 2,
+            pan: null,
+            comment: data,
+            commentPoli: null,
+            pagination: pageNum,
+            page: page,
+            title: "마이페이지",
+            me: sessionUser
+          });
+        });
+      });
+    }else if(what=="commentpoli"){
+      CommentPoli.count({
+        writer: sessionUser.nameJ
+      }, function(err, totalCount) {
+        if (err) throw err;
+        pageNum = Math.ceil(totalCount / limitSize);
+        CommentPoli.find({
+          writer: sessionUser.nameJ
+        }).sort({
+          board_date: -1
+        }).skip(skipSize).limit(limitSize).exec(function(err, data) {
+          if (err) throw err;
+          res.render('myPage', {
+            login: 2,
+            pan: null,
+            comment: null,
+            commentPoli: data,
+            pagination: pageNum,
+            page: page,
+            title: "마이페이지",
+            me: sessionUser
+          });
+        });
+      });
+    }
   }
 });
 

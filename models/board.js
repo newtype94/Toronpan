@@ -10,8 +10,8 @@ var boardSchema = new mongoose.Schema({
     board_date: {type: Date, default: Date.now()},
     like_number : Number,
     likes : [String],
-    exp_done : Boolean,
-    exp_done_howmuch : Number,
+    exp_done : Boolean, //정산 유무
+    exp_done_howmuch : Number, //정산된 수
     hit : Number
 });
 

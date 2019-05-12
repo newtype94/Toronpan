@@ -15,6 +15,7 @@
         </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-12">
         <div class="card border-info mb-2" style="max-width: 20rem;">
@@ -45,30 +46,65 @@
         </div>
       </div>
     </div>
-    <% if (panArr !== null){
-    for(var i = 0; i < panArr.length; i++) { %>
+    <div class="row">
+      <div class="col-12">
+        <div class="alert alert-info" role="alert">
+          <a href="/mypage/board/1" class="text-dark"><i class="fas fa-angle-double-right"></i>글</a>
+          <a href="/mypage/commentpoli/1" class="text-dark"><i class="fas fa-angle-double-right"></i>정치 댓글</a>
+          <a href="/mypage/comment/1" class="text-dark"><i class="fas fa-angle-double-right"></i>일반 댓글</a>
+        </div>
+      </div>
+    </div>
+    <% if (pan !== null){
+    for(var i = 0; i < pan.length; i++) { %>
     <div class="row">
       <div class="col-md-6 col-12 mb-2">
-        <a href="/pan/panArr[i].field/<%= panArr[i]._id%>" class="list-group-item list-group-item-action" style="overflow:hidden; text-overflow:ellipsis;">
-          <%=panArr[i].title%>
+        <a href="/pan/<%=pan[i].field%>/<%= pan[i]._id%>" class="list-group-item list-group-item-action" style="overflow:hidden; text-overflow:ellipsis;">
+          <%=pan[i].title%>
         </a>
       </div>
       <div class="col-md-6 col-12 mb-2">
-        <% if(panArr[i].exp_done==false){ %>
-        <a href='/mypage/expup/<%= panArr[i]._id %>' class="btn btn-success bill"><i class="far fa-heart"></i>
-          <%= panArr[i].like_number%> 정산</a>
-        <% }else{ %>
+        <a class="btn btn-warning" href='/update/render/<%= pan[i]._id %>'>수정</a>
+        <a href='/remove/<%= pan[i]._id %>' class="btn btn-danger deletes">삭제</a>
+      </div>
+    </div>
+    <%  }} %>
+    <% if (comment !== null){
+    for(var i = 0; i < comment.length; i++) { %>
+    <div class="row">
+      <div class="col-md-6 col-12 mb-2">
+        <div class="list-group-item list-group-item-action" style="overflow:hidden; text-overflow:ellipsis;">
+          <%=comment[i].contents%>
+        </div>
+      </div>
+      <div class="col-md-6 col-12 mb-2">
+        <a href='/comment/remove/<%= comment[i]._id %>' class="btn btn-danger deletes">삭제</a>
+      </div>
+    </div>
+    <%  }} %>
+    <% if (commentPoli !== null){
+    for(var i = 0; i < commentPoli.length; i++) { %>
+    <div class="row">
+      <div class="col-md-6 col-12 mb-2">
+        <div class="list-group-item list-group-item-action" style="overflow:hidden; text-overflow:ellipsis;">
+          <%=commentPoli[i].contents%>
+        </div>
+      </div>
+      <div class="col-md-6 col-12 mb-2">
+        <% if(commentPoli[i].exp_done){ %>
         <span><i class="fas fa-heart"></i>
-          <%= panArr[i].exp_done_howmuch %> 정산완료</span>
+          <%= commentPoli[i].exp_done_howmuch %> 정산완료</span>
+        <% }else{ %>
+        <a href='/mypage/expup/<%= commentPoli[i]._id %>' class="btn btn-success bill"><i class="far fa-heart"></i>
+          <%= commentPoli[i].like_number%> 정산</a>
         <% } %>
-        <a class="btn btn-warning" href='/update/render/<%= panArr[i]._id %>'>수정</a>
-        <a href='/remove/<%= panArr[i]._id %>' class="btn btn-danger deletes">삭제</a>
+        <a href='/commentpoli/remove/<%= commentPoli[i]._id %>' class="btn btn-danger deletes">삭제</a>
       </div>
     </div>
     <%  }} %>
     <div class="row">
       <div class="col-12">
-        <nav aria-label="Page navigation example" style="padding:30px;">
+        <nav aria-label="Page navigation example mt-2 mb-2">
           <ul class="pagination justify-content-center">
             <% var start=page;
         if((start%10)==0){

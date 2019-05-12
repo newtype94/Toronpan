@@ -12,13 +12,19 @@
       <div class="col-12">
         <div class="alert alert-warning" role="alert">
           <% if(field==1){ %>
-          정치 게시판
+          정치
           <%} else if(field==2){ %>
-          사회 게시판
+          사회
           <%} else if(field==3){ %>
-          자유 게시판
+          자유
           <%}%>
-          <%= title%>
+          <% if((field==1)&&title=="hot") { %>
+          - 불판
+          <% }else if(title=="hot"){ %>
+          - 인기
+          <% }else{ %>
+          - 최신
+          <% } %>
         </div>
       </div>
     </div>
@@ -41,7 +47,7 @@
               <i class="far fa-clock"></i>
               <%= panArr[i].board_date.toLocaleTimeString().slice(0,5) %>
               <% }else{ %>
-                <i class="fas fa-calendar-alt"></i>
+              <i class="fas fa-calendar-alt"></i>
               <%= panArr[i].board_date.toLocaleDateString().slice(5,10) %>
               <% } %>
             </span>
