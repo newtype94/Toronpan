@@ -9,12 +9,6 @@
 
 ############# TO DO ##############
 
-/mypage/expup 수정 - 정치 댓글 전용으로
-/commentpoli/remove 추가
-/comment/remove 추가
-
 cloudfare로 ssl적용
-
-회원가입시 ID글자수 제한(9자), 금지어 추가
 
 ###################################

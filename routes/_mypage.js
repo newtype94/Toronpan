@@ -16,7 +16,7 @@ function checkLogin(user) {
 }
 
 //렌더링
-router.get('/mypage/:what/:page', function(req, res) {
+router.get('/mypage/view/:what/:page', function(req, res, next) {
   const sessionUser = req.user;
 
   let page = req.params.page;
@@ -125,17 +125,19 @@ router.get('/mypage/:what/:page', function(req, res) {
 });
 
 //경험치 정산
-router.get('/mypage/expup/:panid', function(req, res, next) {
-  var howmuch = 0;
-  var sessionUser = req.user;
+router.get('/mypage/expup/:id', function(req, res, next) {
+  const sessionUser = req.user;
+  const id = req.params.id
+  let howmuch = 0;
 
-  if (sessionUser == null) {
+  console.log('hi');
+  if (!sessionUser) {
     req.flash('message', '로그인이 안되었습니다.');
     res.redirect("/home");
-  } else if (req.params.panid != null) {
-    Board.findOne({
-      _id: req.params.panid,
-      writer_id: sessionUser._id,
+  } else if (id) {
+    CommentPoli.findOne({
+      _id: id,
+      writer: sessionUser.nameJ,
       exp_done: false
     }).exec(
       function(err, panDB) {
@@ -149,9 +151,9 @@ router.get('/mypage/expup/:panid', function(req, res, next) {
               exp: howmuch
             }
           }, function() {
-            Board.findOneAndUpdate({
-              _id: req.params.panid,
-              writer_id: sessionUser._id,
+            CommentPoli.findOneAndUpdate({
+              _id: id,
+              writer: sessionUser.nameJ,
               exp_done: false
             }, {
               $set: {

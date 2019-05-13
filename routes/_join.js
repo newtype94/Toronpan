@@ -12,7 +12,7 @@ function checkLogin(user) {
     return 2;
 }
 
-//회원가입 알고리즘
+//회원가입 DB
 router.post('/join/db', function(req, res) {
   var sessionUser = req.user;
   var newUser = new User();
@@ -77,19 +77,31 @@ router.post('/join/db', function(req, res) {
 });
 
 router.post('/join/idcheck/:check', function(req, res) {
-  var sending = {};
+  let sending = {};
+  let sendingString = "";
   var forCheck = req.params.check;
-  User.count({
-    nameJ: forCheck
-  }, function(err, count) {
-    if (err)
-      console.log(err);
-    else{
-      sending["count"] = count;
-      var sendingString = JSON.stringify(sending);
-      res.json(sendingString);
-    }
-  });
+  console.log(forCheck.length);
+
+  if((forCheck.length>3)&&(forCheck.length<9)){
+    User.count({
+      nameJ: forCheck
+    }, function(err, count) {
+      if (err)
+        console.log(err);
+      else{
+        if(count==0)
+          sending["success"] = 0;
+        else
+          sending["success"] = 1;
+        sendingString = JSON.stringify(sending);
+        res.json(sendingString);
+      }
+    });
+  }else{
+    sending["success"] = 2;
+    sendingString = JSON.stringify(sending);
+    res.json(sendingString);
+  }
 });
 
 

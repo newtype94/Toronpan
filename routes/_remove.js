@@ -49,7 +49,7 @@ router.get('/remove/:id', function(req, res) {
       req.flash('message', '삭제하는데 에러가 발생하였습니다.');
       res.redirect('/home');
     } else {
-      res.redirect("/mypage/1");
+      res.redirect("/mypage/view/board/1");
     }
   });
 

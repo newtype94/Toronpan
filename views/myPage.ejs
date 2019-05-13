@@ -49,9 +49,9 @@
     <div class="row">
       <div class="col-12">
         <div class="alert alert-info" role="alert">
-          <a href="/mypage/board/1" class="text-dark"><i class="fas fa-angle-double-right"></i>글</a>
-          <a href="/mypage/commentpoli/1" class="text-dark"><i class="fas fa-angle-double-right"></i>정치 댓글</a>
-          <a href="/mypage/comment/1" class="text-dark"><i class="fas fa-angle-double-right"></i>일반 댓글</a>
+          <a href="/mypage/view/board/1" class="text-dark"><i class="fas fa-angle-double-right"></i>글</a>
+          <a href="/mypage/view/commentpoli/1" class="text-dark"><i class="fas fa-angle-double-right"></i>정치 댓글</a>
+          <a href="/mypage/view/comment/1" class="text-dark"><i class="fas fa-angle-double-right"></i>일반 댓글</a>
         </div>
       </div>
     </div>
@@ -156,7 +156,7 @@
   $(function() {
 
     $(".bill").click(function() {
-      if (confirm('정산하시겠습니까? 한번 정산된 글로는 추후 경험치를 획득할 수 없습니다')) {
+      if (confirm('정산하시겠습니까? 한번 정산되면 이 댓글로 다시 경험치를 획득할 수 없습니다')) {
         return true;
       } else {
         return false;
@@ -164,7 +164,7 @@
     });
 
     $(".deletes").click(function() {
-      if (confirm('삭제하시겠습니까? 한번 삭제된 글은 복구할 수 없습니다')) {
+      if (confirm('삭제하시겠습니까? 한번 삭제되면 복구할 수 없습니다')) {
         return true;
       } else {
         return false;

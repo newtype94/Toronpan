@@ -76,6 +76,23 @@ router.post('/comment/write', function(req, res) {
   });
 });
 
+//댓글 삭제
+router.get('/comment/remove/:id', function(req, res) {
+  const sessionUser = req.user;
+  Comment.remove({
+    _id: req.params.id,
+    writer : sessionUser.nameJ
+  }, function(err, output) {
+    if (err) {
+      console.log(err);
+      req.flash('message', '삭제하는데 에러가 발생하였습니다.');
+      res.redirect('/home');
+    } else {
+      res.redirect("/mypage/comment/1");
+    }
+  });
+});
+
 //대댓글 달기
 router.post('/comment/little/write', function(req, res) {
 
