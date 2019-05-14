@@ -7,8 +7,8 @@ const User = require('../models/user');
 
 function checkAdmin(user) {
   if(user){
-    if ((user.idK="1080190732")&&(user.nameJ="토론판운영자")) //for test
-    // if ((user.idK="1084118963")&&(user.nameJ="토론판운영자")) //for web
+    //if ((user.idK="1080190732")&&(user.nameJ="토론판운영자")) //for web
+    if ((user.idK="1084559821")&&(user.nameJ="토론판운영자")) //for test
       return true;
     else
       return false;

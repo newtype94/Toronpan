@@ -24,8 +24,8 @@ router.get('/mypage/view/:what/:page', function(req, res, next) {
 
   if (page == null)
     page = 1;
-  const skipSize = (page - 1) * 1;
-  const limitSize = 1;
+  const skipSize = (page - 1) * 7;
+  const limitSize = 7;
   let pageNum = 1;
 
   if (checkLogin(sessionUser) == 0) {

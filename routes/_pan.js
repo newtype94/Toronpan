@@ -112,7 +112,7 @@ router.post('/pan/likes/:id', function(req, res) {
             }
           }, {
             $inc: {
-              like_number: 100
+              like_number: 1
             },
             $push: {
               likes: sessionUser.nameJ
@@ -160,7 +160,7 @@ router.post('/pan/dislikes/:id', function(req, res) {
             }
           }, {
             $inc: {
-              like_number: -100
+              like_number: -1
             },
             $push: {
               likes: sessionUser.nameJ

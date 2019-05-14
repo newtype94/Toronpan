@@ -32,10 +32,10 @@ router.get('/oauth', passport.authenticate('login-kakao', {
 }));
 
 passport.use('login-kakao', new KakaoStrategy({
-    clientID: '5b030254a77f5d87154ee07043cf1717', //for test
-    //clientID: '374495b42614f3b0372f38ffe9bd13af', //for web
-    clientSecret: 'TEHDQudP6sWDhTmfihEIRHaB3VlJ9GpL', //for test
-    //clientSecret: 'O8GwikxCHfBcTBd4jmRmNRFVcuPelF0j', //for web
+    //clientID: '5b030254a77f5d87154ee07043cf1717', //for web
+    clientID: 'c497bfb4327e8bdd2c7ca6a99031b8cf', //for test
+    //clientSecret: 'TEHDQudP6sWDhTmfihEIRHaB3VlJ9GpL', //for web
+    clientSecret: 'lB9IirS4YYnWfZnIZuuWQ2N7FHHZj02M', //for test
     callbackURL: '/oauth'
   },
   function(accessToken, refreshToken, profile, done) {

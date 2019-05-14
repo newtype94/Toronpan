@@ -25,8 +25,8 @@ router.get('/page/:field/new/:page', function(req, res, next) {
     page = 1;
   }
 
-  var skipSize = (page - 1) * 3;
-  var limitSize = 3;
+  var skipSize = (page - 1) * 7;
+  var limitSize = 7;
   var pageNum = 1;
 
   Board.count({

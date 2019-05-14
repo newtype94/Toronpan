@@ -127,43 +127,52 @@ router.post('/comment/little/write', function(req, res) {
 
 //댓글 좋아요
 router.post('/comment/likes/:id', function(req, res) {
-  var sessionUser = req.user;
-  var resultJson = {};
+  const sessionUser = req.user;
+  let resultJson = {};
   if (sessionUser) {
     Comment.findOne({
-      _id: req.params.id,
-      likes: sessionUser.nameJ
-    }, function(err, comment) {
-      if (err) {
-        console.log(err)
-        resultJson["error"] = "오류";
+      _id: req.params.id
+    },function(err, comment){
+      if(comment.writer==sessionUser.nameJ){
+        resultJson["error"] = "자기 자신의 댓글엔 참여할 수 없습니다.";
         res.json(resultJson);
-      } else if (comment) {
-        resultJson["error"] = "이미 참여했습니다";
-        res.json(resultJson);
-      } else {
-        Comment.findOneAndUpdate({
-            _id: req.params.id,
-            likes: {
-              $nin: [sessionUser.nameJ]
-            }
-          }, {
-            $inc: {
-              like_number: 1
-            },
-            $push: {
-              likes: sessionUser.nameJ
-            }
-          }, {
-            new: true
-          },
-          function(err, comment) {
-            if ((!err) && comment) {
-              resultJson["result"] = comment.like_number;
-              res.json(resultJson);
-            }
+      }else{
+        Comment.findOne({
+          _id: req.params.id,
+          likes: sessionUser.nameJ
+        }, function(err, comment) {
+          if (err) {
+            console.log(err)
+            resultJson["error"] = "오류";
+            res.json(resultJson);
+          } else if (comment) {
+            resultJson["error"] = "이미 참여했습니다";
+            res.json(resultJson);
+          } else {
+            Comment.findOneAndUpdate({
+                _id: req.params.id,
+                likes: {
+                  $nin: [sessionUser.nameJ]
+                }
+              }, {
+                $inc: {
+                  like_number: 1
+                },
+                $push: {
+                  likes: sessionUser.nameJ
+                }
+              }, {
+                new: true
+              },
+              function(err, comment) {
+                if ((!err) && comment) {
+                  resultJson["result"] = comment.like_number;
+                  res.json(resultJson);
+                }
+              }
+            );
           }
-        );
+        });
       }
     });
   } else {
@@ -174,43 +183,52 @@ router.post('/comment/likes/:id', function(req, res) {
 
 //댓글 싫어요
 router.post('/comment/dislikes/:id', function(req, res) {
-  var sessionUser = req.user;
-  var resultJson = {};
+  const sessionUser = req.user;
+  let resultJson = {};
   if (sessionUser) {
     Comment.findOne({
-      _id: req.params.id,
-      likes: sessionUser.nameJ
-    }, function(err, comment) {
-      if (err) {
-        console.log(err)
-        resultJson["error"] = "오류";
+      _id: req.params.id
+    },function(err, comment){
+      if(comment.writer==sessionUser.nameJ){
+        resultJson["error"] = "자기 자신의 댓글엔 참여할 수 없습니다.";
         res.json(resultJson);
-      } else if (comment) {
-        resultJson["error"] = "이미 참여했습니다";
-        res.json(resultJson);
-      } else {
-        Comment.findOneAndUpdate({
-            _id: req.params.id,
-            likes: {
-              $nin: [sessionUser.nameJ]
-            }
-          }, {
-            $inc: {
-              like_number: -1
-            },
-            $push: {
-              likes: sessionUser.nameJ
-            }
-          }, {
-            new: true
-          },
-          function(err, comment) {
-            if ((!err) && comment) {
-              resultJson["result"] = comment.like_number;
-              res.json(resultJson);
-            }
+      }else{
+        Comment.findOne({
+          _id: req.params.id,
+          likes: sessionUser.nameJ
+        }, function(err, comment) {
+          if (err) {
+            console.log(err)
+            resultJson["error"] = "오류";
+            res.json(resultJson);
+          } else if (comment) {
+            resultJson["error"] = "이미 참여했습니다";
+            res.json(resultJson);
+          } else {
+            Comment.findOneAndUpdate({
+                _id: req.params.id,
+                likes: {
+                  $nin: [sessionUser.nameJ]
+                }
+              }, {
+                $inc: {
+                  like_number: -1
+                },
+                $push: {
+                  likes: sessionUser.nameJ
+                }
+              }, {
+                new: true
+              },
+              function(err, comment) {
+                if ((!err) && comment) {
+                  resultJson["result"] = comment.like_number;
+                  res.json(resultJson);
+                }
+              }
+            );
           }
-        );
+        });
       }
     });
   } else {
