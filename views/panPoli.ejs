@@ -28,7 +28,8 @@
           <i class="fas fa-user-edit"></i>
           <%= pan.writer %>&nbsp
           <i class="fas fa-calendar-alt"></i>
-          <%= pan.board_date.toLocaleString()%>
+          <%= pan.board_date.getFullYear()%>-<%= pan.board_date.getMonth() + 1%>-<%= pan.board_date.getDate()%>
+          <%= pan.board_date.getHours()%>:<%= pan.board_date.getMinutes()%>:<%= pan.board_date.getSeconds()%>
         </span>
       </div>
     </div>
