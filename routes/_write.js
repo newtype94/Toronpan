@@ -92,11 +92,22 @@ router.post('/write/db', function(req, res) {
         console.log(err);
         res.redirect('/');
       }
-      var deleteMatch = new DeleteMatch();
-      deleteMatch.pan_id = board._id;
-      deleteMatch.idK = sessionUser.idK;
-      deleteMatch.delete_code = req.body.deleteCode;
-      deleteMatch.save();
+      DeleteMatch.find({
+        delete_code : req.body.deleteCode //우연히 deleteCode가 중복될경우 혹은 사용자가 장난질 한 경우
+      },function(err, data){
+        if(err){
+          console.log(err);
+        }else if(data){
+          console.log(sessionUser+"deleteCode 중복");
+        }else{
+          let deleteMatch = new DeleteMatch();
+          deleteMatch.pan_id = board._id;
+          deleteMatch.idK = sessionUser.idK;
+          deleteMatch.delete_code = req.body.deleteCode;
+          deleteMatch.save();
+        }
+      });
+
       req.flash('message', '성공적으로 등록되었습니다..');
       res.redirect("/home");
     });

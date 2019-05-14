@@ -36,6 +36,7 @@ router.get('/remove/:id', function(req, res) {
     }, function(err,data){
       if(err){
         console.log(err);
+        res.redirect("/");
       }
     });
   });
