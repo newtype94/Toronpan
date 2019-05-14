@@ -259,9 +259,9 @@
                   <span style="float:right;">
                     <% var now = new Date(); now = now.toLocaleDateString();
                 if (now==poliHot[i].board_date.toLocaleDateString()){ %>
-                    <%= poliHot[i].board_date.getHours() %>:<%= poliNew[i].board_date.getMinutes()%>
+                    <%= poliHot[i].board_date.getHours() %>:<%= poliHot[i].board_date.getMinutes()%>
                     <% }else{ %>
-                    <%= poliNew[i].board_date.getMonth() + 1  %>-<%= poliNew[i].board_date.getDate()%>
+                    <%= poliHot[i].board_date.getMonth() + 1  %>-<%= poliHot[i].board_date.getDate()%>
                     <% } %>
                   </span>
                 </div>
