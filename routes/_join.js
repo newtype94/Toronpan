@@ -82,7 +82,7 @@ router.post('/join/idcheck/:check', function(req, res) {
   var forCheck = req.params.check;
   console.log(forCheck.length);
 
-  if((forCheck.length>3)&&(forCheck.length<9)){
+  if((forCheck.length>3)&&(forCheck.length<7)){
     User.count({
       nameJ: forCheck
     }, function(err, count) {
