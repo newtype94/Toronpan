@@ -104,7 +104,19 @@
   <% include ./footer %>
 
   <script>
+    function resizeYoutube() {
+      $("iframe").each(function() {
+        $(this).css("width", "100%");
+        $(this).css("height", Math.ceil(parseInt($(this).css("width")) * 360 / 640) + "px");
+      });
+    }
+    $(window).resize(function() {
+      resizeYoutube();
+    });
+
     $(function() {
+      resizeYoutube();
+
       $("#like").click(function() {
         var panId = $("#like").attr("data-panId");
         $.ajax({
@@ -274,7 +286,7 @@
         $(this).parent().siblings().filter('.littleCommentBox').slideToggle();
       });
 
-        $('#getFirstComment').click(); //최신댓글 trigger - window onload에 걸림
+      $('#getFirstComment').click(); //최신댓글 trigger - window onload에 걸림
     });
   </script>
 

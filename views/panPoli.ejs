@@ -119,7 +119,18 @@
   <% include ./footer %>
 
   <script>
+    function resizeYoutube() {
+      $("iframe").each(function() {
+        $(this).css("width", "100%");
+        $(this).css("height", Math.ceil(parseInt($(this).css("width")) * 360 / 640) + "px");
+      });
+    }
+    $(window).resize(function() {
+      resizeYoutube();
+    });
+
     $(function() {
+      resizeYoutube();
       $("#like").click(function() {
         var panId = $("#like").attr("data-panId");
         $.ajax({

@@ -92,7 +92,7 @@ router.post('/write/db', function(req, res) {
         console.log(err);
         res.redirect('/');
       }
-      DeleteMatch.find({
+      DeleteMatch.findOne({
         delete_code : req.body.deleteCode //우연히 deleteCode가 중복될경우 혹은 사용자가 장난질 한 경우
       },function(err, data){
         if(err){
