@@ -18,6 +18,7 @@ var route_home = require('./routes/_home');
 var route_join = require('./routes/_join');
 var route_main = require('./routes/_main');
 var route_mypage = require('./routes/_mypage');
+var route_notice = require('./routes/_notice');
 var route_paging = require('./routes/_paging');
 var route_pan = require('./routes/_pan');
 var route_remove = require('./routes/_remove');
@@ -53,7 +54,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 //express-session + passport
-app.use(session({ key:'sid', secret: 'secretCode', resave: false, saveUninitialized: true })); // 세션 활성화
+app.use(session({ key:'sid', secret: 'wM#1@R12#@!@', resave: false, saveUninitialized: true })); // 세션 활성화
 app.use(passport.initialize()); // passport 구동
 app.use(passport.session()); // 세션 연결
 
@@ -66,6 +67,7 @@ app.all('/home', route_home); //(렌더링)홈
 app.all('/join/*', route_join); //(DB) 회원가입
 app.all('/*', route_main); //(passport)로그인 처리
 app.all('/mypage/*', route_mypage); //(렌더링)마이 페이지 //(DB)레벨 동기화
+app.all('/notice/*', route_notice); //(렌더링)공지
 app.all('/page/*', route_paging); //(렌더링)메뉴별 페이지
 app.all('/pan/*', route_pan); //(DB-AJAX)글 좋아요싫어요 //(렌더링)글 읽기
 app.all('/remove/*', route_remove); //(DB)글 삭제

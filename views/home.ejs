@@ -241,7 +241,35 @@
     <% }%>
 
     <div class="row mt-2 mb-2">
-
+      <div class="col-12 mb-2">
+        <div class="card">
+          <div class="card-header bg-success">
+            <a href="/notice/page/1" class="text-white">공지</a>
+          </div>
+          <% if (notice !== null){
+        for(var i = 0; i < notice.length; i++) { %>
+          <div class="list-group">
+            <a href="/notice/<%=notice[i]._id%>" class="list-group-item list-group-item-action">
+              <div class="row">
+                <div class="col-8" style="overflow: hidden; text-overflow:ellipsis;">
+                  <%=notice[i].title%>
+                </div>
+                <div class="col-4">
+                  <span style="float:right;">
+                    <% var now = new Date(); now = now.toLocaleDateString();
+                if (now==notice[i].date.toLocaleDateString()){ %>
+                    <%= notice[i].date.getHours() %>:<%= notice[i].date.getMinutes()%>
+                    <% }else{ %>
+                    <%= notice[i].date.getMonth() + 1  %>-<%= notice[i].date.getDate()%>
+                    <% } %>
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+          <%  }} %>
+        </div>
+      </div>
       <div class="col-md-6 col-12 mb-2">
         <div class="card">
           <div class="card-header bg-danger">

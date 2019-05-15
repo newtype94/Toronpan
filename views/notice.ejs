@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <% include ./head %>
+</head>
+
+<body>
+  <% include ./header %>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12">
+          <%= notice.title %>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <span style="float:right">
+          <i class="fas fa-user-edit"></i>
+          토론판운영자&nbsp
+          <i class="fas fa-calendar-alt"></i>
+          <%= notice.date.getFullYear()%>-<%= notice.date.getMonth() + 1%>-<%= notice.date.getDate()%>
+          <%= notice.date.getHours()%>:<%= notice.date.getMinutes()%>:<%= notice.date.getSeconds()%>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <hr>
+    <div class="row mt-2 mb-2">
+      <div class="col-12">
+        <%- notice.contents%>
+      </div>
+    </div>
+    <hr>
+  </div>
+
+  <% include ./footer %>
+</body>
+
+</html>

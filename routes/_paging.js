@@ -1,14 +1,22 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var Board = require('../models/board');
+const Board = require('../models/board');
+
+function checkLogin(user) {
+  if (user == null) //로그인 X
+    return 0;
+  else if (user.nameJ == null) //로그인 + 가입 X
+    return 1;
+  else //로그인 + 가입완료
+    return 2;
+}
+
 
 //최신글 페이징
 router.get('/page/:field/new/:page', function(req, res, next) {
-  var login = 0;
-  if (req.user != null) {
-    login = 1;
-  }
+  const sessionUser = req.user;
+
   var page = req.params.page;
   var fieldText = req.params.field;
   var field;
@@ -41,7 +49,7 @@ router.get('/page/:field/new/:page', function(req, res, next) {
     }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
       if (err) throw err;
       res.render('page', {
-        login: login,
+        login: checkLogin(sessionUser),
         panArr: panArr,
         pagination: pageNum,
         page: page,
@@ -54,10 +62,7 @@ router.get('/page/:field/new/:page', function(req, res, next) {
 
 //인기글 페이징
 router.get('/page/:field/hot/:page', function(req, res, next) {
-  var login = 0;
-  if (req.user != null) {
-    login = 1;
-  }
+  const sessionUser = req.user;
 
   var page = req.params.page;
   var fieldText = req.params.field;
@@ -97,7 +102,7 @@ router.get('/page/:field/hot/:page', function(req, res, next) {
     }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
       if (err) throw err;
       res.render('page', {
-        login: login,
+        login: checkLogin(sessionUser),
         panArr: panArr,
         pagination: pageNum,
         page: page,
