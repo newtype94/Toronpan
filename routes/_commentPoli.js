@@ -62,23 +62,35 @@ router.get('/commentpoli/page/:sort/:page/:panid/:side', function(req, res, next
   });
 });
 
+
 //댓글 달기
 router.post('/commentpoli/write', function(req, res) {
-  var comment = new Comment();
-  comment.whatBoard = req.body.id;
-  comment.contents = req.body.contents;
-  comment.writer = req.user.nameJ;
-  comment.sideJ = req.user.sideJ;
-  comment.like_number = 0;
-  comment.exp_done = false;
-  comment.exp_done_howmuch = 0;
-  comment.comment_date = Date.now();
+  let comment = new Comment();
 
-  comment.save(function(err) {
-    if (err)
-      console.log(err);
-    res.redirect('back');
-  });
+  const sessionUser = req.user;
+
+  if (checkLogin(sessionUser) == 2) {
+    comment.whatBoard = req.body.id;
+    comment.contents = req.body.contents;
+    comment.writer = sessionUser.nameJ;
+    comment.sideJ = sessionUser.sideJ;
+    comment.like_number = 0;
+    comment.exp_done = false;
+    comment.exp_done_howmuch = 0;
+    comment.comment_date = Date.now();
+
+    comment.save(function(err) {
+      if (err)
+        console.log(err);
+      res.redirect('back');
+    });
+  } else if (checkLogin(sessionUser) == 1) {
+    req.flash('message', '회원가입을 완료해주세요');
+    res.redirect('/home');
+  } else {
+    req.flash('message', '로그인이 안 되었습니다');
+    res.redirect('/home');
+  }
 });
 
 //댓글 삭제
@@ -86,7 +98,7 @@ router.get('/commentpoli/remove/:id', function(req, res) {
   const sessionUser = req.user;
   Comment.remove({
     _id: req.params.id,
-    writer : sessionUser.nameJ
+    writer: sessionUser.nameJ
   }, function(err, output) {
     if (err) {
       console.log(err);
@@ -100,35 +112,44 @@ router.get('/commentpoli/remove/:id', function(req, res) {
 
 //대댓글 달기
 router.post('/commentpoli/little/write', function(req, res) {
+  const sessionUser = req.user;
+  if (checkLogin(sessionUser) == 2) {
 
-  var littleComment = new LittleComment();
-  littleComment.contents = req.body.contents;
-  littleComment.writer = req.user.nameJ;
-  littleComment.comment_date = Date.now();
+    let littleComment = new LittleComment();
+    littleComment.contents = req.body.contents;
+    littleComment.writer = req.user.nameJ;
+    littleComment.comment_date = Date.now();
 
-  Comment.findOne({
-    _id: req.body.id
-  }, function(err, comment) {
-    if (err) {
-      console.log(err);
-      req.flash('message', '대댓글 작성 중 오류가 발생하였습니다.');
-      res.redirect('/home');
-    } else if (comment.sideJ == req.user.sideJ) {
-      Comment.findOneAndUpdate({
-        _id: req.body.id
-      }, {
-        $push: {
-          littleComment: littleComment
-        }
-      }, function(err, board) {
-        if (err)
-          console.log(err);
+    Comment.findOne({
+      _id: req.body.id
+    }, function(err, comment) {
+      if (err) {
+        console.log(err);
+        req.flash('message', '대댓글 작성 중 오류가 발생하였습니다.');
+        res.redirect('/home');
+      } else if (comment.sideJ == req.user.sideJ) {
+        Comment.findOneAndUpdate({
+          _id: req.body.id
+        }, {
+          $push: {
+            littleComment: littleComment
+          }
+        }, function(err, board) {
+          if (err)
+            console.log(err);
+          res.redirect('back');
+        });
+      } else {
         res.redirect('back');
-      });
-    } else {
-      res.redirect('back');
-    }
-  });
+      }
+    });
+  } else if (checkLogin(sessionUser) == 1) {
+    req.flash('message', '회원가입을 완료해주세요');
+    res.redirect('/home');
+  } else {
+    req.flash('message', '로그인이 안 되었습니다');
+    res.redirect('/home');
+  }
 });
 
 
@@ -139,11 +160,11 @@ router.post('/commentpoli/likes/:id', function(req, res) {
   if (sessionUser) {
     Comment.findOne({
       _id: req.params.id
-    },function(err, comment){
-      if(comment.writer==sessionUser.nameJ){
+    }, function(err, comment) {
+      if (comment.writer == sessionUser.nameJ) {
         resultJson["error"] = "자기 자신의 댓글엔 참여할 수 없습니다.";
         res.json(resultJson);
-      }else{
+      } else {
         Comment.findOne({
           _id: req.params.id,
           likes: sessionUser.nameJ
@@ -195,11 +216,11 @@ router.post('/commentpoli/dislikes/:id', function(req, res) {
   if (sessionUser) {
     Comment.findOne({
       _id: req.params.id
-    },function(err, comment){
-      if(comment.writer==sessionUser.nameJ){
+    }, function(err, comment) {
+      if (comment.writer == sessionUser.nameJ) {
         resultJson["error"] = "자기 자신의 댓글엔 참여할 수 없습니다.";
         res.json(resultJson);
-      }else{
+      } else {
         Comment.findOne({
           _id: req.params.id,
           likes: sessionUser.nameJ

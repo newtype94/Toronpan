@@ -72,7 +72,6 @@ router.post('/comment/write', function(req, res) {
     comment.sideJ = "";
     comment.like_number = 0;
     comment.comment_date = Date.now();
-    console.log(Date.now());
 
     comment.save(function(err) {
       if (err)
