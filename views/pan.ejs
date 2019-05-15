@@ -203,12 +203,20 @@
             var comment = $.parseJSON(json);
 
             for (var i = 0; i < comment.length - 1; i++) { //배열의 마지막 요소는 {pageNum:N} 임의로 넣은거라서
-
+              const thisDate = new Date(comment[i].comment_date);
               comments += '<div class="row">' +
-                '<div class="col-12">' +
-                '<span class="font-weight-bold">' + comment[i].writer + '</span>' +
-                '<span style="float:right;">' + comment[i].comment_date.toLocaleString("ko-KR").slice(0, 10) + " " + comment[i].comment_date.toLocaleString("ko-KR").slice(11, 16) + '</span>' +
-                '<p style="word-wrap:break-word;">' + comment[i].contents + '</p>' +
+                '<div class="col-12 font-weight-bold">' +
+                '<span>' + comment[i].writer + '</span>' +
+
+                '<span style="float:right;">' +
+                thisDate.getFullYear() + "-" +
+                (thisDate.getMonth() + 1) + "-" +
+                thisDate.getDate() + " " +
+                thisDate.getHours() + ":" +
+                thisDate.getMinutes() +
+                '</span></div>' +
+
+                '<div class="col-12"><p style="word-wrap:break-word;">' + comment[i].contents + '</p>' +
                 '<input type="hidden" class="commentId" value="' + comment[i]._id + '" />' +
                 '<button type="button" class="btn btn-secondary" disabled id="' + comment[i]._id + '">' + comment[i].like_number + '</button>' +
                 '<div class="btn-group" role="group">' +
@@ -228,13 +236,20 @@
 
               if (comment[i].littleComment !== null) {
                 for (var a = 0; a < comment[i].littleComment.length; a++) {
-                  comments += '<div class="col-1"></div><div class="col-11"><i class="fas fa-reply"></i>' +
-                    '<span>' + comment[i].littleComment[a].writer + " " +
-                    comment[i].littleComment[a].comment_date.toLocaleString("ko-KR").slice(0, 10) + " " +
-                    comment[i].littleComment[a].comment_date.toLocaleString("ko-KR").slice(11, 16) + '</span>' +
-                    '<p style="word-wrap:break-word;">' + comment[i].littleComment[a].contents + '</p></div>';
+                  const thisDate = new Date(comment[i].comment_date);
+                  comments += '<div class="col-12">&nbsp<i class="fas fa-reply"></i>' +
+                    '<span> ' + comment[i].littleComment[a].writer +
+                    "</span><span style='float:right'>" +
+                    thisDate.getFullYear() + "-" +
+                    (thisDate.getMonth() + 1) + "-" +
+                    thisDate.getDate() + " " +
+                    thisDate.getHours() + ":" +
+                    thisDate.getMinutes() +
+                    '</span></div>' +
+                    '<div class="col-12"><p style="word-wrap:break-word;">' + comment[i].littleComment[a].contents + '</p></div>';
                 }
               }
+
               comments += '</div></div><hr>'; //대댓 영역 끝 + 전체 comment 끝
             }
 

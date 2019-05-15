@@ -61,19 +61,31 @@ router.get('/comment/page/:sort/:page/:panid', function(req, res, next) {
 
 //댓글 달기
 router.post('/comment/write', function(req, res) {
-  var comment = new Comment();
-  comment.whatBoard = req.body.id;
-  comment.contents = req.body.contents;
-  comment.writer = req.user.nameJ;
-  comment.sideJ = "";
-  comment.like_number = 0;
-  comment.comment_date = Date.now();
+  let comment = new Comment();
 
-  comment.save(function(err) {
-    if (err)
-      console.log(err);
-    res.redirect('back');
-  });
+  const sessionUser = req.user;
+
+  if (checkLogin(sessionUser)==2) {
+    comment.whatBoard = req.body.id;
+    comment.contents = req.body.contents;
+    comment.writer = sessionUser.nameJ;
+    comment.sideJ = "";
+    comment.like_number = 0;
+    comment.comment_date = Date.now();
+    console.log(Date.now());
+
+    comment.save(function(err) {
+      if (err)
+        console.log(err);
+      res.redirect('back');
+    });
+  }else if (checkLogin(sessionUser)==1){
+    req.flash('message', '회원가입을 완료해주세요');
+    res.redirect('/home');
+  }else{
+    req.flash('message', '로그인이 안 되었습니다');
+    res.redirect('/home');
+  }
 });
 
 //댓글 삭제
