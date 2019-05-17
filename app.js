@@ -60,6 +60,16 @@ app.use(passport.session()); // 세션 연결
 
 app.use(flash());
 
+//non-www redirects to wwww
+app.all(/.*/, function(req, res, next) {
+  const host = req.header("host");
+  if (host.match(/^www\..*/i)) {
+    next();
+  } else {
+    res.redirect(301, "http://www." + host + req.url);
+  }
+});
+
 app.all('/admin/*', route_admin); //(렌더링)관리자 페이지 //(DB)설문 등록
 app.all('/comment/*', route_comment); //일반 //(DB)댓글 쓰기, 좋아요, 대댓글 쓰기 //(AJAX)댓글 json
 app.all('/commentPoli/*', route_commentpoli); //정치 //(DB)댓글 쓰기, 좋아요, 대댓글 쓰기 //(AJAX)댓글 json
