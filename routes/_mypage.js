@@ -81,7 +81,7 @@ router.get('/mypage/view/:what/:page', function(req, res, next) {
         Comment.find({
           writer: sessionUser.nameJ
         }).sort({
-          board_date: -1
+          comment_date: -1
         }).skip(skipSize).limit(limitSize).exec(function(err, data) {
           if (err) throw err;
           res.render('myPage', {
@@ -105,7 +105,7 @@ router.get('/mypage/view/:what/:page', function(req, res, next) {
         CommentPoli.find({
           writer: sessionUser.nameJ
         }).sort({
-          board_date: -1
+          comment_date: -1
         }).skip(skipSize).limit(limitSize).exec(function(err, data) {
           if (err) throw err;
           res.render('myPage', {

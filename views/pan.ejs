@@ -104,18 +104,36 @@
   <% include ./footer %>
 
   <script>
-    function resizeYoutube() {
-      $("iframe").each(function() {
-        $(this).css("width", "100%");
-        $(this).css("height", Math.ceil(parseInt($(this).css("width")) * 360 / 640) + "px");
+    function resizeMedia() {
+      //유튜브 resize
+      $("p>iframe").each(function() {
+        const parentWidth = $(this).parent().css("width");
+
+        if (parentWidth.slice(0, parentWidth.length - 2) < 768)
+          $(this).css("width", "100%")
+          .css("height", Math.ceil(parseInt($(this).css("width")) * 360 / 640) + "px");
+        else
+          $(this).css("width", "70%")
+          .css("height", Math.ceil(parseInt($(this).css("width")) * 360 / 640) + "px");
+      });
+
+      //이미지 resize
+      $("p>img").each(function() {
+        const thisWidth = $(this).css("width");
+        const parentWidth = $(this).parent().css("width");
+
+        if ((thisWidth.slice(0, thisWidth.length - 2) > 910) ||
+          (parentWidth.slice(0, parentWidth.length - 2) < 768))
+          $(this).css("width", "100%")
       });
     }
+
     $(window).resize(function() {
-      resizeYoutube();
+      resizeMedia();
     });
 
     $(function() {
-      resizeYoutube();
+      resizeMedia();
 
       $("#like").click(function() {
         var panId = $("#like").attr("data-panId");
