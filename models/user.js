@@ -7,10 +7,11 @@ var userSchema = new Schema({
   nameK: String, //실명
   nameJ: String, //토론판 닉네임
   genderJ: String, //m , f
-  yearJ: Number, //연령대
-  ageJ: Number, //출생연도
+  yearJ: Number, //출생연도
+  ageJ: Number, //연령대
   sideJ: String, //left, right
   exp: Number, //경험치
+  locate: String, //지역
   level: Number //레벨
 });
 

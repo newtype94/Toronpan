@@ -14,14 +14,16 @@ function checkLogin(user) {
 
 //회원가입 DB
 router.post('/join/db', function(req, res) {
-  var sessionUser = req.user;
-  var newUser = new User();
-  var idK = req.user.idK;
-  var nameJ = req.body.nameJ;
-  var genderJ = req.body.genderJ;
-  var yearJ = req.body.yearJ;
-  var sideJ = req.body.sideJ;
-  var ageJ = 20;
+  const sessionUser = req.user;
+  let newUser = new User();
+  const idK = req.user.idK;
+  const nameJ = req.body.nameJ;
+  const genderJ = req.body.genderJ;
+  const yearJ = req.body.yearJ;
+  const sideJ = req.body.sideJ;
+  const locate = req.body.locate;
+
+  let ageJ = 20;
 
   if(checkLogin(sessionUser)==1){
     User.count({
@@ -49,6 +51,7 @@ router.post('/join/db', function(req, res) {
               sideJ: sideJ,
               yearJ: yearJ,
               ageJ: ageJ,
+              locate : locate,
               level: 1,
               exp: 0
             }
