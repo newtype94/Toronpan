@@ -17,47 +17,71 @@ function checkLogin(user) {
 router.get('/page/:field/new/:page', function(req, res, next) {
   const sessionUser = req.user;
 
-  var page = req.params.page;
-  var fieldText = req.params.field;
-  var field;
+  let page = req.params.page;
+  if (page == "") {
+    page = 1;
+  }
+
+  const fieldText = req.params.field;
+  let field;
 
   if (fieldText == "poli") {
     field = 1;
-  } else if (fieldText == "soci") {
+  } else if (fieldText == "norm") {
     field = 2;
   } else {
     field = 3;
   }
 
-  if (page == "") {
-    page = 1;
-  }
+  const skipSize = (page - 1) * 7;
+  const limitSize = 7;
+  let pageNum = 1;
 
-  var skipSize = (page - 1) * 7;
-  var limitSize = 7;
-  var pageNum = 1;
-
-  Board.count({
-    field: field
-  }, function(err, totalCount) {
-    if (err) throw err;
-    pageNum = Math.ceil(totalCount / limitSize);
-    Board.find({
+  if (field != 3) {
+    Board.count({
       field: field
-    }).sort({
-      board_date: -1
-    }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
+    }, function(err, totalCount) {
       if (err) throw err;
-      res.render('page', {
-        login: checkLogin(sessionUser),
-        panArr: panArr,
-        pagination: pageNum,
-        page: page,
-        field: field,
-        title: "new"
+      pageNum = Math.ceil(totalCount / limitSize);
+      Board.find({
+        field: field
+      }).sort({
+        board_date: -1
+      }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
+        if (err) throw err;
+        res.render('page', {
+          login: checkLogin(sessionUser),
+          panArr: panArr,
+          pagination: pageNum,
+          page: page,
+          field: field,
+          title: "new"
+        });
       });
     });
-  });
+  } else {
+    Board.count({
+      field_2: fieldText
+    }, function(err, totalCount) {
+      if (err) throw err;
+      pageNum = Math.ceil(totalCount / limitSize);
+      Board.find({
+        field_2: fieldText
+      }).sort({
+        board_date: -1
+      }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
+        if (err) throw err;
+        res.render('page', {
+          login: checkLogin(sessionUser),
+          panArr: panArr,
+          pagination: pageNum,
+          page: page,
+          field: field,
+          title: "new"
+        });
+      });
+    });
+  }
 });
 
 //인기글 페이징

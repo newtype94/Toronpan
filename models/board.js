@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 
 var boardSchema = new mongoose.Schema({
     title: String,
-    field : Number, //1:정치, 2:사회, 3:자유
+    field : Number, //1:정치토론, 2:일반토론, 3:취미,자유,질문
+    field_2 : String, //it, game, style, travel, music, movie, free, ask
     contents: String,
     writer : String,
     writer_id : String, //user._id
