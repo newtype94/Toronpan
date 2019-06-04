@@ -77,10 +77,17 @@ router.post('/write/db', function(req, res) {
     } else {
       board.title = req.body.title;
     }
-
+    if (req.body.field==4){
+      board.field = 3;
+      board.fieldText = "free";
+    }else if(req.body.field==5){
+      board.field = 3;
+      board.fieldText = "ask";
+    }else{
+      board.field = req.body.field;
+      board.fieldText = req.body.fieldText;
+    }
     board.contents = req.body.contents;
-    board.field = req.body.field;
-    board.fieldText = req.body.fieldText;
     board.writer = sessionUser.nameJ;
     board.writer_id = sessionUser._id;
     board.board_date = Date.now();

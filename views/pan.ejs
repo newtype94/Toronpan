@@ -36,69 +36,78 @@
   </div>
   <div class="container">
     <hr>
-    <div class="row" style="padding-top:20px; padding-bottom:20px;">
+    <div class="row mt-2 mb-2">
       <div class="col-12">
         <%- pan.contents%>
       </div>
     </div>
-    <div class="row" style="margin-top:20px; margin-bottom:20px;">
-      <div class="col-12 text-center">
-        <button class="btn btn-primary" id="like" data-panId="<%= pan._id %>"><i class="fas fa-heart"></i></button>
-        <button class="btn btn-danger" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-heart-broken"></i></button>
-      </div>
+    <%if(pan.field==2){%>
+      <div class="row mt-2 mb-2">
+        <div class="col-12 text-center">
+          <button class="btn btn-danger" id="like" data-panId="<%= pan._id %>"><i class="fas fa-fire-alt"></i>불판으로</button>
+    <button class="btn btn-primary" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-fire-extinguisher"></i></button>
+  </div>
+  </div>
+  <%}else{%>
+  <div class="row mt-2 mb-2">
+    <div class="col-12 text-center">
+      <button class="btn btn-primary" id="like" data-panId="<%= pan._id %>"><i class="fas fa-heart"></i></button>
+      <button class="btn btn-danger" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-heart-broken"></i></button>
     </div>
+  </div>
+  <%}%>
   </div>
   <div class="container">
     <hr>
     <div class="row mt-3">
       <div class="col-12">
         <% if(login==2){ %>
-        <form action="/comment/write" method="post">
-          <input type="hidden" name="id" value="<%=pan._id%>">
-          <div class="form-group mb-2">
-            <textarea class="form-control" name="contents" rows="3" placeholder="댓글 입력"></textarea>
-          </div>
-          <div class="form-group mb-2">
-            <button type="submit" class="btn btn-primary">완료</button>
-          </div>
-        </form>
-        <hr>
-        <% } %>
-      </div>
+  <form action="/comment/write" method="post">
+    <input type="hidden" name="id" value="<%=pan._id%>">
+    <div class="form-group mb-2">
+      <textarea class="form-control" name="contents" rows="3" placeholder="댓글 입력"></textarea>
     </div>
-    <div class="row">
-      <% if(login==2){ %>
-      <div class="col-12 text-center">
-        <button class="btn btn-success getComments" data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</button>
-        <button class="btn btn-primary getComments" data-page="1" data-where="hot">인기 댓글</button></div>
-      <% }else{ %>
-      <div class="col-12 text-center">
-        <button class="btn btn-success">최신 댓글</button>
-        <button class="btn btn-primary">인기 댓글</button></div>
-      <% } %>
+    <div class="form-group mb-2">
+      <button type="submit" class="btn btn-primary">완료</button>
     </div>
-    <hr>
-    <% if(login==0){ %>
-    <div class="row">
-      <div class="col-12">
-        로그인하지 않아 댓글을 볼 수 없습니다
-      </div>
+  </form>
+  <hr>
+  <% } %>
+  </div>
+  </div>
+  <div class="row">
+    <% if(login==2){ %>
+    <div class="col-12 text-center">
+      <button class="btn btn-success getComments" data-page="1" data-where="new" data-panId="<%= pan._id %>" id="getFirstComment">최신 댓글</button>
+      <button class="btn btn-primary getComments" data-page="1" data-where="hot">인기 댓글</button></div>
+    <% }else{ %>
+    <div class="col-12 text-center">
+      <button class="btn btn-success">최신 댓글</button>
+      <button class="btn btn-primary">인기 댓글</button></div>
+    <% } %>
+  </div>
+  <hr>
+  <% if(login==0){ %>
+  <div class="row">
+    <div class="col-12">
+      로그인하지 않아 댓글을 볼 수 없습니다
     </div>
-    <% }else if(login==1){ %>
-    <div class="row">
-      <div class="col-12">
-        회원가입이 완료되지 않아 댓글을 볼 수 없습니다
-      </div>
+  </div>
+  <% }else if(login==1){ %>
+  <div class="row">
+    <div class="col-12">
+      회원가입이 완료되지 않아 댓글을 볼 수 없습니다
     </div>
-    <%}else{%>
-    <div class="row">
-      <div class="col-12">
-        <div id="commentBox"></div>
-        <div id="paging"></div>
-      </div>
+  </div>
+  <%}else{%>
+  <div class="row">
+    <div class="col-12">
+      <div id="commentBox"></div>
+      <div id="paging"></div>
     </div>
-    <% }%>
-    <hr>
+  </div>
+  <% }%>
+  <hr>
   </div>
 
   <% include ./footer %>
