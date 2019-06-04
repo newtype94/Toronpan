@@ -1,20 +1,20 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var multer = require('multer');
-var uploadSetting = multer({
+const multer = require('multer');
+const uploadSetting = multer({
   dest: "./tmp",
   limits: {
     fileSize: 6 * 1024 * 1024
   }
 });
 
-var fs = require('fs');
+const fs = require('fs');
 
-var Board = require('../models/board');
-var User = require('../models/user');
-var SurveyDone = require('../models/surveyDone');
-var DeleteMatch = require('../models/deleteMatch');
+const Board = require('../models/board');
+const User = require('../models/user');
+const SurveyDone = require('../models/surveyDone');
+const DeleteMatch = require('../models/deleteMatch');
 
 function checkLogin(user) {
   if (user == null) //로그인 X
@@ -27,9 +27,9 @@ function checkLogin(user) {
 
 //렌더링
 router.get('/write/render', function(req, res, next) {
-  var now = new Date();
+  let now = new Date();
   now = now.toLocaleDateString();
-  var sessionUser = req.user;
+  const sessionUser = req.user;
 
   if (checkLogin(req.user) == 0) {
     req.flash('message', '로그인 후에 글을 작성할 수 있습니다');
@@ -60,9 +60,10 @@ router.get('/write/render', function(req, res, next) {
 
 //DB
 router.post('/write/db', function(req, res) {
-  var now = new Date();
+  let now = new Date();
   now = now.toLocaleDateString();
-  var sessionUser = req.user;
+  const sessionUser = req.user;
+
   if (checkLogin(sessionUser) == 0) {
     req.flash('message', '로그인 먼저 해주세요');
     res.redirect("/home");
@@ -70,7 +71,7 @@ router.post('/write/db', function(req, res) {
     req.flash('message', '메인 화면에서 회원가입 먼저 해주세요');
     res.redirect("/home");
   } else {
-    var board = new Board();
+    let board = new Board();
     if (req.body.title == "") {
       board.title = "제목 없음";
     } else {
@@ -79,6 +80,7 @@ router.post('/write/db', function(req, res) {
 
     board.contents = req.body.contents;
     board.field = req.body.field;
+    board.fieldText = req.body.fieldText;
     board.writer = sessionUser.nameJ;
     board.writer_id = sessionUser._id;
     board.board_date = Date.now();
@@ -116,26 +118,25 @@ router.post('/write/db', function(req, res) {
 
 //사진 업로드
 router.post('/write/upload', uploadSetting.single('file'), function(req, res) {
+  const tmpPath = req.file.path;
+  const fileName = req.file.filename;
 
-  var tmpPath = req.file.path;
-  var fileName = req.file.filename;
-
-  var deleteCode = JSON.stringify(req.body);
+  let deleteCode = JSON.stringify(req.body);
   deleteCode = deleteCode.substring(15, deleteCode.length - 2);
 
   //폴더 없으면 생성
   !fs.existsSync("./public/images/" + deleteCode) && fs.mkdirSync("./public/images/" + deleteCode);
 
-  var newPath = "./public/images/" + deleteCode + "/" + fileName;
+  const newPath = "./public/images/" + deleteCode + "/" + fileName;
 
   fs.rename(tmpPath, newPath, function(err) {
-    var sending = {};
+    let sending = {};
     if (err) {
       console.log(err);
       sending["err"] = err;
     }
     sending["path"] = newPath.substring(8, newPath.length);
-    var sendingString = JSON.stringify(sending);
+    const sendingString = JSON.stringify(sending);
     res.json(sendingString);
   });
 });

@@ -55,6 +55,7 @@ router.get('/page/:field/new/:page', function(req, res, next) {
           pagination: pageNum,
           page: page,
           field: field,
+          fieldText:null,
           title: "new"
         });
       });
@@ -76,7 +77,8 @@ router.get('/page/:field/new/:page', function(req, res, next) {
           panArr: panArr,
           pagination: pageNum,
           page: page,
-          field: field,
+          field: 3,
+          fieldText: fieldText,
           title: "new"
         });
       });
@@ -94,7 +96,7 @@ router.get('/page/:field/hot/:page', function(req, res, next) {
 
   if (fieldText == "poli") {
     field = 1;
-  } else if (fieldText == "soci") {
+  } else if (fieldText == "norm") {
     field = 2;
   } else {
     field = 3;
@@ -131,6 +133,7 @@ router.get('/page/:field/hot/:page', function(req, res, next) {
         pagination: pageNum,
         page: page,
         field: field,
+        fieldText:null,
         title: "hot"
       });
     });

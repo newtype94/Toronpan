@@ -11,19 +11,17 @@
     <div class="row">
       <div class="col-12">
         <div class="alert alert-warning" role="alert">
-          <% if(field==1){ %>
-          정치
-          <%} else if(field==2){ %>
-          사회
-          <%} else if(field==3){ %>
-          자유
-          <%}%>
-          <% if((field==1)&&title=="hot") { %>
-          - 불판
-          <% }else if(title=="hot"){ %>
-          - 인기
+          <% if(!fieldText){%>
+          <% if((field==1)&&(title=="new")) { %>
+          정치 토론
+          <% }else if((field==1)&&(title=="hot")){ %>
+          정치 토론 불판
+          <% }else if((field==2)&&(title=="new")){ %>
+          일반 토론
           <% }else{ %>
-          - 최신
+          일반 토론 불판
+          <% }}else{ %>
+          <%=fieldText%>
           <% } %>
         </div>
       </div>

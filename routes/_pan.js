@@ -19,6 +19,8 @@ router.get('/pan/:field/:id', function(req, res) {
   var now = new Date();
   now = now.toLocaleDateString();
 
+  const field = req.params.field;
+
   if (checkLogin(sessionUser) == 2) {
     SurveyDone.findOne({
       done_people: sessionUser.idK,
@@ -37,7 +39,7 @@ router.get('/pan/:field/:id', function(req, res) {
         }, {
           new: true
         }, function(err, panDB) {
-          if (req.params.field == 1) {
+          if (field == 1) {
             res.render('panPoli', {
               login: 2,
               pan: panDB,
