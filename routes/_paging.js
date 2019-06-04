@@ -62,12 +62,12 @@ router.get('/page/:field/new/:page', function(req, res, next) {
     });
   } else {
     Board.count({
-      field_2: fieldText
+      fieldText: fieldText
     }, function(err, totalCount) {
       if (err) throw err;
       pageNum = Math.ceil(totalCount / limitSize);
       Board.find({
-        field_2: fieldText
+        fieldText: fieldText
       }).sort({
         board_date: -1
       }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {

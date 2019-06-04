@@ -123,6 +123,9 @@
           if (fieldText.value == "0") {
             fieldText.focus();
             alert("취미를 선택해주세요");
+            return false;
+          } else {
+            return true;
           }
         } else {
           var submitEnd = confirm('글을 마무리 하셨나요? 확인 누르면 제출됩니다.');

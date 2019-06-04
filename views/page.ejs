@@ -20,8 +20,25 @@
           일반 토론
           <% }else{ %>
           일반 토론 불판
-          <% }}else{ %>
-          <%=fieldText%>
+          <% } %>
+          <%}else{ %>
+            <%if(fieldText=="it"){%>
+            IT
+            <%}else if(fieldText=="game"){%>
+            게임
+            <%}else if(fieldText=="style"){%>
+            미용/패션
+            <%}else if(fieldText=="travel"){%>
+            여행
+            <%}else if(fieldText=="music"){%>
+            음악
+            <%}else if(fieldText=="movie"){%>
+            영화
+            <%}else if(fieldText=="free"){%>
+            자유
+            <%}else if(fieldText=="ask"){%>
+            질문
+            <% } %>
           <% } %>
         </div>
       </div>
