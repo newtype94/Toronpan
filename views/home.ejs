@@ -27,23 +27,36 @@
         <form action="/search/1" method="post">
           <div class="form-row">
             <div class="col-4 col-md-2">
-              <select class="form-control" name="field">
-                <option value="1">정치</option>
-                <option value="2">사회</option>
-                <option value="3">자유</option>
+              <select class="form-control" name="field" id="field">
+                <option value="1">정치토론</option>
+                <option value="2">일반토론</option>
+                <option value="3">취미</option>
+                <option value="4">자유</option>
+                <option value="5">질문</option>
               </select>
             </div>
             <div class="col-4 col-md-2">
-              <select class="form-control" name="where">
-                <option value="최신">최신</option>
-                <option value="인기">인기</option>
+              <select class="form-control" name="newhot" id="newhot">
+                <option value="new">new</option>
+                <option value="hot">불판</option>
+              </select>
+              <select class="form-control" name="fieldText" id="fieldText" style="display:none;">
+                <option value="it">IT</option>
+                <option value="game">게임</option>
+                <option value="style">미용/패션</option>
+                <option value="travel">여행</option>
+                <option value="music">음악</option>
+                <option value="movie">영화</option>
+              </select>
+              <select class="form-control" id="fieldNone" style="display:none;">
+                <option value="">--</option>
               </select>
             </div>
             <div class="col-4 col-md-2">
               <select class="form-control" name="how">
-                <option value="제목">제목</option>
-                <option value="제목">내용</option>
-                <option value="제목+내용">제목+내용</option>
+                <option value="title">제목</option>
+                <option value="contents">내용</option>
+                <option value="ticon">제목+내용</option>                
               </select>
             </div>
             <div class="col-8 my-2 col-md-4 my-md-0">
@@ -92,7 +105,7 @@
             <h4 class="card-title">
               가입 후 수정 불가합니다
             </h4>
-            <form action="/join/db" method="post" id="writeForm">
+            <form action="/join/db" method="post" id="joinForm">
               <div class="form-group">
                 <label for="nameJ">닉네임 (불량 닉네임은 제재 조치)
                   <input type="text" class="form-control" name="nameJ" id="nameJ" /></label>
@@ -376,8 +389,24 @@
       })
       .keyup();
 
-    var wf = document.getElementById("writeForm");
-    if (wf != null) {
+    $("#field").change(function() {
+      if (this.value == 3) {
+        $("#newhot").hide();
+        $("#fieldText").show();
+        $("#fieldNone").hide();
+      } else if((this.value == 4)||(this.value == 5)){
+        $("#newhot").hide();
+        $("#fieldText").hide();
+        $("#fieldNone").show();
+      } else {
+        $("#newhot").show();
+        $("#fieldText").hide();
+        $("#fieldNone").hide();
+      }
+    });
+
+    var jf = document.getElementById("joinForm");
+    if (jf != null) {
       wf.onsubmit = function() {
         if (checkNick == 0) {
           $("#nameJ").focus();

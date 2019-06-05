@@ -39,6 +39,7 @@ router.get('/home', function(req, res, next) {
       });
     });
   }
+
   function poliNewFind() {
     return new Promise((resolve, reject) => {
       Board.find({
@@ -55,6 +56,7 @@ router.get('/home', function(req, res, next) {
       });
     });
   }
+
   function poliHotFind() {
     return new Promise((resolve, reject) => {
       Board.find({
@@ -74,10 +76,11 @@ router.get('/home', function(req, res, next) {
       });
     });
   }
+
   function surveyDoneFind() {
     return new Promise((resolve, reject) => {
       if (checkLogin(sessionUser) == 2) {
-        login=2;
+        login = 2;
         SurveyDone.findOne({
           done_people: sessionUser.idK,
           date: now
@@ -144,15 +147,25 @@ router.get('/home', function(req, res, next) {
   }
 
   noticeFind()
-    .catch(err=> {console.log(err);})
+    .catch(err => {
+      console.log(err);
+    })
     .then(poliNewFind)
-    .catch(err=> {console.log(err);})
+    .catch(err => {
+      console.log(err);
+    })
     .then(poliHotFind)
-    .catch(err=> {console.log(err);})
+    .catch(err => {
+      console.log(err);
+    })
     .then(surveyDoneFind)
-    .catch(err=> {console.log(err);})
+    .catch(err => {
+      console.log(err);
+    })
     .then(surveyFind)
-    .catch(err=> {console.log(err);});
+    .catch(err => {
+      console.log(err);
+    });
 
 });
 

@@ -34,7 +34,7 @@
           <div class="form-group">
             <select id="fieldText" name="fieldText" class="form-control" style="display:none;">
               <option value="0">취미 자세히..</option>
-              <option value="movie">IT</option>
+              <option value="it">IT</option>
               <option value="game">게임</option>
               <option value="style">패션</option>
               <option value="travel">여행</option>
@@ -135,8 +135,13 @@
             fieldText.focus();
             alert("취미를 선택해주세요");
             return false;
-          } else {
-            return true;
+          }else{
+            var submitEnd = confirm('글을 마무리 하셨나요? 확인 누르면 제출됩니다.');
+            if (submitEnd) {
+              return true;
+            } else {
+              return false;
+            }
           }
         } else {
           var submitEnd = confirm('글을 마무리 하셨나요? 확인 누르면 제출됩니다.');

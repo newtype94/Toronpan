@@ -14,240 +14,92 @@ function checkLogin(user) {
 
 //렌더링
 router.post('/search/:page', function(req, res) {
-  var field = req.body.field;
-  var where = req.body.where;
-  var how = req.body.how;
-  var what = req.body.what;
+  const field = req.body.field;
+  const how = req.body.how;
+  const what = req.body.what;
 
-  if (what == null) {
-    console.log('flag');
+  let formBack = new Object();
+  let findQuery = new Object();
+  let sortQuery = new Object();
+
+  formBack.field = field;
+  formBack.how = how;
+  formBack.what = what;
+
+  //findQuery 제작 start - 제목, 내용, 제목+내용
+  if (how == "title") {
+    findQuery = {
+      title: {
+        $regex: ".*" + what + ".*"
+      }
+    };
+  } else if (how == "contents") {
+    findQuery = {
+      contents: {
+        $regex: ".*" + what + ".*"
+      }
+    };
+  } else if (how == "ticon") {
+    findQuery = {
+      $or: [{
+        title: {
+          $regex: ".*" + what + ".*"
+        }
+      }, {
+        contents: {
+          $regex: ".*" + what + ".*"
+        }
+      }]
+    }
   }
 
-  var formBack = [];
-  formBack['field'] = field;
-  formBack['where'] = where;
-  formBack['how'] = how;
-  formBack['what'] = what;
+  //findQuery 추가 - 토론 글, 기타 글
+  if ((field == 1) || (field == 2)) {
+    formBack.newhot = req.body.newhot;
+    findQuery.field = Number(field);
+    if (req.body.newhot == "hot") {
+      findQuery.like_number = {
+        $gte: 50
+      };
+    }
+  } else if (field == 3) {
+    formBack.fieldText = req.body.fieldText;
+    findQuery.fieldText = req.body.fieldText;
+  } else if (field == 4) {
+    formBack.fieldText = "free";
+    findQuery.fieldText = "free";
+  } else if (field == 5) {
+    formBack.fieldText = "ask";
+    findQuery.fieldText = "ask";
+  }
 
-  console.log(formBack);
-
-  var page = req.params.page;
+  let page = req.params.page;
   if (page == "") {
     page = 1;
   }
-  var skipSize = (page - 1) * 7;
-  var limitSize = 7;
-  var pageNum = 1;
+  const skipSize = (page - 1) * 7;
+  const limitSize = 7;
+  let pageNum = 1;
 
-  if (where == "최신") { //최신
-    if (how == "제목") { //최신 -> 제목
-      Board.find({
-        field: field
-      }).count({
-        title: {
-          $regex: ".*" + what + ".*"
-        }
-      }, function(err, totalCount) {
+  Board.count(
+    findQuery,
+    function(err, totalCount) {
+      if (err) throw err;
+      pageNum = Math.ceil(totalCount / limitSize);
+      Board.find(findQuery).sort({
+        board_date: -1
+      }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
         if (err) throw err;
-        pageNum = Math.ceil(totalCount / limitSize);
-        Board.find({
-          title: {
-            $regex: ".*" + what + ".*"
-          }
-        }).sort({
-          board_date: -1
-        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
-          if (err) throw err;
-          res.render('search', {
-            login: checkLogin(req.user),
-            panArr: panArr,
-            pagination: pageNum,
-            page: page,
-            formBack: formBack
-          });
+        res.render('search', {
+          login: checkLogin(req.user),
+          panArr: panArr,
+          pagination: pageNum,
+          page: page,
+          formBack: formBack
         });
       });
-    } else if (how == "내용") { //최신 -> 내용
-      Board.find({
-        field: field
-      }).count({
-        contents: {
-          $regex: ".*" + what + ".*"
-        }
-      }, function(err, totalCount) {
-        if (err) throw err;
-        pageNum = Math.ceil(totalCount / limitSize);
-        Board.find({
-          contents: {
-            $regex: ".*" + what + ".*"
-          }
-        }).sort({
-          board_date: -1
-        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
-          if (err) throw err;
-          res.render('search', {
-            login: checkLogin(req.user),
-            panArr: panArr,
-            pagination: pageNum,
-            page: page,
-            formBack: formBack
-          });
-        });
-      });
-    } else { //최신 -> 내용+내용
-      Board.find({
-        field: field
-      }).count({
-        $or: [{
-          title: {
-            $regex: ".*" + what + ".*"
-          }
-        }, {
-          contents: {
-            $regex: ".*" + what + ".*"
-          }
-        }]
-      }, function(err, totalCount) {
-        if (err) throw err;
-        pageNum = Math.ceil(totalCount / limitSize);
-        Board.find({
-          $or: [{
-            title: {
-              $regex: ".*" + what + ".*"
-            }
-          }, {
-            contents: {
-              $regex: ".*" + what + ".*"
-            }
-          }]
-        }).sort({
-          board_date: -1
-        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
-          if (err) throw err;
-          res.render('search', {
-            login: checkLogin(req.user),
-            panArr: panArr,
-            pagination: pageNum,
-            page: page,
-            formBack: formBack
-          });
-        });
-      });
-    }
-  } else if (where == "인기") { //인기
-    if (how == "제목") { //인기 -> 제목
-      Board.find({
-        field: field
-      }).count({
-        like_number: {
-          $gte: 50
-        },
-        title: {
-          $regex: ".*" + what + ".*"
-        }
-      }, function(err, totalCount) {
-        if (err) throw err;
-        pageNum = Math.ceil(totalCount / limitSize);
-        Board.find({
-          like_number: {
-            $gte: 50
-          },
-          title: {
-            $regex: ".*" + what + ".*"
-          }
-        }).sort({
-          board_date: -1
-        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
-          if (err) throw err;
-          res.render('search', {
-            login: checkLogin(req.user),
-            panArr: panArr,
-            pagination: pageNum,
-            page: page,
-            formBack: formBack
-          });
-        });
-      });
-    } else if (how == "내용") { //인기 -> 내용
-      Board.find({
-        field: field
-      }).count({
-        like_number: {
-          $gte: 50
-        },
-        contents: {
-          $regex: ".*" + what + ".*"
-        }
-      }, function(err, totalCount) {
-        if (err) throw err;
-        pageNum = Math.ceil(totalCount / limitSize);
-        Board.find({
-          like_number: {
-            $gte: 50
-          },
-          contents: {
-            $regex: ".*" + what + ".*"
-          }
-        }).sort({
-          board_date: -1
-        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
-          if (err) throw err;
-          res.render('search', {
-            login: checkLogin(req.user),
-            panArr: panArr,
-            pagination: pageNum,
-            page: page,
-            formBack: formBack
-          });
-        });
-      });
-    } else { //인기 -> 제목+내용
-      Board.find({
-        field: field
-      }).count({
-        like_number: {
-          $gte: 50
-        },
-        $or: [{
-          title: {
-            $regex: ".*" + what + ".*"
-          }
-        }, {
-          contents: {
-            $regex: ".*" + what + ".*"
-          }
-        }]
-      }, function(err, totalCount) {
-        if (err) throw err;
-        pageNum = Math.ceil(totalCount / limitSize);
-        Board.find({
-          like_number: {
-            $gte: 50
-          },
-          $or: [{
-            title: {
-              $regex: ".*" + what + ".*"
-            }
-          }, {
-            contents: {
-              $regex: ".*" + what + ".*"
-            }
-          }]
-        }).sort({
-          board_date: -1
-        }).skip(skipSize).limit(limitSize).exec(function(err, panArr) {
-          if (err) throw err;
-          res.render('search', {
-            login: checkLogin(req.user),
-            panArr: panArr,
-            pagination: pageNum,
-            page: page,
-            formBack: formBack
-          });
-        });
-      });
-    }
-  }
+    });
+
 });
 
 module.exports = router;

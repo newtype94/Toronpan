@@ -11,16 +11,9 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <div class="alert alert-warning" role="alert">
-          <% if(formBack.field==1){ %>
-          정치
-          <%} else if(formBack.field==2){ %>
-          사회
-          <%} else if(formBack.field==3){ %>
-          자유
-          <%}%>
-          <%= formBack.where %>
-          "<%= formBack.what %>"
+        <div class="alert alert-warning" role="alert"><b>
+            "<%= formBack.what %>"
+            검색 결과</b>
           <form id="searchForm" method="post">
             <input type="hidden" name="field" value="<%= formBack.field %>">
             <input type="hidden" name="where" value="<%= formBack.where %>">
