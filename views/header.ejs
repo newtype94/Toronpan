@@ -90,14 +90,17 @@
       <h3><a href="/kakao"><img src="/login.png" height="40px" /></a></h3>
       <strong><a href="/kakao"><img src="/login_min.png" height="40px" /></a></strong>
       <% }else{ %>
-        <h3><a href="/logout"><img src="/logout.png" height="40px" /></a></h3>
-        <strong><a href="/logout"><img src="/logout_min.png" height="40px" /></a></strong>
+      <h3><a href="/logout"><img src="/logout.png" height="40px" /></a></h3>
+      <strong><a href="/logout"><img src="/logout_min.png" height="40px" /></a></strong>
       <% }%>
     </div>
   </nav>
-  <nav>
-    <button type="button" id="sidebarCollapse" class="btn btn-dark">
-      <i class="fas fa-align-left"></i>
-    </button>
+
+
+  <div class="container">
+    <!--container-->
+    <nav class="navbar sticky-top">
+      <button type="button" id="sidebarCollapse" title="메뉴 열기" class="btn btn-info">
+        <i class="fas fa-align-left"></i>
+      </button>
     </nav>
-  <div class="container"><!--container-->

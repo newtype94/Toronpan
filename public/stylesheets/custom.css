@@ -10,7 +10,10 @@ body {
 
 .container {
     width: 100%;
-    padding: 20px;
+    padding-top:10px;
+    padding-bottom:20px;
+    padding-left:15px;
+    padding-right:15px;
     min-height: 100vh;
     transition: all 0.3s;
 }
