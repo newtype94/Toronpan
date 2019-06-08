@@ -7,7 +7,7 @@
 
 <body>
   <% include ./header %>
-  <div class="container">
+
     <div class="row">
       <div class="col-12">
         <div class="alert alert-warning" role="alert"><b>
@@ -20,8 +20,8 @@
           일반 토론
           <% }else{ %>
           일반 토론 불판
-          <% } %></b>
-          <%}else{ %><b>
+          <% } %>
+          <%}else{ %>
               <%if(fieldText=="it"){%>
               IT
               <%}else if(fieldText=="game"){%>
@@ -38,8 +38,8 @@
               자유
               <%}else if(fieldText=="ask"){%>
               질문
-              <% } %></b>
           <% } %>
+          <% } %></b>
         </div>
       </div>
     </div>
@@ -118,7 +118,6 @@
         </nav>
       </div>
     </div>
-  </div>
 
   <% include ./footer %>
 

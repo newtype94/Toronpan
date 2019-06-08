@@ -7,7 +7,7 @@
 
 <body>
   <% include ./header %>
-  <div class="container">
+  
     <div class="row text-center">
       <div class="col-12">
         <a href="/pan/<%=pan.field%>/<%= pan._id%>" class="text-dark">
@@ -33,8 +33,6 @@
         </span>
       </div>
     </div>
-  </div>
-  <div class="container">
     <hr>
     <div class="row mt-2 mb-2">
       <div class="col-12">
@@ -42,37 +40,37 @@
       </div>
     </div>
     <%if(pan.field==2){%>
-      <div class="row mt-2 mb-2">
-        <div class="col-12 text-center">
-          <button class="btn btn-danger" id="like" data-panId="<%= pan._id %>"><i class="fas fa-fire-alt"></i>불판으로</button>
-    <button class="btn btn-primary" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-fire-extinguisher"></i></button>
-  </div>
-  </div>
-  <%}else{%>
-  <div class="row mt-2 mb-2">
-    <div class="col-12 text-center">
-      <button class="btn btn-primary" id="like" data-panId="<%= pan._id %>"><i class="fas fa-heart"></i></button>
-      <button class="btn btn-danger" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-heart-broken"></i></button>
+    <div class="row mt-2 mb-2">
+      <div class="col-12 text-center">
+        <button class="btn btn-danger" id="like" data-panId="<%= pan._id %>"><i class="fas fa-fire-alt"></i>불판으로</button>
+        <button class="btn btn-primary" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-fire-extinguisher"></i></button>
+      </div>
     </div>
-  </div>
-  <%}%>
-  </div>
-  <div class="container">
+    <%}else{%>
+    <div class="row mt-2 mb-2">
+      <div class="col-12 text-center">
+        <button class="btn btn-primary" id="like" data-panId="<%= pan._id %>"><i class="fas fa-heart"></i></button>
+        <button class="btn btn-danger" id="dislike" data-panId="<%= pan._id %>"><i class="fas fa-heart-broken"></i></button>
+      </div>
+    </div>
+    <%}%>
+
+
     <hr>
     <div class="row mt-3">
       <div class="col-12">
         <% if(login==2){ %>
-  <form action="/comment/write" method="post">
-    <input type="hidden" name="id" value="<%=pan._id%>">
-    <div class="form-group mb-2">
-      <textarea class="form-control" name="contents" rows="3" placeholder="댓글 입력"></textarea>
-    </div>
-    <div class="form-group mb-2">
-      <button type="submit" class="btn btn-primary">완료</button>
-    </div>
-  </form>
-  <hr>
-  <% } %>
+    <form action="/comment/write" method="post">
+      <input type="hidden" name="id" value="<%=pan._id%>">
+      <div class="form-group mb-2">
+        <textarea class="form-control" name="contents" rows="3" placeholder="댓글 입력"></textarea>
+      </div>
+      <div class="form-group mb-2">
+        <button type="submit" class="btn btn-primary">완료</button>
+      </div>
+    </form>
+    <hr>
+    <% } %>
   </div>
   </div>
   <div class="row">
@@ -108,7 +106,7 @@
   </div>
   <% }%>
   <hr>
-  </div>
+
 
   <% include ./footer %>
 

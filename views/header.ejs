@@ -1,60 +1,107 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top mb-3">
-  <a class="navbar-brand" href="/"><img src="/logo.png" height="30px" class="d-inline-block align-top" alt=""></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item active">
-        <a class="nav-link" href="/mypage/view/board/1">my</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<div class="wrapper">
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <h3><a href="/"><img src="/logo.png" height="45px" /></a></h3>
+      <strong><a href="/"><img src="/logo.png" height="25px" /></a></strong>
+    </div>
+
+    <ul class="list-unstyled components">
+      <li>
+        <a href="#menu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+          <i class="fas fa-balance-scale"></i>
           정치토론
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/page/poli/new/1">new</a>
-          <a class="dropdown-item" href="/page/poli/hot/1">불판</a>
-        </div>
+        <ul class="collapse list-unstyled" id="menu1">
+          <li>
+            <a href="/page/poli/new/1">new</a>
+          </li>
+          <li>
+            <a href="/page/poli/hot/1">불판</a>
+          </li>
+        </ul>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <li>
+        <a href="#menu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+          <i class="fas fa-users"></i>
           일반토론
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/page/norm/new/1">new</a>
-          <a class="dropdown-item" href="/page/norm/hot/1">불판</a>
-        </div>
+        <ul class="collapse list-unstyled" id="menu2">
+          <li>
+            <a href="/page/norm/new/1">new</a>
+          </li>
+          <li>
+            <a href="/page/norm/hot/1">불판</a>
+          </li>
+        </ul>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <li>
+        <a href="/mypage/view/board/1">
+          <i class="fas fa-user-tag"></i>
+          my
+        </a>
+        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+          <i class="fas fa-star"></i>
           취미
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/page/it/new/1">IT</a>
-          <a class="dropdown-item" href="/page/game/new/1">게임</a>
-          <a class="dropdown-item" href="/page/style/new/1">미용/패션</a>
-          <a class="dropdown-item" href="/page/travel/new/1">여행</a>
-          <a class="dropdown-item" href="/page/music/new/1">음악</a>
-          <a class="dropdown-item" href="/page/movie/new/1">영화</a>
-        </div>
+        <ul class="collapse list-unstyled" id="pageSubmenu">
+          <li>
+            <a href="/page/it/new/1">IT</a>
+          </li>
+          <li>
+            <a href="/page/game/new/1">게임</a>
+          </li>
+          <li>
+            <a href="/page/style/new/1">미용/패션</a>
+          </li>
+          <li>
+            <a href="/page/style/new/1">여행</a>
+          </li>
+          <li>
+            <a href="/page/music/new/1">음악</a>
+          </li>
+          <li>
+            <a href="/page/movie/new/1">영화</a>
+          </li>
+        </ul>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/page/free/new/1">자유</a>
+      <li>
+        <a href="/page/free/new/1">
+          <i class="fas fa-image"></i>
+          자유
+        </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/page/ask/new/1">질문</a>
+      <li>
+        <a href="/page/ask/new/1">
+          <i class="fas fa-question"></i>
+          질문
+        </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/write/render">글쓰기</a>
+      <li>
+        <a href="/write/render">
+          <i class="fas fa-pencil-alt"></i>
+          글쓰기
+        </a>
       </li>
     </ul>
-    <% const a = login;
-    if(!a){}
-    if(a==0){ %>
-    <a href="/kakao"><img src="/kakao.png" height="35"></a>
-    <% }else{ %>
-    <a href="/logout"><img src="/logout.png" height="35"></a>
-    <% }%>
-  </div>
-</nav>
+
+    <div class="sidebar-header">
+      <% if(!login){}
+    if(login==0){ %>
+      <h3><a href="/kakao"><img src="/login.png" height="40px" /></a></h3>
+      <strong><a href="/kakao"><img src="/login_min.png" height="40px" /></a></strong>
+      <% }else{ %>
+        <h3><a href="/logout"><img src="/logout.png" height="40px" /></a></h3>
+        <strong><a href="/logout"><img src="/logout_min.png" height="40px" /></a></strong>
+      <% }%>
+    </div>
+  </nav>
+  <nav>
+    <button type="button" id="sidebarCollapse" class="btn btn-dark">
+      <i class="fas fa-align-left"></i>
+    </button>
+    </nav>
+  <div class="container"><!--container-->
+
+    <div>
+
+    </div>
