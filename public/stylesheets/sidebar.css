@@ -13,6 +13,7 @@ p {
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
+    color: #999;
 }
 
 #sidebar a,
@@ -23,66 +24,73 @@ p {
     transition: all 0.3s;
 }
 
+
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
 
-.wrapper {
-    display: flex;
-    align-items: stretch;
-}
-
 #sidebar {
-    min-width: 250px;
-    max-width: 250px;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    height: 100vh;
+    z-index: 9999;
     background: rgb(43, 59, 84);
     color: #fff;
     transition: all 0.3s;
+    overflow-y: scroll;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
 
 #sidebar.active {
-    min-width: 80px;
-    max-width: 80px;
-    text-align: center;
+    left: 0;
 }
 
-#sidebar.active .sidebar-header h3,
-#sidebar.active .CTAs {
+#dismiss {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background: rgb(83, 102, 132);
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    cursor: pointer;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+    border-radius: 10px;
+}
+
+#dismiss:hover {
+    background: #fff;
+    color: rgb(83, 102, 132);
+}
+
+#sidebarCollapse {
+    background: rgb(83, 102, 132);
+    color: #fff;
+}
+
+#sidebarCollapse:hover {
+    background: #fff;
+    color: rgb(83, 102, 132);
+}
+
+.overlay {
     display: none;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 998;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
 }
-
-#sidebar.active .sidebar-header strong {
+.overlay.active {
     display: block;
-}
-
-#sidebar ul li a {
-    text-align: left;
-}
-
-#sidebar.active ul li a {
-    padding: 20px 10px;
-    text-align: center;
-    font-size: 0.85em;
-}
-
-#sidebar.active ul li a i {
-    margin-right: 0;
-    display: block;
-    font-size: 1.8em;
-    margin-bottom: 5px;
-}
-
-#sidebar.active ul ul a {
-    padding: 10px !important;
-}
-
-#sidebar.active .dropdown-toggle::after {
-    top: auto;
-    bottom: 10px;
-    right: 50%;
-    -webkit-transform: translateX(50%);
-    -ms-transform: translateX(50%);
-    transform: translateX(50%);
+    opacity: 1;
 }
 
 #sidebar .sidebar-header {
@@ -90,14 +98,14 @@ p {
     background: rgb(43, 59, 84);
 }
 
-#sidebar .sidebar-header strong {
-    display: none;
-    font-size: 1.8em;
+#sidebar ul.components {
+    padding: 0px;
+    border-bottom: 1px solid #47748b;
 }
 
-#sidebar ul.components {
-    padding: 20px 0;
-    border-bottom: 1px solid #47748b;
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
 }
 
 #sidebar ul li a {
@@ -107,18 +115,14 @@ p {
 }
 
 #sidebar ul li a:hover {
-    color: #7386D5;
+    color: rgb(0,0,0);
     background: rgb(183, 202, 232);
-}
-
-#sidebar ul li a i {
-    margin-right: 10px;
 }
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
-    color: rgb(183, 202, 232);
-    background: rgb(47, 84, 142);
+  color: rgb(183, 202, 232);
+  background: rgb(47, 84, 142);
 }
 
 a[data-toggle="collapse"] {
@@ -156,33 +160,47 @@ a.download {
     color: rgb(0, 0, 0);
 }
 
-a.article,
-a.article:hover {
-    background: #6d7fcc !important;
-    color: #fff !important;
-}
-
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
 
 #content {
     width: 100%;
-    padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
+
+#sidebar.active .sidebar-header h3,
+#sidebar.active .CTAs {
+    display: block;
+}
+
+#sidebar .sidebar-header h3 {
+    display: block;
+    font-size: 1.8em;
+}
+
+#sidebar.active .sidebar-header h4 {
+    display: none;
+}
+#sidebar .sidebar-header h4 {
+    display: none;
+    font-size: 1.8em;
+}
+
 
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
-
 @media (max-width: 768px) {
     #sidebar {
-        min-width: 80px;
-        max-width: 80px;
+        min-width: 100px;
+        max-width: 100px;
         text-align: center;
-        margin-left: -80px !important;
+        margin-left: -100px !important;
     }
     .dropdown-toggle::after {
         top: auto;
@@ -195,13 +213,14 @@ a.article:hover {
     #sidebar.active {
         margin-left: 0 !important;
     }
-    #sidebar .sidebar-header h3,
-    #sidebar .CTAs {
+    #sidebar.active .sidebar-header h3,
+    #sidebar.active .CTAs {
         display: none;
     }
-    #sidebar .sidebar-header strong {
+    #sidebar.active .sidebar-header h4 {
         display: block;
     }
+
     #sidebar ul li a {
         padding: 20px 10px;
     }
@@ -220,8 +239,5 @@ a.article:hover {
     }
     #sidebar {
         margin-left: 0;
-    }
-    #sidebarCollapse span {
-        display: none;
     }
 }

@@ -1,8 +1,12 @@
 <div class="wrapper">
   <nav id="sidebar">
+    <div id="dismiss">
+      <i class="fas fa-arrow-left"></i>
+    </div>
+
     <div class="sidebar-header">
-      <h3><a href="/"><img src="/logo.png" height="45px" /></a></h3>
-      <strong><a href="/"><img src="/logo.png" height="25px" /></a></strong>
+      <h3><a href="/"><img src="/logo.png" height="40px" /></a></h3>
+      <h4 class="text-left"><a href="/"><img src="/logo_min.png" height="50px" /></a></h4>
     </div>
 
     <ul class="list-unstyled components">
@@ -87,20 +91,20 @@
     <div class="sidebar-header">
       <% if(!login){}
     if(login==0){ %>
-      <h3><a href="/kakao"><img src="/login.png" height="40px" /></a></h3>
-      <strong><a href="/kakao"><img src="/login_min.png" height="40px" /></a></strong>
+      <h3><a href="/kakao"><img src="/login.png" height="35px" /></a></h3>
+      <h4><a href="/kakao"><img src="/login_min.png" height="60px" /></a></h4>
       <% }else{ %>
-      <h3><a href="/logout"><img src="/logout.png" height="40px" /></a></h3>
-      <strong><a href="/logout"><img src="/logout_min.png" height="40px" /></a></strong>
+      <h3><a href="/logout"><img src="/logout.png" height="35px" /></a></h3>
+      <h4><a href="/logout"><img src="/logout_min.png" height="60px" /></a></h4>
       <% }%>
     </div>
   </nav>
 
-
+  <div id="content">
   <div class="container">
     <!--container-->
     <nav class="navbar sticky-top">
-      <button type="button" id="sidebarCollapse" title="메뉴 열기" class="btn btn-info">
+      <button type="button" id="sidebarCollapse" title="메뉴 열기" class="btn">
         <i class="fas fa-align-left"></i>
       </button>
     </nav>
