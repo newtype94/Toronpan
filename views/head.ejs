@@ -25,6 +25,10 @@
 </script>
 
 <script type="text/javascript">
+
+  var goBack = function(){
+      location.href=document.referrer;
+  }
   $(document).ready(function() {
     $('#dismiss, .overlay').on('click', function() {
       $('#sidebar').removeClass('active');

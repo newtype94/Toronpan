@@ -61,12 +61,12 @@ body {
   color: rgb(83, 102, 132);
 }
 
-#sidebarCollapse {
+#sidebarCollapse, #goBack {
   background: rgb(83, 102, 132);
   color: #fff;
 }
 
-#sidebarCollapse:hover {
+#sidebarCollapse:hover, #goBack:hover{
   background: #fff;
   color: rgb(83, 102, 132);
 }
