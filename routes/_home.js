@@ -101,6 +101,7 @@ router.get('/home', function(req, res, next) {
       }
     });
   }
+
   //survey find + res.render
   function surveyFind(surveydone) {
     if (surveydone) {
@@ -131,16 +132,28 @@ router.get('/home', function(req, res, next) {
             poliHot: poliHotDB,
             notice: noticeDB
           });
-        } else { //설문이 있음
-          req.flash('message', '오늘 설문이 아직 안 올라왔습니다.');
-          res.render('home', {
-            message: req.flash('message'),
-            login: login,
-            survey: null,
-            poliNew: poliNewDB,
-            poliHot: poliHotDB,
-            notice: noticeDB
+        } else { //설문이 없음
+          let todaySurvey = new TodaySurvey();
+          let surveyDone = new SurveyDone();
+
+          let now = new Date();
+          now = now.toLocaleDateString();
+
+          todaySurvey.firstQ = "설문 예비";
+          todaySurvey.date = now;
+          todaySurvey.save(function(err) {
+            if (err) {
+              res.redirect('/');
+              console.log(err);
+            }
+            surveyDone.date = now;
+            surveyDone.save(function(err) {
+              if (err)
+                console.log(err);
+              res.redirect("/");
+            });
           });
+
         }
       });
     }
