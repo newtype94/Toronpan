@@ -39,7 +39,10 @@ router.get('/pan/:field/:id', function(req, res) {
         }, {
           new: true
         }, function(err, panDB) {
-          if (field == 1) {
+          if(panDB==null){
+            req.flash('message', '존재하지 않는 글입니다');
+            res.redirect("/home");
+          }else if (field == 1) {
             res.render('panPoli', {
               login: 2,
               pan: panDB,
@@ -71,7 +74,10 @@ router.get('/pan/:field/:id', function(req, res) {
     }, {
       new: true
     }, function(err, panDB) {
-      if (req.params.field == 1) {
+      if(panDB==null){
+        req.flash('message', '존재하지 않는 글입니다');
+        res.redirect("/home");
+      }else if (field == 1) {
         res.render('panPoli', {
           login: 0,
           pan: panDB,
