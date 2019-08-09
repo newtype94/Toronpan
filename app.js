@@ -1,46 +1,110 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var passport = require('passport');
-var session = require('express-session');
-var mongoose = require('mongoose');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const session = require('express-session');
+const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-var flash = require('connect-flash');
+const flash = require('connect-flash');
 
 //router
-var route_admin = require('./routes/_admin');
-var route_comment = require('./routes/_comment');
-var route_commentpoli = require('./routes/_commentPoli');
-var route_home = require('./routes/_home');
-var route_join = require('./routes/_join');
-var route_main = require('./routes/_main');
-var route_mypage = require('./routes/_mypage');
-var route_notice = require('./routes/_notice');
-var route_paging = require('./routes/_paging');
-var route_pan = require('./routes/_pan');
-var route_remove = require('./routes/_remove');
-var route_search = require('./routes/_search');
-var route_survey = require('./routes/_survey');
-var route_update = require('./routes/_update');
-var route_write = require('./routes/_write');
+const route_admin = require('./routes/_admin');
+const route_comment = require('./routes/_comment');
+const route_commentpoli = require('./routes/_commentPoli');
+const route_home = require('./routes/_home');
+const route_join = require('./routes/_join');
+const route_main = require('./routes/_main');
+const route_mypage = require('./routes/_mypage');
+const route_notice = require('./routes/_notice');
+const route_paging = require('./routes/_paging');
+const route_pan = require('./routes/_pan');
+const route_remove = require('./routes/_remove');
+const route_search = require('./routes/_search');
+const route_survey = require('./routes/_survey');
+const route_update = require('./routes/_update');
+const route_write = require('./routes/_write');
 
-var app = express();
+const app = express();
+
+// http server를 socket.io server로 upgrade한다
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
+let emptyRoom;
+let rooms = new Object(); // {socketId : roomId}
+
+io.of('/').on('connection', (socket)=> { //socket = (1대1) 클라이언트
+  socket.on('waitingStart', (userId) => {
+    console.log(userId + " : waitingStart \n");
+    if (!emptyRoom) {
+      emptyRoom = userId;
+      socket.join(userId);
+      rooms[userId] = userId;
+    } else {
+      socket.join(emptyRoom);
+      socket.room = emptyRoom;
+      rooms[userId] = emptyRoom;
+      io.of('/').in(emptyRoom).emit('chattingStart', {}); //1번방에 matched쏨
+      emptyRoom = null;
+    }
+    console.log("emptyRoom -> " + emptyRoom + "\n");
+    console.log("rooms -> " + JSON.stringify(rooms) + "\n");
+  });
+
+  socket.on('messageSend', (msg, userId)=> {
+    console.log("got messag : " + msg + "\n" );
+    socket.broadcast.to(rooms[userId]).emit('messageReceive', msg);
+  });
+
+  socket.on('waitingCancel', (userId) =>{
+    const roomId = rooms[userId];
+
+    console.log(userId + roomId)
+
+    if(emptyRoom === userId){
+      console.log("emptyRoom("+emptyRoom+") : 삭제")
+      emptyRoom = null
+    }
+
+    if (roomId !== null) {
+      delete rooms.userId;
+      socket.leave(roomId);
+    }
+  });
+
+  socket.on('chattingCancel', (userId) => {
+    const roomId = rooms[userId];
+
+    if (roomId !== null) {
+      delete rooms[userId];
+      socket.leave(roomId);
+      io.to(roomId).emit('chattingCancelled'); //상대방에게 disconnected 통보
+    }
+  });
+
+  socket.on('chattingCancelled', function(userId) {
+    const roomId = rooms[userId];
+
+    if (roomId !== null) {
+      delete rooms[userId];
+      socket.leave(roomId);
+    }
+  });
+
+});
 
 //mongoDB + mongoose
-
 var promise = mongoose.connect('mongodb://localhost/mydb', {
     useMongoClient: true
 });
-
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
     console.log('mongoDB connected successfully');
 });
-
 
 //view 엔진 설정
 app.set('views', path.join(__dirname, 'views'));
@@ -59,6 +123,8 @@ app.use(passport.initialize()); // passport 구동
 app.use(passport.session()); // 세션 연결
 
 app.use(flash());
+
+
 
 //non-www redirects to wwww
 app.all(/.*/, function(req, res, next) {
@@ -87,7 +153,7 @@ app.all('/update/*', route_update); //(렌더링)글 수정 //(DB)글 수정
 app.all('/write/*', route_write); //(렌더링)글쓰기 //(DB)글쓰기
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -104,4 +170,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+
+const port = process.env.PORT || 80;
+
+server.listen(port, function() {
+  console.log('Socket IO server listening on port 80');
+});
