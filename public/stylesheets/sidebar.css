@@ -4,7 +4,7 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   background: #fafafa;
 }
 
@@ -32,8 +32,8 @@ body {
   overflow-y: scroll;
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
-::-webkit-scrollbar {
-  display:none;
+#sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 #sidebar.active {
@@ -61,12 +61,14 @@ body {
   color: rgb(83, 102, 132);
 }
 
-#sidebarCollapse, #goBack {
+#sidebarCollapse,
+#goBack {
   background: rgb(83, 102, 132);
   color: #fff;
 }
 
-#sidebarCollapse:hover, #goBack:hover{
+#sidebarCollapse:hover,
+#goBack:hover {
   background: #fff;
   color: rgb(83, 102, 132);
 }
@@ -113,7 +115,7 @@ body {
   background: rgb(183, 202, 232);
 }
 
-#sidebar ul li.active>a,
+#sidebar ul li.active > a,
 a[aria-expanded="true"] {
   color: rgb(183, 202, 232);
   background: rgb(47, 84, 142);
