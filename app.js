@@ -37,7 +37,7 @@ const io = require("socket.io")(server);
 let emptyRoom;
 let rooms = new Object(); // {userId : roomId}
 
-io.of("/").on("connection", socket => {
+io.of("/chat").on("connection", socket => {
   socket.emit("connected", [socket.id]);
 
   socket.on("disconnect", () => {
