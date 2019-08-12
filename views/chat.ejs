@@ -37,7 +37,7 @@
 </body>
 
 <script type="text/javascript">
-  const socket = io.connect('/');
+  const socket = io.connect('http://localhost');
   let userId;
   socket.on("connected", (socketId) => {
     userId = socketId;
