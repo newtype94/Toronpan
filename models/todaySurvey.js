@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-var stone = new Schema({
+const stone = new Schema({
   idK: String,
   genderJ: String,
   ageJ: Number,
@@ -9,12 +9,12 @@ var stone = new Schema({
   degree: Number
 });
 
-var todaySurvey = new Schema({
-  firstQ : String,
-  case1 : [stone],
-  secondQ : String,
-  case2 : [stone],
-  date: {type: Date, default: Date.now().toLocaleDateString}
+const todaySurvey = new Schema({
+  firstQ: String,
+  case1: [stone],
+  secondQ: String,
+  case2: [stone],
+  date: { type: Date, default: Date.now().toLocaleDateString }
 });
 
-module.exports = mongoose.model('todaySurvey', todaySurvey);
+module.exports = mongoose.model("todaySurvey", todaySurvey);

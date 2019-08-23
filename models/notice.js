@@ -1,10 +1,9 @@
+const mongoose = require("mongoose");
 
-var mongoose = require('mongoose');
-
-var noticeSchema = new mongoose.Schema({
-    title: String,
-    contents: String,
-    date: {type: Date, default: Date.now()},
+const noticeSchema = new mongoose.Schema({
+  title: String,
+  contents: String,
+  date: { type: Date, default: Date.now() }
 });
 
-module.exports = mongoose.model('notice', noticeSchema);
+module.exports = mongoose.model("notice", noticeSchema);

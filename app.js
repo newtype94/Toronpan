@@ -127,10 +127,10 @@ io.of("/").on("connection", socket => {
 });
 
 //mongoDB + mongoose
-var promise = mongoose.connect("mongodb://localhost/mydb", {
+const promise = mongoose.connect("mongodb://localhost/mydb", {
   useMongoClient: true
 });
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function() {
   console.log("mongoDB connected successfully");
@@ -190,7 +190,7 @@ app.all("/write/*", route_write); //(렌더링)글쓰기 //(DB)글쓰기
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  var err = new Error("Not Found");
+  const err = new Error("Not Found");
   err.status = 404;
   next(err);
 });

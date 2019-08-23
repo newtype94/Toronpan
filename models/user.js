@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var userSchema = new Schema({
+const userSchema = new Schema({
   idK: String, //카카오 토큰
   nameK: String, //실명
   nameJ: String, //토론판 닉네임
@@ -15,4 +15,4 @@ var userSchema = new Schema({
   level: Number //레벨
 });
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model("user", userSchema);

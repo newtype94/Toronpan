@@ -1,8 +1,8 @@
 // (one user -> specific date) "matching" => has writeLimit
 
-var mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-var limitSchema = new mongoose.Schema({
+const limitSchema = new mongoose.Schema({
   writer: String,
   howMany: Number,
   date: {
@@ -11,7 +11,7 @@ var limitSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('writeLimit', limitSchema);
+module.exports = mongoose.model("writeLimit", limitSchema);
 
 /* 사용법
 
@@ -20,7 +20,7 @@ module.exports = mongoose.model('writeLimit', limitSchema);
     date: now
   }, function(err, what) {
     if (!err && !what) { //쿼리결과가 없다 = 오늘 글을 쓴적이 없다
-      var writeLimit = new WriteLimit();
+      let writeLimit = new WriteLimit();
       writeLimit.writer = sessionUser._id;
       writeLimit.howMany = 0;
       writeLimit.date = now;
